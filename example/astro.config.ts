@@ -1,5 +1,6 @@
 import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
+import typedoc from 'starlight-typedoc'
 
 export default defineConfig({
   integrations: [
@@ -19,5 +20,6 @@ export default defineConfig({
         },
       ],
     }),
+    typedoc(),
   ],
 })

@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "@astrojs/starlight": "0.1.1",
-    "astro": "2.6.1"
+    "astro": "2.6.1",
+    "starlight-typedoc": "workspace:*"
   },
   "engines": {
     "node": ">=18"

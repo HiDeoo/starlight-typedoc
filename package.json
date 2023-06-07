@@ -6,7 +6,7 @@
   "author": "HiDeoo <github@hideoo.dev> (https://hideoo.dev)",
   "type": "module",
   "scripts": {
-    "dev": "pnpm --stream -r dev",
+    "dev": "pnpm --parallel -r dev",
     "lint": "pnpm -r lint",
     "prepare": "husky install"
   },
