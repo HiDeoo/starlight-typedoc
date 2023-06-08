@@ -7,6 +7,11 @@ export class StarlightTypedocTheme extends MarkdownTheme {
   constructor(renderer: Renderer) {
     super(renderer)
 
+    this.hideBreadcrumbs = true
+    this.hideInPageTOC = true
+    this.namedAnchors = false
+    this.preserveAnchorCasing = false
+
     this.listenTo(renderer, {
       [PageEvent.END]: this.#onPageEnd,
     })
