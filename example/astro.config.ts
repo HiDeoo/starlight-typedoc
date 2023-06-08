@@ -20,6 +20,9 @@ export default defineConfig({
         },
       ],
     }),
-    typedoc(),
+    typedoc({
+      entryPoints: ['../fixtures/src/index.ts'],
+      tsconfig: '../fixtures/tsconfig.json',
+    }),
   ],
 })
