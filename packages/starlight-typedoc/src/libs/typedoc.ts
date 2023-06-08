@@ -5,6 +5,7 @@ import { StarlightTypedocTheme } from './theme'
 
 const defaultOptions: Partial<TypeDocOptions> = {
   disableSources: true,
+  githubPages: false,
   readme: 'none',
   theme: StarlightTypedocTheme.identifier,
 }
