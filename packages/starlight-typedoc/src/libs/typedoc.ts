@@ -1,12 +1,12 @@
 import { Application, TSConfigReader, type TypeDocOptions } from 'typedoc'
-import { load as loadMarkdownPlugin, MarkdownTheme } from 'typedoc-plugin-markdown'
+import { load as loadMarkdownPlugin } from 'typedoc-plugin-markdown'
 
-const themeName = 'starlight-typedoc'
+import { StarlightTypedocTheme } from './theme'
 
 const defaultOptions: Partial<TypeDocOptions> = {
   disableSources: true,
   readme: 'none',
-  theme: themeName,
+  theme: StarlightTypedocTheme.identifier,
 }
 
 export function bootstrapApp(options: Partial<TypeDocOptions>) {
@@ -15,7 +15,7 @@ export function bootstrapApp(options: Partial<TypeDocOptions>) {
 
   loadMarkdownPlugin(app)
 
-  app.renderer.defineTheme(themeName, MarkdownTheme)
+  app.renderer.defineTheme(StarlightTypedocTheme.identifier, StarlightTypedocTheme)
 
   app.bootstrap({
     ...defaultOptions,
