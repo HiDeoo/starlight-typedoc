@@ -18,8 +18,13 @@ export function generateTypeDoc(options: StarlightTypeDocOptions) {
 
   // TODO(HiDeoo)
   return {
-    label: '// TODO(HiDeoo) ',
-    items: [{ label: '// TODO(HiDeoo) ', link: '/todo' }],
+    // TODO(HiDeoo)
+    label: 'API ',
+    items: [
+      // TODO(HiDeoo)
+      { label: 'Exports ', link: '/api/exports' },
+      // TODO(HiDeoo)...
+    ],
   }
 }
 

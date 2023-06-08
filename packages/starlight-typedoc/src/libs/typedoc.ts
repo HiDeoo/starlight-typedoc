@@ -1,27 +1,37 @@
-import { Application, TSConfigReader, type TypeDocOptions } from 'typedoc'
+import { Application, type DeclarationReflection, PageEvent, TSConfigReader, type TypeDocOptions } from 'typedoc'
 import { load as loadMarkdownPlugin } from 'typedoc-plugin-markdown'
 
-import { StarlightTypedocTheme } from './theme'
-
-const defaultOptions: Partial<TypeDocOptions> = {
-  disableSources: true,
+const defaultTypeDocOptions: Partial<TypeDocOptions> = {
+  // TODO(HiDeoo)
+  entryFileName: 'exports.md',
   githubPages: false,
   readme: 'none',
-  theme: StarlightTypedocTheme.identifier,
 }
 
 export function bootstrapApp(options: Partial<TypeDocOptions>) {
   const app = new Application()
   app.options.addReader(new TSConfigReader())
+  app.renderer.on(PageEvent.END, onPageEnd)
 
   loadMarkdownPlugin(app)
 
-  app.renderer.defineTheme(StarlightTypedocTheme.identifier, StarlightTypedocTheme)
-
   app.bootstrap({
-    ...defaultOptions,
+    ...defaultTypeDocOptions,
     ...options,
   })
 
   return app
+}
+
+function onPageEnd(event: PageEvent<DeclarationReflection>) {
+  if (!event.contents) {
+    return
+  }
+
+  // TODO(HiDeoo)
+  event.contents = `---
+title: ${event.model.name}
+---
+
+${event.contents}`
 }
