@@ -28,7 +28,7 @@
     "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
-    "astro": "2.6.1",
+    "@types/node": "18.16.16",
     "tsup": "6.7.0",
     "typescript": "5.1.3"
   },

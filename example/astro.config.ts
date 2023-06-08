@@ -1,6 +1,6 @@
 import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
-import typedoc from 'starlight-typedoc'
+import { generateTypeDoc } from 'starlight-typedoc'
 
 export default defineConfig({
   integrations: [
@@ -10,6 +10,14 @@ export default defineConfig({
         github: 'https://github.com/HiDeoo/starlight-typedoc',
       },
       sidebar: [
+        generateTypeDoc({
+          entryPoints: ['../fixtures/src/index.ts'],
+          tsconfig: '../fixtures/tsconfig.json',
+        }),
+        {
+          label: 'API',
+          autogenerate: { directory: 'api' },
+        },
         {
           label: 'Guides',
           items: [{ label: 'Example Guide', link: '/guides/example/' }],
@@ -19,10 +27,6 @@ export default defineConfig({
           autogenerate: { directory: 'reference' },
         },
       ],
-    }),
-    typedoc({
-      entryPoints: ['../fixtures/src/index.ts'],
-      tsconfig: '../fixtures/tsconfig.json',
     }),
   ],
 })

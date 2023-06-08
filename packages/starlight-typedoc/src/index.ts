@@ -1,33 +1,29 @@
 import path from 'node:path'
 
-import type { AstroIntegration } from 'astro'
 import type { TypeDocOptions } from 'typedoc'
 
 import { bootstrapApp } from './libs/typedoc'
 
-export default function starlightTypeDocIntegration(options: StarlightTypeDocIntegration): AstroIntegration {
+// TODO(HiDeoo) logs
+// TODO(HiDeoo) handle errors
+export function generateTypeDoc(options: StarlightTypeDocOptions) {
+  const app = bootstrapApp({ entryPoints: options.entryPoints, tsconfig: options.tsconfig })
+  const reflections = app.convert()
+
+  if (!reflections) {
+    throw new Error('// TODO(HiDeoo) ')
+  }
+
+  app.generateDocs(reflections, path.join('src/content/docs', options.output ?? 'api'))
+
+  // TODO(HiDeoo)
   return {
-    name: 'starlight-typedoc',
-    hooks: {
-      'astro:config:done': () => {
-        // TODO(HiDeoo) logs
-        // TODO(HiDeoo) handle errors
-
-        const app = bootstrapApp({ entryPoints: options.entryPoints, tsconfig: options.tsconfig })
-        const reflections = app.convert()
-
-        if (!reflections) {
-          // TODO(HiDeoo)
-          return
-        }
-
-        app.generateDocs(reflections, path.join('src/content/docs', options.output ?? 'api'))
-      },
-    },
+    label: '// TODO(HiDeoo) ',
+    items: [{ label: '// TODO(HiDeoo) ', link: '/todo' }],
   }
 }
 
-export interface StarlightTypeDocIntegration {
+export interface StarlightTypeDocOptions {
   /**
    * The entry points to document.
    */
@@ -39,7 +35,7 @@ export interface StarlightTypeDocIntegration {
    */
   output?: string
   /**
-   * The path to the `tsconfig.json` file to use.
+   * The path to the `tsconfig.json` file to use for the documentation generation.
    */
   tsconfig: TypeDocOptions['tsconfig']
 }
