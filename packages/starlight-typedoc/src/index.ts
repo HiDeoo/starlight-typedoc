@@ -6,21 +6,19 @@ import { bootstrapApp, type TypeDocConfig } from './libs/typedoc'
 
 // TODO(HiDeoo) logs
 // TODO(HiDeoo) handle errors
-export function generateTypeDoc(options: StarlightTypeDocOptions) {
+export async function generateTypeDoc(options: StarlightTypeDocOptions) {
   const app = bootstrapApp(options.entryPoints, options.tsconfig, options.typeDoc)
   const reflections = app.convert()
 
-  if (!reflections) {
-    throw new Error('// TODO(HiDeoo) ')
+  if (!reflections?.groups || reflections.groups.length === 0) {
+    throw new Error('Failed to generate TypeDoc documentation.')
   }
 
   const outputDirectory = options.output ?? 'api'
 
-  app.generateDocs(reflections, path.join('src/content/docs', outputDirectory))
+  await app.generateDocs(reflections, path.join('src/content/docs', outputDirectory))
 
-  const t = getSidebarGroupFromReflections(reflections, outputDirectory)
-
-  return t
+  return getSidebarGroupFromReflections(reflections, outputDirectory)
 }
 
 // TODO(HiDeoo) Test with no results, multiple entry points, 1 group, etc.
