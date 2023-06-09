@@ -1,11 +1,14 @@
 import { Application, type DeclarationReflection, PageEvent, TSConfigReader, type TypeDocOptions } from 'typedoc'
 import { load as loadMarkdownPlugin } from 'typedoc-plugin-markdown'
 
-const defaultConfig: Partial<TypeDocOptions> = {
-  // TODO(HiDeoo)
-  entryFileName: 'exports.md',
+const defaultTypeDocConfig: TypeDocConfig = {
   githubPages: false,
   readme: 'none',
+}
+
+const markdownPluginConfig = {
+  // TODO(HiDeoo) Change based on the number of entry points?
+  entryFileName: 'exports.md',
 }
 
 export function bootstrapApp(
@@ -20,8 +23,9 @@ export function bootstrapApp(
   loadMarkdownPlugin(app)
 
   app.bootstrap({
-    ...defaultConfig,
+    ...defaultTypeDocConfig,
     ...config,
+    ...markdownPluginConfig,
     entryPoints,
     tsconfig,
   })
