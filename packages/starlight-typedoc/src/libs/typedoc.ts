@@ -1,14 +1,18 @@
 import { Application, type DeclarationReflection, PageEvent, TSConfigReader, type TypeDocOptions } from 'typedoc'
 import { load as loadMarkdownPlugin } from 'typedoc-plugin-markdown'
 
-const defaultTypeDocOptions: Partial<TypeDocOptions> = {
+const defaultConfig: Partial<TypeDocOptions> = {
   // TODO(HiDeoo)
   entryFileName: 'exports.md',
   githubPages: false,
   readme: 'none',
 }
 
-export function bootstrapApp(options: Partial<TypeDocOptions>) {
+export function bootstrapApp(
+  entryPoints: TypeDocOptions['entryPoints'],
+  tsconfig: TypeDocOptions['tsconfig'],
+  config: TypeDocConfig = {}
+) {
   const app = new Application()
   app.options.addReader(new TSConfigReader())
   app.renderer.on(PageEvent.END, onRendererPageEnd)
@@ -16,8 +20,10 @@ export function bootstrapApp(options: Partial<TypeDocOptions>) {
   loadMarkdownPlugin(app)
 
   app.bootstrap({
-    ...defaultTypeDocOptions,
-    ...options,
+    ...defaultConfig,
+    ...config,
+    entryPoints,
+    tsconfig,
   })
 
   return app
@@ -36,3 +42,5 @@ title: ${event.model.name}
 
 ${event.contents}`
 }
+
+export type TypeDocConfig = Partial<Omit<TypeDocOptions, 'entryPoints' | 'tsconfig'>>

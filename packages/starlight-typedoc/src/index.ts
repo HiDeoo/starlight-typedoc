@@ -2,12 +2,12 @@ import path from 'node:path'
 
 import type { ProjectReflection, TypeDocOptions } from 'typedoc'
 
-import { bootstrapApp } from './libs/typedoc'
+import { bootstrapApp, type TypeDocConfig } from './libs/typedoc'
 
 // TODO(HiDeoo) logs
 // TODO(HiDeoo) handle errors
 export function generateTypeDoc(options: StarlightTypeDocOptions) {
-  const app = bootstrapApp({ entryPoints: options.entryPoints, tsconfig: options.tsconfig })
+  const app = bootstrapApp(options.entryPoints, options.tsconfig, options.typeDoc)
   const reflections = app.convert()
 
   if (!reflections) {
@@ -56,4 +56,9 @@ export interface StarlightTypeDocOptions {
    * The path to the `tsconfig.json` file to use for the documentation generation.
    */
   tsconfig: TypeDocOptions['tsconfig']
+  /**
+   * Additional TypeDoc configuration.
+   * @see https://typedoc.org/options
+   */
+  typeDoc?: TypeDocConfig
 }
