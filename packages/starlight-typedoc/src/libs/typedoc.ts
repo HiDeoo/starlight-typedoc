@@ -7,8 +7,7 @@ const defaultTypeDocConfig: TypeDocConfig = {
 }
 
 const markdownPluginConfig = {
-  // TODO(HiDeoo) Change based on the number of entry points?
-  entryFileName: 'exports.md',
+  skipIndexPage: true,
 }
 
 export function bootstrapApp(
@@ -39,7 +38,6 @@ function onRendererPageEnd(event: PageEvent<DeclarationReflection>) {
   }
 
   // TODO(HiDeoo) Improve this
-  // TODO(HiDeoo) The title is wrong for the exports page
   event.contents = `---
 title: ${event.model.name}
 ---

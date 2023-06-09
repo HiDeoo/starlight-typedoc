@@ -30,14 +30,10 @@ function getSidebarGroupFromReflections(reflections: ProjectReflection, outputDi
   return {
     // TODO(HiDeoo) Handle name
     label: 'API ',
-    items: [
-      // TODO(HiDeoo) Handle multiple entry points
-      { label: 'Exports', link: `/${outputDirectory}/exports` },
-      ...groups.map((group) => ({
-        label: group.title,
-        autogenerate: { directory: `${outputDirectory}/${group.title.toLowerCase()}` },
-      })),
-    ],
+    items: groups.map((group) => ({
+      label: group.title,
+      autogenerate: { directory: `${outputDirectory}/${group.title.toLowerCase()}` },
+    })),
   }
 }
 
