@@ -15,10 +15,6 @@ export default defineConfig({
           tsconfig: '../fixtures/tsconfig.json',
         }),
         {
-          label: 'API',
-          autogenerate: { directory: 'api' },
-        },
-        {
           label: 'Guides',
           items: [{ label: 'Example Guide', link: '/guides/example/' }],
         },

@@ -11,7 +11,7 @@ const defaultTypeDocOptions: Partial<TypeDocOptions> = {
 export function bootstrapApp(options: Partial<TypeDocOptions>) {
   const app = new Application()
   app.options.addReader(new TSConfigReader())
-  app.renderer.on(PageEvent.END, onPageEnd)
+  app.renderer.on(PageEvent.END, onRendererPageEnd)
 
   loadMarkdownPlugin(app)
 
@@ -23,12 +23,13 @@ export function bootstrapApp(options: Partial<TypeDocOptions>) {
   return app
 }
 
-function onPageEnd(event: PageEvent<DeclarationReflection>) {
+function onRendererPageEnd(event: PageEvent<DeclarationReflection>) {
   if (!event.contents) {
     return
   }
 
-  // TODO(HiDeoo)
+  // TODO(HiDeoo) Improve this
+  // TODO(HiDeoo) The title is wrong for the exports page
   event.contents = `---
 title: ${event.model.name}
 ---
