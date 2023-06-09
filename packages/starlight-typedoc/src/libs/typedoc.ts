@@ -7,6 +7,12 @@ const defaultTypeDocConfig: TypeDocConfig = {
 }
 
 const markdownPluginConfig = {
+  // TODO(HiDeoo) baseUrl ?
+  hideBreadcrumbs: true,
+  hideInPageTOC: true,
+  hideKindPrefix: true,
+  hidePageHeader: true,
+  hidePageTitle: true,
   skipIndexPage: true,
 }
 
