@@ -18,16 +18,15 @@ export async function generateTypeDoc(options: StarlightTypeDocOptions) {
 
   await app.generateDocs(reflections, path.join('src/content/docs', outputDirectory))
 
-  return getSidebarGroupFromReflections(reflections, outputDirectory)
+  return getSidebarGroupFromReflections(options.sidebarLabel, reflections, outputDirectory)
 }
 
 // TODO(HiDeoo) Test with no results, multiple entry points, 1 group, etc.
-function getSidebarGroupFromReflections(reflections: ProjectReflection, outputDirectory: string) {
+function getSidebarGroupFromReflections(label = 'API', reflections: ProjectReflection, outputDirectory: string) {
   const groups = reflections.groups ?? []
 
   return {
-    // TODO(HiDeoo) Handle name
-    label: 'API ',
+    label,
     items: groups.map((group) => ({
       label: group.title,
       autogenerate: { directory: `${outputDirectory}/${group.title.toLowerCase()}` },
@@ -46,6 +45,11 @@ export interface StarlightTypeDocOptions {
    * @default 'api'
    */
   output?: string
+  /**
+   * The generated documentation sidebar group label.
+   * @default 'API'
+   */
+  sidebarLabel?: string
   /**
    * The path to the `tsconfig.json` file to use for the documentation generation.
    */

@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --parallel -r dev",
-    "test": "pnpm --stream  -r test",
+    "test": "pnpm --stream -r test",
     "lint": "pnpm -r lint",
     "prepare": "husky install"
   },
