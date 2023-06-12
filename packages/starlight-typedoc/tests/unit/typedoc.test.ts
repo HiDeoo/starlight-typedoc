@@ -55,8 +55,7 @@ test('should support providing custom TypeDoc options', async () => {
 test('should generate the doc in `src/content/docs/api`', async () => {
   await generateTypeDoc({
     ...starlightTypeDocOptions,
-    // TODO(HiDeoo) Use another file
-    entryPoints: ['../../fixtures/src/noDocs.ts'],
+    entryPoints: ['../../fixtures/src/functions.ts'],
   })
 
   const mkdirSyncSpy = vi.mocked(fs.mkdirSync)
@@ -70,8 +69,7 @@ test('should generate the doc in a custom output directory relative to `src/cont
 
   await generateTypeDoc({
     ...starlightTypeDocOptions,
-    // TODO(HiDeoo) Use another file
-    entryPoints: ['../../fixtures/src/noDocs.ts'],
+    entryPoints: ['../../fixtures/src/functions.ts'],
     output,
   })
 

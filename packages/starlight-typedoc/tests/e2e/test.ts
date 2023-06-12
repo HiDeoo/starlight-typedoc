@@ -12,10 +12,10 @@ export const test = base.extend<Fixtures>({
     await use(docPage)
   },
   homePage: async ({ page }, use) => {
-    const todoPage = new HomePage(page)
-    await todoPage.goto()
+    const homePage = new HomePage(page)
+    await homePage.goto()
 
-    await use(todoPage)
+    await use(homePage)
   },
 })
 
