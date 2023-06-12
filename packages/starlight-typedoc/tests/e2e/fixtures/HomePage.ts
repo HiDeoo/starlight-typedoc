@@ -15,9 +15,9 @@ export class HomePage {
       .locator(`details:has(summary > h2:has-text("${label}"))`)
 
     this.typeDocSidebarLabel = typeDocSidebarDetails.getByRole('heading', {
+      exact: true,
       level: 2,
       name: label,
-      exact: true,
     })
 
     this.typeDocSidebarRootList = typeDocSidebarDetails.locator('> ul')

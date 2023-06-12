@@ -7,14 +7,14 @@ import { bootstrapApp, type TypeDocConfig } from './libs/typedoc'
 // TODO(HiDeoo) logs
 // TODO(HiDeoo) handle errors
 export async function generateTypeDoc(options: StarlightTypeDocOptions) {
-  const app = bootstrapApp(options.entryPoints, options.tsconfig, options.typeDoc)
+  const outputDirectory = options.output ?? 'api'
+
+  const app = bootstrapApp(options.entryPoints, options.tsconfig, options.typeDoc, outputDirectory)
   const reflections = app.convert()
 
   if (!reflections?.groups || reflections.groups.length === 0) {
     throw new Error('Failed to generate TypeDoc documentation.')
   }
-
-  const outputDirectory = options.output ?? 'api'
 
   await app.generateDocs(reflections, path.join('src/content/docs', outputDirectory))
 

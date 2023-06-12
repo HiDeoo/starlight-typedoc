@@ -1,13 +1,15 @@
 import { Application, type DeclarationReflection, PageEvent, TSConfigReader, type TypeDocOptions } from 'typedoc'
 import { load as loadMarkdownPlugin } from 'typedoc-plugin-markdown'
 
+import { StarlightTypeDocTheme } from './StarlightTypeDocTheme'
+
 const defaultTypeDocConfig: TypeDocConfig = {
   githubPages: false,
   readme: 'none',
+  theme: 'starlight-typedoc',
 }
 
 const markdownPluginConfig = {
-  // TODO(HiDeoo) baseUrl ?
   hideBreadcrumbs: true,
   hideInPageTOC: true,
   hideKindPrefix: true,
@@ -19,18 +21,20 @@ const markdownPluginConfig = {
 export function bootstrapApp(
   entryPoints: TypeDocOptions['entryPoints'],
   tsconfig: TypeDocOptions['tsconfig'],
-  config: TypeDocConfig = {}
+  config: TypeDocConfig = {},
+  outputDirectory: string
 ) {
   const app = new Application()
   app.options.addReader(new TSConfigReader())
+  app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
   app.renderer.on(PageEvent.END, onRendererPageEnd)
 
   loadMarkdownPlugin(app)
 
   app.bootstrap({
     ...defaultTypeDocConfig,
+    ...getMarkdownPluginConfig(outputDirectory),
     ...config,
-    ...markdownPluginConfig,
     entryPoints,
     tsconfig,
   })
@@ -49,6 +53,13 @@ title: ${event.model.name}
 ---
 
 ${event.contents}`
+}
+
+function getMarkdownPluginConfig(outputDirectory: string) {
+  return {
+    ...markdownPluginConfig,
+    baseUrl: `/${outputDirectory}${outputDirectory.endsWith('/') ? '' : '/'}`,
+  }
 }
 
 export type TypeDocConfig = Partial<Omit<TypeDocOptions, 'entryPoints' | 'tsconfig'>>

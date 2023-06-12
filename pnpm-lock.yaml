@@ -59,6 +59,9 @@ importers:
 
   packages/starlight-typedoc:
     dependencies:
+      github-slugger:
+        specifier: 2.0.0
+        version: 2.0.0
       typedoc:
         specifier: '>=0.24.0'
         version: 0.24.8(typescript@5.1.3)
