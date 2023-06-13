@@ -52,7 +52,7 @@ test('should support providing custom TypeDoc options', async () => {
   ).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to generate TypeDoc documentation."')
 })
 
-test('should generate the doc in `src/content/docs/api`', async () => {
+test('should generate the doc in `src/content/docs/api` by default', async () => {
   await generateTypeDoc({
     ...starlightTypeDocOptions,
     entryPoints: ['../../fixtures/src/functions.ts'],

@@ -9,13 +9,18 @@ export default defineConfig({
     },
   ],
   testDir: 'tests/e2e',
-  use: {
-    baseURL: 'http://localhost:3000',
-  },
-  webServer: {
-    command: 'pnpm run dev',
-    cwd: '../../example',
-    reuseExistingServer: !process.env['CI'],
-    url: 'http://localhost:3000',
-  },
+  webServer: [
+    {
+      command: 'pnpm run dev:single-entrypoints',
+      cwd: '../../example',
+      reuseExistingServer: !process.env['CI'],
+      url: 'http://localhost:3000',
+    },
+    {
+      command: 'pnpm run dev:multiple-entrypoints',
+      cwd: '../../example',
+      reuseExistingServer: !process.env['CI'],
+      url: 'http://localhost:3001',
+    },
+  ],
 })

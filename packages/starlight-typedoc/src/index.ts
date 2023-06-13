@@ -1,7 +1,8 @@
 import path from 'node:path'
 
-import type { ProjectReflection, TypeDocOptions } from 'typedoc'
+import type { TypeDocOptions } from 'typedoc'
 
+import { getSidebarGroupFromReflections } from './libs/starlight'
 import { bootstrapApp, type TypeDocConfig } from './libs/typedoc'
 
 export async function generateTypeDoc(options: StarlightTypeDocOptions) {
@@ -17,19 +18,6 @@ export async function generateTypeDoc(options: StarlightTypeDocOptions) {
   await app.generateDocs(reflections, path.join('src/content/docs', outputDirectory))
 
   return getSidebarGroupFromReflections(options.sidebarLabel, reflections, outputDirectory)
-}
-
-// TODO(HiDeoo) Test with no results, multiple entry points, 1 group, etc.
-function getSidebarGroupFromReflections(label = 'API', reflections: ProjectReflection, outputDirectory: string) {
-  const groups = reflections.groups ?? []
-
-  return {
-    label,
-    items: groups.map((group) => ({
-      label: group.title,
-      autogenerate: { directory: `${outputDirectory}/${group.title.toLowerCase()}` },
-    })),
-  }
 }
 
 export interface StarlightTypeDocOptions {

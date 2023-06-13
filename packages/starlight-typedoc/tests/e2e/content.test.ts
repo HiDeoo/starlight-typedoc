@@ -1,6 +1,6 @@
 import { expect, test } from './test'
 
-test('should add frontmatter titles', async ({ docPage }) => {
+test('should add titles to the frontmatter', async ({ docPage }) => {
   await docPage.goto('classes/classfoo')
 
   expect(docPage.title).toBe('Foo')
@@ -10,7 +10,7 @@ test('should add frontmatter titles', async ({ docPage }) => {
   expect(docPage.title).toBe('doThingA')
 })
 
-test('should properly format links', async ({ docPage }) => {
+test('should properly format links for a single entry point', async ({ docPage }) => {
   await docPage.goto('classes/classfoo')
 
   const barLinkLocators = await docPage.content.getByRole('link', { exact: true, name: 'Bar' }).all()
@@ -19,7 +19,7 @@ test('should properly format links', async ({ docPage }) => {
   expect(barLinkHrefs.every((href) => href === '/api/classes/classbar/')).toBe(true)
 })
 
-test('should properly format links with anchors', async ({ docPage }) => {
+test('should properly format links with anchors for a single entry point', async ({ docPage }) => {
   await docPage.goto('classes/classfoo')
 
   const barConstructorLinkHref = await docPage.content
@@ -28,3 +28,5 @@ test('should properly format links with anchors', async ({ docPage }) => {
 
   expect(barConstructorLinkHref).toEqual('/api/classes/classbar/#constructor')
 })
+
+// TODO(HiDeoo) test links with multiple entry points
