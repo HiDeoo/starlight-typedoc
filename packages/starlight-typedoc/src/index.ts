@@ -4,8 +4,6 @@ import type { ProjectReflection, TypeDocOptions } from 'typedoc'
 
 import { bootstrapApp, type TypeDocConfig } from './libs/typedoc'
 
-// TODO(HiDeoo) logs
-// TODO(HiDeoo) handle errors
 export async function generateTypeDoc(options: StarlightTypeDocOptions) {
   const outputDirectory = options.output ?? 'api'
 

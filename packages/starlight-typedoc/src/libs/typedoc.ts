@@ -1,6 +1,7 @@
 import { Application, type DeclarationReflection, PageEvent, TSConfigReader, type TypeDocOptions } from 'typedoc'
 import { load as loadMarkdownPlugin } from 'typedoc-plugin-markdown'
 
+import { StarlightTypeDocLogger } from './logger'
 import { addFrontmatter } from './markdown'
 import { StarlightTypeDocTheme } from './theme'
 
@@ -26,6 +27,7 @@ export function bootstrapApp(
   outputDirectory: string
 ) {
   const app = new Application()
+  app.logger = new StarlightTypeDocLogger()
   app.options.addReader(new TSConfigReader())
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
   app.renderer.on(PageEvent.END, onRendererPageEnd)
