@@ -9,7 +9,7 @@ const defaultTypeDocConfig: TypeDocConfig = {
   theme: 'starlight-typedoc',
 }
 
-const markdownPluginConfig = {
+const markdownPluginConfig: TypeDocConfig = {
   hideBreadcrumbs: true,
   hideInPageTOC: true,
   hideKindPrefix: true,
@@ -33,8 +33,8 @@ export function bootstrapApp(
 
   app.bootstrap({
     ...defaultTypeDocConfig,
-    ...getMarkdownPluginConfig(outputDirectory),
     ...config,
+    ...getMarkdownPluginConfig(outputDirectory),
     entryPoints,
     tsconfig,
   })
@@ -55,7 +55,7 @@ title: ${event.model.name}
 ${event.contents}`
 }
 
-function getMarkdownPluginConfig(outputDirectory: string) {
+function getMarkdownPluginConfig(outputDirectory: string): TypeDocConfig {
   return {
     ...markdownPluginConfig,
     baseUrl: `/${outputDirectory}${outputDirectory.endsWith('/') ? '' : '/'}`,
