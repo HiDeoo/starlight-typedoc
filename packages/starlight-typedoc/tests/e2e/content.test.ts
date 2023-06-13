@@ -1,5 +1,15 @@
 import { expect, test } from './test'
 
+test('should add frontmatter titles', async ({ docPage }) => {
+  await docPage.goto('classes/classfoo')
+
+  expect(docPage.title).toBe('Foo')
+
+  await docPage.goto('functions/functiondothinga')
+
+  expect(docPage.title).toBe('doThingA')
+})
+
 test('should properly format links', async ({ docPage }) => {
   await docPage.goto('classes/classfoo')
 

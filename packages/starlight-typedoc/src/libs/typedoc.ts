@@ -1,6 +1,7 @@
 import { Application, type DeclarationReflection, PageEvent, TSConfigReader, type TypeDocOptions } from 'typedoc'
 import { load as loadMarkdownPlugin } from 'typedoc-plugin-markdown'
 
+import { addFrontmatter } from './markdown'
 import { StarlightTypeDocTheme } from './StarlightTypeDocTheme'
 
 const defaultTypeDocConfig: TypeDocConfig = {
@@ -47,12 +48,7 @@ function onRendererPageEnd(event: PageEvent<DeclarationReflection>) {
     return
   }
 
-  // TODO(HiDeoo) Improve this
-  event.contents = `---
-title: ${event.model.name}
----
-
-${event.contents}`
+  event.contents = addFrontmatter(event.contents, { title: event.model.name })
 }
 
 function getMarkdownPluginConfig(outputDirectory: string): TypeDocConfig {
