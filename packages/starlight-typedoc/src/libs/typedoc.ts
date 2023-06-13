@@ -2,7 +2,7 @@ import { Application, type DeclarationReflection, PageEvent, TSConfigReader, typ
 import { load as loadMarkdownPlugin } from 'typedoc-plugin-markdown'
 
 import { addFrontmatter } from './markdown'
-import { StarlightTypeDocTheme } from './StarlightTypeDocTheme'
+import { StarlightTypeDocTheme } from './theme'
 
 const defaultTypeDocConfig: TypeDocConfig = {
   githubPages: false,
