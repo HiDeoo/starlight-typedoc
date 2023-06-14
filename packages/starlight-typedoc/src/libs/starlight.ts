@@ -28,7 +28,7 @@ export function getSidebarGroupFromReflections(
 
         return {
           label: group.title,
-          autogenerate: { directory: `${outputDirectory}/${group.title.toLowerCase()}` },
+          autogenerate: { directory: `${outputDirectory}/${slug(group.title.toLowerCase())}` },
         }
       })
       .filter((item): item is SidebarGroup => item !== undefined),

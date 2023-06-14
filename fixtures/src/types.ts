@@ -8,3 +8,5 @@ export interface Thing {
    */
   bar: number
 }
+
+export type Things = Thing[]
