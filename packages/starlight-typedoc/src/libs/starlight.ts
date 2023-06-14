@@ -15,7 +15,6 @@ export function getSidebarGroupFromReflections(
     label,
     items: groups
       .flatMap((group) => {
-        // TODO(HiDeoo) Better test with kind or instanceof
         if (group.title === 'Modules') {
           return group.children.map((child) => {
             if (!child.url) {
@@ -38,7 +37,7 @@ export function getSidebarGroupFromReflections(
   }
 }
 
-type SidebarGroup =
+export type SidebarGroup =
   | {
       items: (LinkItem | SidebarGroup)[]
       label: string

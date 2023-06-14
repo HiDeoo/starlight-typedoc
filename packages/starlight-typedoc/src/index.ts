@@ -2,10 +2,10 @@ import path from 'node:path'
 
 import type { TypeDocOptions } from 'typedoc'
 
-import { getSidebarGroupFromReflections } from './libs/starlight'
+import { getSidebarGroupFromReflections, type SidebarGroup } from './libs/starlight'
 import { bootstrapApp, type TypeDocConfig } from './libs/typedoc'
 
-export async function generateTypeDoc(options: StarlightTypeDocOptions) {
+export async function generateTypeDoc(options: StarlightTypeDocOptions): Promise<SidebarGroup> {
   const outputDirectory = options.output ?? 'api'
 
   const app = bootstrapApp(options.entryPoints, options.tsconfig, options.typeDoc, outputDirectory)

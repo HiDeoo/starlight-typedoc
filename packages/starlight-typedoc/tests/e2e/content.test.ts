@@ -19,6 +19,17 @@ test('should properly format links for a single entry point', async ({ docPage }
   expect(barLinkHrefs.every((href) => href === '/api/classes/classbar/')).toBe(true)
 })
 
+test('should properly format links for multiple entry points', async ({ docPage }) => {
+  docPage.useMultipleEntryPoints()
+
+  await docPage.goto('modulefoo/classes/classfoo')
+
+  const barLinkLocators = await docPage.content.getByRole('link', { exact: true, name: 'Bar' }).all()
+  const barLinkHrefs = await Promise.all(barLinkLocators.map((link) => link.getAttribute('href')))
+
+  expect(barLinkHrefs.every((href) => href === '/api-multiple-entrypoints/modulebar/classes/classbar/')).toBe(true)
+})
+
 test('should properly format links with anchors for a single entry point', async ({ docPage }) => {
   await docPage.goto('classes/classfoo')
 
@@ -29,4 +40,14 @@ test('should properly format links with anchors for a single entry point', async
   expect(barConstructorLinkHref).toEqual('/api/classes/classbar/#constructor')
 })
 
-// TODO(HiDeoo) test links with multiple entry points
+test('should properly format links with anchors for multiple entry points', async ({ docPage }) => {
+  docPage.useMultipleEntryPoints()
+
+  await docPage.goto('modulefoo/classes/classfoo')
+
+  const barConstructorLinkHref = await docPage.content
+    .getByRole('link', { exact: true, name: 'constructor' })
+    .getAttribute('href')
+
+  expect(barConstructorLinkHref).toEqual('/api-multiple-entrypoints/modulebar/classes/classbar/#constructor')
+})

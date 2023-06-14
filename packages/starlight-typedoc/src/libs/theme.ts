@@ -22,9 +22,10 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
 
     const filePath = path.parse(url)
     const [, anchor] = filePath.base.split('#')
+    const segments = filePath.dir.split('/').map((segment) => slug(segment))
     const baseUrl = this.options.getValue('baseUrl')
 
-    return `${typeof baseUrl === 'string' ? baseUrl : ''}${filePath.dir}/${slug(filePath.name)}/${
+    return `${typeof baseUrl === 'string' ? baseUrl : ''}${segments.join('/')}/${slug(filePath.name)}/${
       anchor && anchor.length > 0 ? `#${anchor}` : ''
     }`
   }
