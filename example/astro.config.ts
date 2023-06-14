@@ -6,7 +6,6 @@ const typeDocSidebarGroup = await generateTypeDoc({
   entryPoints: ['../fixtures/src/index.ts'],
   tsconfig: '../fixtures/tsconfig.json',
   sidebarLabel: 'API (auto-generated)',
-  watch: true,
 })
 
 export default defineConfig({
