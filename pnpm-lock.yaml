@@ -48,8 +48,8 @@ importers:
         specifier: 0.24.8
         version: 0.24.8(typescript@5.1.3)
       typedoc-plugin-markdown:
-        specifier: 4.0.0-next.14
-        version: 4.0.0-next.14(prettier@2.8.8)(typedoc@0.24.8)
+        specifier: 4.0.0-next.16
+        version: 4.0.0-next.16(prettier@2.8.8)(typedoc@0.24.8)
 
   fixtures:
     dependencies:
@@ -5673,6 +5673,16 @@ packages:
 
   /typedoc-plugin-markdown@4.0.0-next.14(prettier@2.8.8)(typedoc@0.24.8):
     resolution: {integrity: sha512-mmmSjuwtZCKOcwaHmWxoaOwFp0Jwaqc25KIz/87MPcyRtBhg1d0ivEFyMaDA49jI9xRceef8ISe2UdkaQsnhuQ==}
+    peerDependencies:
+      prettier: '>=1.8.0'
+      typedoc: '>=0.24.0'
+    dependencies:
+      prettier: 2.8.8
+      typedoc: 0.24.8(typescript@5.1.3)
+    dev: false
+
+  /typedoc-plugin-markdown@4.0.0-next.16(prettier@2.8.8)(typedoc@0.24.8):
+    resolution: {integrity: sha512-+ut3u62pZ+/L1vpoofOGm44ByZOWPCsgSxIm5VssLUuQSrP2jwNceB8AE7bZqp5wvNvZ7i7/6oXNZrKWRlHmeA==}
     peerDependencies:
       prettier: '>=1.8.0'
       typedoc: '>=0.24.0'
