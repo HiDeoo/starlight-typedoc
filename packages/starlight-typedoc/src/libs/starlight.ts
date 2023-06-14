@@ -35,6 +35,12 @@ export function getSidebarGroupFromReflections(
   }
 }
 
+export function getAsideMarkdown(type: AsideType, title: string, content: string) {
+  return `:::${type}[${title}]
+${content}
+:::`
+}
+
 export type SidebarGroup =
   | {
       items: (LinkItem | SidebarGroup)[]
@@ -51,3 +57,5 @@ interface LinkItem {
   label: string
   link: string
 }
+
+type AsideType = 'caution' | 'danger' | 'note' | 'tip'
