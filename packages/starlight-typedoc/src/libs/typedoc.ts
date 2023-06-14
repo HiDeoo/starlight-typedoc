@@ -6,6 +6,9 @@ import { addFrontmatter } from './markdown'
 import { StarlightTypeDocTheme } from './theme'
 
 const defaultTypeDocConfig: TypeDocConfig = {
+  excludeInternal: true,
+  excludePrivate: true,
+  excludeProtected: true,
   githubPages: false,
   readme: 'none',
   theme: 'starlight-typedoc',
