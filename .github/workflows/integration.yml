@@ -47,6 +47,10 @@ jobs:
         run: pnpm playwright install --with-deps chromium
         if: steps.cache-playwright.outputs.cache-hit != 'true'
 
+      - name: Build
+        run: pnpm build
+        working-directory: packages/starlight-typedoc
+
       - name: Lint
         run: pnpm lint
 
