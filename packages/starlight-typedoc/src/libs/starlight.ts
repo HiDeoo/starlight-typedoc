@@ -3,7 +3,6 @@ import path from 'node:path'
 import { slug } from 'github-slugger'
 import type { DeclarationReflection, ProjectReflection } from 'typedoc'
 
-// TODO(HiDeoo) Extra readme with multiple entry points
 export function getSidebarGroupFromReflections(
   label = 'API',
   reflections: ProjectReflection | DeclarationReflection,
@@ -23,7 +22,6 @@ export function getSidebarGroupFromReflections(
 
             const url = path.parse(child.url)
 
-            // TODO(HiDeoo) Better name? Can be renamed through doc?
             return getSidebarGroupFromReflections(child.name, child, `${outputDirectory}/${slug(url.dir)}`)
           })
         }
