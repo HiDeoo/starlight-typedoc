@@ -11,7 +11,9 @@ export class Bar {
   /**
    * This does something.
    */
-  doSomething() {
+  doSomething(element: HTMLElement) {
+    element
+
     this.#doSomethingElse()
 
     return 'something'

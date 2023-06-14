@@ -61,3 +61,15 @@ test('should disable edit links', async ({ docPage }) => {
 
   await expect(docPage.page.getByRole('link', { exact: true, name: 'Edit page' })).not.toBeVisible()
 })
+
+test('should support TypeDoc plugins', async ({ docPage }) => {
+  await docPage.goto('classes/classfoo')
+
+  const mdnLink = docPage.page.getByRole('link', { exact: true, name: 'HTMLElement' })
+
+  expect(mdnLink).toBeVisible()
+
+  const mdnLinkHref = await mdnLink.getAttribute('href')
+
+  expect(mdnLinkHref?.startsWith('https://developer.mozilla.org')).toBe(true)
+})

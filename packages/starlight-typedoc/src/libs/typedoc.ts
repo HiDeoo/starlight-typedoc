@@ -23,7 +23,7 @@ const markdownPluginConfig: TypeDocConfig = {
   skipIndexPage: true,
 }
 
-export function bootstrapApp(
+export async function bootstrapApp(
   entryPoints: TypeDocOptions['entryPoints'],
   tsconfig: TypeDocOptions['tsconfig'],
   config: TypeDocConfig = {},
@@ -37,7 +37,7 @@ export function bootstrapApp(
 
   loadMarkdownPlugin(app)
 
-  app.bootstrap({
+  await app.bootstrapWithPlugins({
     ...defaultTypeDocConfig,
     ...config,
     ...getMarkdownPluginConfig(outputDirectory),

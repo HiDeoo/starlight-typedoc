@@ -50,6 +50,9 @@ importers:
       typedoc-plugin-markdown:
         specifier: 4.0.0-next.16
         version: 4.0.0-next.16(prettier@2.8.8)(typedoc@0.24.8)
+      typedoc-plugin-mdn-links:
+        specifier: 3.0.3
+        version: 3.0.3(typedoc@0.24.8)
 
   fixtures:
     dependencies:
@@ -5688,6 +5691,14 @@ packages:
       typedoc: '>=0.24.0'
     dependencies:
       prettier: 2.8.8
+      typedoc: 0.24.8(typescript@5.1.3)
+    dev: false
+
+  /typedoc-plugin-mdn-links@3.0.3(typedoc@0.24.8):
+    resolution: {integrity: sha512-NXhIpwQnsg7BcyMCHVqj3tUK+DL4g3Bt96JbFl4APzTGFkA+iM6GfZ/fn3TAqJ8O0CXG5R9BfWxolw1m1omNuQ==}
+    peerDependencies:
+      typedoc: '>= 0.23.14 || 0.24.x'
+    dependencies:
       typedoc: 0.24.8(typescript@5.1.3)
     dev: false
 

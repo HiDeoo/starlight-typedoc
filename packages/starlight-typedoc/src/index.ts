@@ -8,7 +8,7 @@ import { bootstrapApp, type TypeDocConfig } from './libs/typedoc'
 export async function generateTypeDoc(options: StarlightTypeDocOptions): Promise<SidebarGroup> {
   const outputDirectory = options.output ?? 'api'
 
-  const app = bootstrapApp(options.entryPoints, options.tsconfig, options.typeDoc, outputDirectory)
+  const app = await bootstrapApp(options.entryPoints, options.tsconfig, options.typeDoc, outputDirectory)
   const reflections = app.convert()
 
   if (!reflections?.groups || reflections.groups.length === 0) {
