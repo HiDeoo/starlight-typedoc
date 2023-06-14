@@ -24,8 +24,20 @@ test('should generate the proper items for for a single entry point', async ({ d
 
   expect(items).toMatchObject([
     {
+      label: 'Enumerations',
+      items: [{ name: 'ANumericEnum' }, { name: 'AStringEnum' }],
+    },
+    {
       label: 'Classes',
       items: [{ name: 'Bar' }, { name: 'Foo' }],
+    },
+    {
+      label: 'Interfaces',
+      items: [{ name: 'Thing' }],
+    },
+    {
+      label: 'Variables',
+      items: [{ name: 'anObject' }, { name: 'anObjectAsConst' }, { name: 'anUndefinedString' }, { name: 'aString' }],
     },
     {
       label: 'Functions',

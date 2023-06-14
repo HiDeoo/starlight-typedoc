@@ -7,4 +7,17 @@ export class Bar {
    * @default 'bar'
    */
   readonly bar = 'bar'
+
+  /**
+   * This does something.
+   */
+  doSomething() {
+    this.#doSomethingElse()
+
+    return 'something'
+  }
+
+  #doSomethingElse() {
+    return 'something else'
+  }
 }
