@@ -48,6 +48,10 @@ export function bootstrapApp(
 function onRendererPageEnd(event: PageEvent<DeclarationReflection>) {
   if (!event.contents) {
     return
+  } else if (/^module\..*\/README\.md$/.test(event.url)) {
+    // Do not save `README.md` files for multiple entry points.
+    event.preventDefault()
+    return
   }
 
   event.contents = addFrontmatter(event.contents, { title: event.model.name })

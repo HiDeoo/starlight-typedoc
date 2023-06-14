@@ -78,3 +78,16 @@ test('should generate the doc in a custom output directory relative to `src/cont
   expect(mkdirSyncSpy).toHaveBeenCalled()
   expect(mkdirSyncSpy.mock.calls[0]?.[0].toString().endsWith(`src/content/docs/${output}`)).toBe(true)
 })
+
+test('should not add `README.md` module files for multiple entry points', async () => {
+  await generateTypeDoc({
+    ...starlightTypeDocOptions,
+    entryPoints: ['../../fixtures/src/Bar.ts', '../../fixtures/src/Foo.ts'],
+  })
+
+  const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
+  const filePaths = writeFileSyncSpy.mock.calls.map((call) => call[0].toString())
+
+  expect(writeFileSyncSpy).toHaveBeenCalled()
+  expect(filePaths.some((filePath) => filePath.endsWith('README.md'))).toBe(false)
+})
