@@ -17,31 +17,48 @@ test('should include the TypeDoc sidebar group for multiple entry points', async
   await expect(docPage.typeDocSidebarLabel).toBeVisible()
 })
 
-test('should include the TypeDoc groups for a single entry point', async ({ docPage }) => {
+test('should generate the proper items for for a single entry point', async ({ docPage }) => {
   await docPage.goto(singleEntrypointUrl)
 
-  await expect(docPage.typeDocSidebarGroups).toBeVisible()
+  const items = await docPage.getTypeDocSidebarItems()
 
-  await expect(docPage.typeDocSidebarGroups.getByRole('listitem').getByRole('heading', { level: 2 })).toHaveText([
-    'Classes',
-    'Functions',
+  expect(items).toMatchObject([
+    {
+      label: 'Classes',
+      items: [{ name: 'Bar' }, { name: 'Foo' }],
+    },
+    {
+      label: 'Functions',
+      items: [{ name: 'doThingA' }, { name: 'doThingB' }],
+    },
   ])
 })
 
-test('should include the TypeDoc groups for for multiple entry points', async ({ docPage }) => {
+test('should generate the proper items for for multiple entry points', async ({ docPage }) => {
   docPage.useMultipleEntryPoints()
 
   await docPage.goto(multipleEntrypointsUrl)
 
-  await expect(docPage.typeDocSidebarGroups).toBeVisible()
+  const items = await docPage.getTypeDocSidebarItems()
 
-  await expect(docPage.typeDocSidebarGroups.getByRole('listitem').getByRole('heading', { level: 2 })).toHaveText([
-    'Bar',
-    'Classes',
-    'Foo',
-    'Classes',
+  expect(items).toMatchObject([
+    {
+      label: 'Bar',
+      items: [
+        {
+          label: 'Classes',
+          items: [{ name: 'Bar' }],
+        },
+      ],
+    },
+    {
+      label: 'Foo',
+      items: [
+        {
+          label: 'Classes',
+          items: [{ name: 'Foo' }],
+        },
+      ],
+    },
   ])
 })
-
-// TODO(HiDeoo) Test sidebar entries for a single entry point
-// TODO(HiDeoo) Test sidebar entries for multiple entry points

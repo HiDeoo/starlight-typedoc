@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test'
+import type { Locator, Page } from '@playwright/test'
 
 export class DocPage {
   title: string | null = null
@@ -31,24 +31,54 @@ export class DocPage {
   }
 
   get typeDocSidebarLabel() {
-    return this.#typeDocSidebarDetails.getByRole('heading', {
+    return this.#typeDocSidebarRootDetails.getByRole('heading', {
       exact: true,
       level: 2,
       name: this.#expectedTypeDocSidebarLabel,
     })
   }
 
-  get typeDocSidebarGroups() {
-    return this.#typeDocSidebarDetails.locator('> ul')
-  }
-
   get #expectedTypeDocSidebarLabel() {
     return this.#useMultipleEntryPoints ? 'API' : 'API (auto-generated)'
   }
 
-  get #typeDocSidebarDetails() {
+  get #typeDocSidebarRootDetails() {
     return this.#sidebar
       .getByRole('listitem')
       .locator(`details:has(summary > h2:has-text("${this.#expectedTypeDocSidebarLabel}"))`)
   }
+
+  getTypeDocSidebarItems() {
+    return this.#getTypeDocSidebarChildrenItems(this.#typeDocSidebarRootDetails.locator('> ul'))
+  }
+
+  async #getTypeDocSidebarChildrenItems(list: Locator): Promise<TypeDocSidebarItem[]> {
+    const items: TypeDocSidebarItem[] = []
+
+    for (const category of await list.locator('> li > details').all()) {
+      items.push({
+        label: await category.locator(`> summary > h2`).textContent(),
+        items: await this.#getTypeDocSidebarChildrenItems(category.locator('> ul')),
+      })
+    }
+
+    for (const link of await list.locator('> li > a').all()) {
+      const name = await link.textContent()
+
+      items.push({ name: name ? name.trim() : null })
+    }
+
+    return items
+  }
+}
+
+type TypeDocSidebarItem = TypeDocSidebarItemGroup | TypeDocSidebarItemLink
+
+interface TypeDocSidebarItemLink {
+  name: string | null
+}
+
+interface TypeDocSidebarItemGroup {
+  items: (TypeDocSidebarItemGroup | TypeDocSidebarItemLink)[]
+  label: string | null
 }
