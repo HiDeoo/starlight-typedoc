@@ -11,10 +11,6 @@ const typeDocSidebarGroup = await generateTypeDoc({
 export default defineConfig({
   integrations: [
     starlight({
-      title: 'Starlight TypeDoc',
-      social: {
-        github: 'https://github.com/HiDeoo/starlight-typedoc',
-      },
       sidebar: [
         {
           label: 'Guides',
@@ -26,6 +22,10 @@ export default defineConfig({
           autogenerate: { directory: 'reference' },
         },
       ],
+      social: {
+        github: 'https://github.com/HiDeoo/starlight-typedoc',
+      },
+      title: 'Starlight TypeDoc',
     }),
   ],
   server: {

@@ -1,4 +1,4 @@
-export function addFrontmatter(content: string, frontmatter: Record<string, string>) {
+export function addFrontmatter(content: string, frontmatter: Record<string, boolean | string>) {
   const entries = Object.entries(frontmatter).map(([key, value]) => `${key}: ${value}`)
 
   if (entries.length === 0) {

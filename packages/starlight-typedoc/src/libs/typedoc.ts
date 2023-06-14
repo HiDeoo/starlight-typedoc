@@ -57,7 +57,7 @@ function onRendererPageEnd(event: PageEvent<DeclarationReflection>) {
     return
   }
 
-  event.contents = addFrontmatter(event.contents, { title: event.model.name })
+  event.contents = addFrontmatter(event.contents, { editUrl: false, title: event.model.name })
 }
 
 function getMarkdownPluginConfig(outputDirectory: string): TypeDocConfig {
