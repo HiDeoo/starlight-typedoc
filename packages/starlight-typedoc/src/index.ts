@@ -15,7 +15,15 @@ export async function generateTypeDoc(options: StarlightTypeDocOptions): Promise
     throw new Error('Failed to generate TypeDoc documentation.')
   }
 
-  await app.generateDocs(reflections, path.join('src/content/docs', outputDirectory))
+  const outputPath = path.join('src/content/docs', outputDirectory)
+
+  if (options.watch) {
+    app.convertAndWatch(async (reflections) => {
+      await app.generateDocs(reflections, outputPath)
+    })
+  } else {
+    await app.generateDocs(reflections, outputPath)
+  }
 
   return getSidebarGroupFromReflections(options.sidebarLabel, reflections, outputDirectory)
 }
@@ -45,4 +53,9 @@ export interface StarlightTypeDocOptions {
    * @see https://typedoc.org/options
    */
   typeDoc?: TypeDocConfig
+  /**
+   * Whether to watch the entry points for changes and regenerate the documentation when needed.
+   * @default false
+   */
+  watch?: boolean
 }
