@@ -1,8 +1,6 @@
 import type { DocPage } from './fixtures/DocPage'
 import { expect, test } from './test'
 
-const releaseStageAsideContent = 'This API should not be used in production and may be trimmed from a public release.'
-
 test('should use an aside for the deprecated tag with no content', async ({ docPage }) => {
   await docPage.goto('functions/functiondothingb')
 
@@ -25,16 +23,22 @@ test('should use an aside for the deprecated tag with custom content', async ({ 
   expect(content).toBe('Use the new doThingFaster function instead.')
 })
 
-test('should use an aside for the alpha tag', async ({ docPage }) => {
-  await docPage.goto('classes/classbar')
+const releaseStageCases: [releaseStage: string, url: string][] = [
+  ['Alpha', 'classes/classbar'],
+  ['Beta', 'variables/variableanobject'],
+]
 
-  const name = 'Alpha'
-  const { aside, title, content } = await getAside(docPage, name)
+for (const [releaseStage, url] of releaseStageCases) {
+  test(`should use an aside for the ${releaseStage.toLowerCase()} tag`, async ({ docPage }) => {
+    await docPage.goto(url)
 
-  await expect(aside).toBeVisible()
-  expect(title).toBe(name)
-  expect(content).toBe(releaseStageAsideContent)
-})
+    const { aside, title, content } = await getAside(docPage, releaseStage)
+
+    await expect(aside).toBeVisible()
+    expect(title).toBe(releaseStage)
+    expect(content).toBe('This API should not be used in production and may be trimmed from a public release.')
+  })
+}
 
 async function getAside(docPage: DocPage, name: string) {
   const aside = docPage.content.getByRole('complementary', { exact: true, name })

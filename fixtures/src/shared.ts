@@ -17,6 +17,7 @@ export const anObject = {
   bar: {
     /**
      * This is baz.
+     * @beta
      */
     baz: ['Baz'],
   },
