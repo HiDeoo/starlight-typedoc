@@ -1,0 +1,45 @@
+{
+  "name": "starlight-typedoc-example",
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "Astro integration for Starlight to generate documentation from TypeScript using TypeDoc.",
+  "author": "HiDeoo <github@hideoo.dev> (https://hideoo.dev)",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "dev:single-entrypoints": "astro dev --config astro.config.ts",
+    "dev:multiple-entrypoints": "astro dev --config astro.multiple-entrypoints.config.ts",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "prettier -c --cache . && eslint . --cache --max-warnings=0"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "0.1.2",
+    "astro": "2.6.1",
+    "starlight-typedoc": "workspace:*",
+    "typedoc": "0.24.8",
+    "typedoc-plugin-markdown": "4.0.0-next.16",
+    "typedoc-plugin-mdn-links": "3.0.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@8.6.1",
+  "private": true,
+  "sideEffects": false,
+  "keywords": [
+    "starlight",
+    "typedoc",
+    "typescript",
+    "documentation",
+    "astro"
+  ],
+  "homepage": "https://github.com/HiDeoo/starlight-typedoc",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HiDeoo/starlight-typedoc.git"
+  },
+  "bugs": "https://github.com/HiDeoo/starlight-typedoc/issues"
+}
