@@ -2,7 +2,7 @@
   "name": "starlight-typedoc",
   "version": "0.0.1",
   "license": "MIT",
-  "description": "// TODO(HiDeoo)",
+  "description": "Starlight integration to generate documentation from TypeScript using TypeDoc.",
   "author": "HiDeoo <github@hideoo.dev> (https://hideoo.dev)",
   "type": "module",
   "main": "dist/index.cjs",
@@ -57,7 +57,11 @@
     "dist"
   ],
   "keywords": [
-    "// TODO(HiDeoo)"
+    "starlight",
+    "typedoc",
+    "typescript",
+    "documentation",
+    "astro"
   ],
   "homepage": "https://github.com/HiDeoo/starlight-typedoc",
   "repository": {
