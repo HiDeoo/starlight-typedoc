@@ -8,7 +8,7 @@ import { comment as commentPartial } from 'typedoc-plugin-markdown/dist/theme/re
 import { getAsideMarkdown } from './starlight'
 
 const customBlockTagTypes = ['@deprecated'] as const
-const customModifiersTagTypes = ['@alpha', '@beta'] as const
+const customModifiersTagTypes = ['@alpha', '@beta', '@experimental'] as const
 
 const externalLinkRegex = /^(http|ftp)s?:\/\//
 
@@ -73,6 +73,10 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
         }
         case '@deprecated': {
           markdown = this.#addDeprecatedAside(markdown, customCommentTag.blockTag)
+          break
+        }
+        case '@experimental': {
+          markdown = this.#addReleaseStageAside(markdown, 'Experimental')
           break
         }
       }

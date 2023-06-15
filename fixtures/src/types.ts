@@ -5,6 +5,7 @@ export interface Thing {
   foo: string
   /**
    * This is bar.
+   * @experimental
    */
   bar: number
 }

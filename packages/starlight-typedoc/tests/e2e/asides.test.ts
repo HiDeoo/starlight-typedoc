@@ -26,6 +26,7 @@ test('should use an aside for the deprecated tag with custom content', async ({ 
 const releaseStageCases: [releaseStage: string, url: string][] = [
   ['Alpha', 'classes/classbar'],
   ['Beta', 'variables/variableanobject'],
+  ['Experimental', 'interfaces/interfacething'],
 ]
 
 for (const [releaseStage, url] of releaseStageCases) {
