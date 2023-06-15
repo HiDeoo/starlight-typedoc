@@ -7,6 +7,9 @@ import { comment as commentPartial } from 'typedoc-plugin-markdown/dist/theme/re
 
 import { getAsideMarkdown } from './starlight'
 
+const customBlockTagTypes = ['@deprecated'] as const
+const customModifiersTagTypes = ['@alpha'] as const
+
 const externalLinkRegex = /^(http|ftp)s?:\/\//
 
 export class StarlightTypeDocTheme extends MarkdownTheme {
@@ -36,27 +39,36 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
   override comment: (comment: Comment, headingLevel?: number | undefined) => string = (comment, headingLevel) => {
     const filteredComment = { ...comment } as Comment
     filteredComment.blockTags = []
+    filteredComment.modifierTags = new Set<string>()
 
-    const customCommentTags: CustomCommentTag[] = []
+    const customTags: CustomTag[] = []
 
     for (const blockTag of comment.blockTags) {
-      const isDeprecatedTag = blockTag.tag === '@deprecated'
-
-      if (isDeprecatedTag) {
-        customCommentTags.push({ blockTag, type: 'deprecated' })
+      if (this.#isCustomBlockCommentTagType(blockTag.tag)) {
+        customTags.push({ blockTag, type: blockTag.tag })
       } else {
         filteredComment.blockTags.push(blockTag)
       }
     }
 
+    for (const modifierTag of comment.modifierTags) {
+      if (this.#isCustomModifierCommentTagType(modifierTag)) {
+        customTags.push({ type: modifierTag })
+      } else {
+        filteredComment.modifierTags.add(modifierTag)
+      }
+    }
+
     let markdown = commentPartial(this, filteredComment, headingLevel)
 
-    for (const customCommentTag of customCommentTags) {
-      const { blockTag, type } = customCommentTag
-
-      switch (type) {
-        case 'deprecated': {
-          markdown = this.#addDeprecatedAside(markdown, blockTag)
+    for (const customCommentTag of customTags) {
+      switch (customCommentTag.type) {
+        case '@alpha': {
+          markdown = this.#addReleaseStageAside(markdown, 'Alpha')
+          break
+        }
+        case '@deprecated': {
+          markdown = this.#addDeprecatedAside(markdown, customCommentTag.blockTag)
           break
         }
       }
@@ -65,17 +77,43 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
     return markdown
   }
 
+  #isCustomBlockCommentTagType = (tag: string): tag is CustomBlockTagType => {
+    return customBlockTagTypes.includes(tag as CustomBlockTagType)
+  }
+
+  #isCustomModifierCommentTagType = (tag: string): tag is CustomModifierTagType => {
+    return customModifiersTagTypes.includes(tag as CustomModifierTagType)
+  }
+
+  #addAside(markdown: string, ...args: Parameters<typeof getAsideMarkdown>) {
+    return `${markdown}\n\n${getAsideMarkdown(...args)}`
+  }
+
   #addDeprecatedAside(markdown: string, blockTag: CommentTag) {
     const content =
       blockTag.content.length > 0
         ? this.commentParts(blockTag.content)
         : 'This API is no longer supported and may be removed in a future release.'
 
-    return `${markdown}\n\n${getAsideMarkdown('caution', 'Deprecated', content)}`
+    return this.#addAside(markdown, 'caution', 'Deprecated', content)
+  }
+
+  #addReleaseStageAside(markdown: string, title: string) {
+    return this.#addAside(
+      markdown,
+      'caution',
+      title,
+      'This API should not be used in production and may be trimmed from a public release.'
+    )
   }
 }
 
-interface CustomCommentTag {
-  blockTag: CommentTag
-  type: 'deprecated'
-}
+type CustomBlockTagType = (typeof customBlockTagTypes)[number]
+type CustomModifierTagType = (typeof customModifiersTagTypes)[number]
+
+type CustomTag =
+  | { type: CustomModifierTagType }
+  | {
+      blockTag: CommentTag
+      type: CustomBlockTagType
+    }

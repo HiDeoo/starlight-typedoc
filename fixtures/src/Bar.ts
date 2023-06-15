@@ -10,6 +10,7 @@ export class Bar {
 
   /**
    * This does something.
+   * @alpha
    */
   doSomething(element: HTMLElement) {
     element
