@@ -46,6 +46,7 @@ jobs:
 
       - name: Install Playwright browsers
         run: pnpm playwright install --with-deps chromium
+        working-directory: packages/starlight-typedoc
         if: steps.cache-playwright.outputs.cache-hit != 'true'
 
       - name: Build
