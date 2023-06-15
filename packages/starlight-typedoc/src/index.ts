@@ -30,7 +30,7 @@ export async function generateTypeDoc(options: StarlightTypeDocOptions): Promise
 
 export interface StarlightTypeDocOptions {
   /**
-   * The entry points to document.
+   * The path(s) to the entry point(s) to document.
    */
   entryPoints: TypeDocOptions['entryPoints']
   /**
@@ -54,7 +54,7 @@ export interface StarlightTypeDocOptions {
    */
   typeDoc?: TypeDocConfig
   /**
-   * Whether to watch the entry points for changes and regenerate the documentation when needed.
+   * Whether to watch the entry point(s) for changes and regenerate the documentation when needed.
    * @default false
    */
   watch?: boolean

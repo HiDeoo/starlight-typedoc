@@ -2,7 +2,7 @@
   "name": "starlight-typedoc-example",
   "version": "0.0.1",
   "license": "MIT",
-  "description": "Starlight integration to generate documentation from TypeScript using TypeDoc.",
+  "description": "Astro integration for Starlight to generate documentation from TypeScript using TypeDoc.",
   "author": "HiDeoo <github@hideoo.dev> (https://hideoo.dev)",
   "type": "module",
   "scripts": {
