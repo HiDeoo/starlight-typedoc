@@ -1,0 +1,95 @@
+---
+title: Getting Started
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+
+## Installation
+
+Install the Starlight TypeDoc package and its peer dependencies using your favorite package manager:
+
+<Tabs>
+  <TabItem label="pnpm">
+
+```shell
+pnpm add starlight-typedoc typedoc typedoc-plugin-markdown@next
+```
+
+  </TabItem>
+  <TabItem label="yarn">
+
+```shell
+yarn add starlight-typedoc typedoc typedoc-plugin-markdown@next
+```
+
+  </TabItem>
+  <TabItem label="npm">
+
+```shell
+npm i starlight-typedoc typedoc typedoc-plugin-markdown@next
+```
+
+  </TabItem>
+  <TabItem label="bun">
+
+```shell
+bun add starlight-typedoc typedoc typedoc-plugin-markdown@next
+```
+
+  </TabItem>
+  <TabItem label="ni">
+
+```shell
+ni starlight-typedoc typedoc typedoc-plugin-markdown@next
+```
+
+  </TabItem>
+</Tabs>
+
+:::note
+The Starlight TypeDoc package requires at least the version `4.0.0-next.14` of `typedoc-plugin-markdown`, hence the `@next` tag in the installation command.
+:::
+
+Update your [Astro configuration](https://docs.astro.build/en/guides/configuring-astro/#supported-config-file-types) to generate documentation from your TypeScript code:
+
+```ts
+import starlight from '@astrojs/starlight'
+import { defineConfig } from 'astro/config'
+import { generateTypeDoc } from 'starlight-typedoc'
+
+// Generate the documentation and get the associated sidebar group.
+const typeDocSidebarGroup = await generateTypeDoc({
+  entryPoints: ['../path/to/entry-point.ts'],
+  tsconfig: '../path/to/tsconfig.json',
+})
+
+export default defineConfig({
+  // …
+  integrations: [
+    starlight({
+      sidebar: [
+        {
+          label: 'Guides',
+          items: [{ label: 'Example Guide', link: '/guides/example/' }],
+        },
+        // Add the generated sidebar group to the sidebar.
+        typeDocSidebarGroup,
+      ],
+      title: 'My Docs',
+    }),
+  ],
+})
+```
+
+## Configuration
+
+The `generateTypeDoc` function returns a [`SidebarGroup`](https://starlight.astro.build/reference/configuration/#sidebargroup) object containing the generated documentation sidebar navigation items and can be used in the Starlight configuration. It accepts an object with the following properties:
+
+| Name           | Description                                                                                                               | Required |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------- | :------: |
+| `entryPoints`  | The path(s) to the entry point(s) to document.                                                                            |    ✅    |
+| `tsconfig`     | The path to the `tsconfig.json` file to use for the documentation generation.                                             |    ✅    |
+| `output`       | The output directory containing the generated documentation markdown files relative to the `src/content/docs/` directory. |          |
+| `sidebarLabel` | The generated documentation sidebar group label.                                                                          |          |
+| `typeDoc`      | Additional [TypeDoc configuration](https://typedoc.org/options).                                                          |          |
+| `watch`        | Whether to watch the entry point(s) for changes and regenerate the documentation when needed.                             |          |
