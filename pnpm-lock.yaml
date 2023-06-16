@@ -36,8 +36,8 @@ importers:
   example:
     dependencies:
       '@astrojs/starlight':
-        specifier: 0.1.2
-        version: 0.1.2(astro@2.5.5)
+        specifier: 0.2.0
+        version: 0.2.0(astro@2.5.5)
       astro:
         specifier: 2.5.5
         version: 2.5.5
@@ -154,8 +154,8 @@ packages:
       '@astrojs/markdown-remark': 2.2.1(astro@2.5.5)
       '@astrojs/prism': 2.1.2
       '@mdx-js/mdx': 2.3.0
-      acorn: 8.8.2
-      es-module-lexer: 1.2.1
+      acorn: 8.9.0
+      es-module-lexer: 1.3.0
       estree-util-visit: 1.2.1
       github-slugger: 1.5.0
       gray-matter: 4.0.3
@@ -188,8 +188,8 @@ packages:
       zod: 3.21.4
     dev: false
 
-  /@astrojs/starlight@0.1.2(astro@2.5.5):
-    resolution: {integrity: sha512-m07oOyJTuE107AoqUwt3oyCqwULp4bKHnTTvfUqVYxYz0NdDQoip+HEZTAyScA4tx99Pg2cq+pras67zfUHsxw==}
+  /@astrojs/starlight@0.2.0(astro@2.5.5):
+    resolution: {integrity: sha512-sAWpdsLOc3Wekbv47FWsx57Yc5a9VHcSMl0D6Uu+OL9Gud3cZ/MzCj+Z1XsVxeAZ1XjGBIYRsCBKuBbW5ME5EQ==}
     peerDependencies:
       astro: ^2.5.0
     dependencies:
@@ -207,7 +207,7 @@ packages:
       unified: 10.1.2
       unist-util-remove: 3.1.1
       unist-util-visit: 4.1.2
-      vfile: 5.3.7
+      vfile: 6.0.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -1055,7 +1055,7 @@ packages:
   /@types/sax@1.2.4:
     resolution: {integrity: sha512-pSAff4IAxJjfAXUG6tFkO7dsSbTmf8CtUpfhhZ5VhkRpC4628tJhh3+V6H1E+/Gs9piSzYKT5yzHO5M4GG9jkw==}
     dependencies:
-      '@types/node': 18.16.16
+      '@types/node': 17.0.45
     dev: false
 
   /@types/semver@7.5.0:
@@ -1259,6 +1259,15 @@ packages:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
       acorn: 8.8.2
+    dev: true
+
+  /acorn-jsx@5.3.2(acorn@8.9.0):
+    resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
+    peerDependencies:
+      acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
+    dependencies:
+      acorn: 8.9.0
+    dev: false
 
   /acorn-walk@8.2.0:
     resolution: {integrity: sha512-k+iyHEuPgSw6SbuDpGQM+06HQUa04DZ3o+F6CSzXMvvI5KMvnaEqXe+YVe555R9nn6GPt404fos4wcgpw12SDA==}
@@ -1269,6 +1278,12 @@ packages:
     resolution: {integrity: sha512-xjIYgE8HBrkpd/sJqOGNspf8uHG+NOHGOw6a/Urj8taM2EXfdNAH2oFcPeIFfsv3+kz/mJrS5VuMqbNLjCa2vw==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  /acorn@8.9.0:
+    resolution: {integrity: sha512-jaVNAFBHNLXspO543WnNNPZFRtavh3skAkITqD0/2aeMkKZTN+254PyhwxFYrk3vQ1xfY+2wbesJMs/JC8/PwQ==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+    dev: false
 
   /aggregate-error@3.1.0:
     resolution: {integrity: sha512-4I7Td01quW/RpocfNayFdFVk1qSuoh0E7JrbRJ16nH01HhKFQ88INq9Sd+nd72zqRySlr9BmDA8xlEJ6vJMrYA==}
@@ -2131,6 +2146,10 @@ packages:
 
   /es-module-lexer@1.2.1:
     resolution: {integrity: sha512-9978wrXM50Y4rTMmW5kXIC09ZdXQZqkE4mxhwkd8VbzsGkXGPgV4zWuqQJgCEzYngdo2dYDa0l8xhX4fkSwJSg==}
+    dev: false
+
+  /es-module-lexer@1.3.0:
+    resolution: {integrity: sha512-vZK7T0N2CBmBOixhmjdqx2gWVbFZ4DXZ/NyRMZVlJXPa7CyFS+/a4QQsDGDQy9ZfEzxFuNEsMLeQJnKP2p5/JA==}
     dev: false
 
   /es-set-tostringtag@2.0.1:
@@ -4056,8 +4075,8 @@ packages:
   /micromark-extension-mdxjs@1.0.1:
     resolution: {integrity: sha512-7YA7hF6i5eKOfFUzZ+0z6avRG52GpWR8DL+kN47y3f2KhxbBZMhmxe7auOeaTBrW2DenbbZTf1ea9tA2hDpC2Q==}
     dependencies:
-      acorn: 8.8.2
-      acorn-jsx: 5.3.2(acorn@8.8.2)
+      acorn: 8.9.0
+      acorn-jsx: 5.3.2(acorn@8.9.0)
       micromark-extension-mdx-expression: 1.0.8
       micromark-extension-mdx-jsx: 1.0.5
       micromark-extension-mdx-md: 1.0.1
@@ -5880,6 +5899,13 @@ packages:
       unist-util-stringify-position: 3.0.3
     dev: false
 
+  /vfile-message@4.0.1:
+    resolution: {integrity: sha512-Z1WqUoIK6T6LLoyO64ncUapmjlA84JqKRQFjcG0kZnnyysfq2rMyg5NvKhkQ16GH9FRCRT+Rk4G0aMxgKYS16g==}
+    dependencies:
+      '@types/unist': 2.0.6
+      unist-util-stringify-position: 3.0.3
+    dev: false
+
   /vfile@5.3.7:
     resolution: {integrity: sha512-r7qlzkgErKjobAmyNIkkSpizsFPYiUPuJb5pNW1RB4JcYVZhs4lIbVqk8XPk033CV/1z8ss5pkax8SuhGpcG8g==}
     dependencies:
@@ -5887,6 +5913,14 @@ packages:
       is-buffer: 2.0.5
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
+    dev: false
+
+  /vfile@6.0.0:
+    resolution: {integrity: sha512-wx7bOMmEl8bY5WPaXTGsK8YxPLoFiUiDg+m+lBACA1QGcagj3sUyxkX0F+W/Nmn4MHH7G4sXBekpYWRxQE2eHg==}
+    dependencies:
+      '@types/unist': 2.0.6
+      unist-util-stringify-position: 3.0.3
+      vfile-message: 4.0.1
     dev: false
 
   /vite-node@0.32.0(@types/node@18.16.16):
