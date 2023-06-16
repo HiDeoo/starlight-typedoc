@@ -2,8 +2,8 @@
   <h1>starlight-typedoc 📚</h1>
   <p>Astro integration for Starlight to generate documentation from TypeScript using TypeDoc.</p>
   <p>
-    <a href="https://github.com/HiDeoo/vercel-env-push/assets/494699/dd06da84-d28a-4d09-b9ee-a716ebf5bbbf" title="Screenshot of starlight-typedoc">
-      <img alt="Screenshot of starlight-typedoc" src="https://github.com/HiDeoo/vercel-env-push/assets/494699/dd06da84-d28a-4d09-b9ee-a716ebf5bbbf" width="520" />
+    <a href="https://i.imgur.com/EpHdpln.png" title="Screenshot of starlight-typedoc">
+      <img alt="Screenshot of starlight-typedoc" src="https://i.imgur.com/EpHdpln.png" width="520" />
     </a>
   </p>
 </div>
@@ -24,7 +24,7 @@ An [Astro](https://astro.build) _integration<sup>\*</sup>_ for [Starlight](https
 
 Some [TSDoc](https://tsdoc.org) tags uses a custom Markdown syntax, e.g. the `@deprecated`, `@alpha`, `@beta` and `@experimental` tags using Starlight [asides](https://starlight.astro.build/guides/authoring-content/#asides):
 
-<img alt="Screenshot of a deprecated tag in Starlight" src="https://github.com/HiDeoo/vercel-env-push/assets/494699/27036add-e111-46c2-93df-1459ce82be59" width="652" />
+<img alt="Screenshot of a deprecated tag in Starlight" src="https://i.imgur.com/18ZA5vN.png" width="672" />
 
 <br />
 <br />

@@ -53,7 +53,7 @@ test('should properly format links with anchors for multiple entry points', asyn
 })
 
 test('should disable edit links', async ({ docPage }) => {
-  await docPage.goto('../guides/example')
+  await docPage.goto('../guides/getting-started')
 
   await expect(docPage.page.getByRole('link', { exact: true, name: 'Edit page' })).toBeVisible()
 

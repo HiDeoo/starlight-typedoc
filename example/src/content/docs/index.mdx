@@ -1,16 +1,19 @@
 ---
 title: Welcome to Starlight TypeDoc
-description: Get started building your docs site with Starlight.
+description: Astro integration for Starlight to generate documentation from TypeScript using TypeDoc.
 template: splash
 hero:
-  tagline: Congrats on starting the Starlight TypeDoc example!
+  tagline: Astro integration for Starlight to generate documentation from TypeScript using TypeDoc.
   image:
     file: ../../assets/houston.webp
   actions:
-    - text: Check Example # TODO(HiDeoo)
-      link: /guides/example/
+    - text: Check Example
+      link: /api/functions/functiondothingc/
       icon: right-arrow
       variant: primary
+    - text: Getting Started
+      link: /guides/getting-started/
+      icon: rocket
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components'
@@ -22,6 +25,6 @@ import { Card, CardGrid } from '@astrojs/starlight/components'
     Edit your config in `astro.config.ts`.
   </Card>
   <Card title="Read the docs" icon="open-book">
-    Learn more in [the Starlight TypeDoc Docs](https://github.com/HiDeoo/starlight-typedoc).
+    Learn more in [the Starlight TypeDoc Docs](/guides/getting-started/).
   </Card>
 </CardGrid>
