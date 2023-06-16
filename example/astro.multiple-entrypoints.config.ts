@@ -14,13 +14,9 @@ export default defineConfig({
       sidebar: [
         {
           label: 'Guides',
-          items: [{ label: 'Example Guide', link: '/guides/example/' }],
+          items: [{ label: 'Getting Started', link: '/guides/getting-started/' }],
         },
         typeDocSidebarGroup,
-        {
-          label: 'Reference',
-          autogenerate: { directory: 'reference' },
-        },
       ],
       social: {
         github: 'https://github.com/HiDeoo/starlight-typedoc',
