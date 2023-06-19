@@ -1,9 +1,8 @@
 import path from 'node:path'
 
 import { slug } from 'github-slugger'
-import type { Comment, CommentTag, PageEvent, Reflection } from 'typedoc'
+import type { Comment, CommentTag, Options, PageEvent, Reflection } from 'typedoc'
 import { MarkdownTheme, MarkdownThemeRenderContext } from 'typedoc-plugin-markdown'
-import { comment as commentPartial } from 'typedoc-plugin-markdown/dist/theme/resources/partials/comment'
 
 import { getAsideMarkdown } from './starlight'
 
@@ -19,6 +18,13 @@ export class StarlightTypeDocTheme extends MarkdownTheme {
 }
 
 class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
+  #markdownThemeRenderContext: MarkdownThemeRenderContext
+
+  constructor(event: PageEvent<Reflection>, options: Options) {
+    super(event, options)
+    this.#markdownThemeRenderContext = new MarkdownThemeRenderContext(event, options)
+  }
+
   override relativeURL: (url: string | undefined) => string | null = (url) => {
     if (!url) {
       return null
@@ -59,7 +65,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
       }
     }
 
-    let markdown = commentPartial(this, filteredComment, headingLevel)
+    let markdown = this.#markdownThemeRenderContext.comment(filteredComment, headingLevel)
 
     for (const customCommentTag of customTags) {
       switch (customCommentTag.type) {
