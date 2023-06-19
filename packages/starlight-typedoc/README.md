@@ -31,7 +31,7 @@ Some [TSDoc](https://tsdoc.org) tags uses a custom Markdown syntax, e.g. the `@d
 <br />
 <br />
 
-<sup>\*: `starlight-astro` is currently not available as an [Astro Integration](https://docs.astro.build/en/reference/integrations-reference/) due to current Starlight limitations but the goal is to make it available as one in the future.</sup>
+<sup>\*: `starlight-typedoc` is currently not available as an [Astro Integration](https://docs.astro.build/en/reference/integrations-reference/) due to current Starlight limitations but the goal is to make it available as one in the future.</sup>
 
 ## Installation
 
