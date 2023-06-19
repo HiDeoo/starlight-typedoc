@@ -72,7 +72,7 @@ Update your [Astro configuration](https://docs.astro.build/en/guides/configuring
 
 ## Configuration
 
-The `generateTypeDoc` function returns a [`SidebarGroup`](https://starlight.astro.build/reference/configuration/#sidebargroup) object containing the generated documentation sidebar navigation items and can be used in the Starlight configuration. It accepts an object with the following properties:
+The `generateTypeDoc` function returns a group of [`SidebarItem`](https://starlight.astro.build/reference/configuration/#sidebaritem) containing the generated documentation sidebar navigation items and can be used in the Starlight configuration. It accepts an object with the following properties:
 
 | Name           | Description                                                                                                               | Required |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------- | :------: |
