@@ -22,6 +22,8 @@
 
 An [Astro](https://astro.build) _integration<sup>\*</sup>_ for [Starlight](https://starlight.astro.build) using [TypeDoc](https://typedoc.org) and [typedoc-plugin-markdown](https://github.com/tgreyuk/typedoc-plugin-markdown) to generate documentation from TypeScript code.
 
+Check out the [example](https://starlight-typedoc-example.vercel.app) for a preview of the generated documentation.
+
 Some [TSDoc](https://tsdoc.org) tags uses a custom Markdown syntax, e.g. the `@deprecated`, `@alpha`, `@beta` and `@experimental` tags using Starlight [asides](https://starlight.astro.build/guides/authoring-content/#asides):
 
 <img alt="Screenshot of a deprecated tag in Starlight" src="https://i.imgur.com/18ZA5vN.png" width="672" />
