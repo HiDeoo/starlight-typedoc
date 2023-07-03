@@ -25,7 +25,7 @@ export async function generateTypeDoc(options: StarlightTypeDocOptions): Promise
     await app.generateDocs(reflections, outputPath)
   }
 
-  return getSidebarGroupFromReflections(options.sidebarLabel, reflections, outputDirectory)
+  return getSidebarGroupFromReflections(options.sidebar, reflections, outputDirectory)
 }
 
 export interface StarlightTypeDocOptions {
@@ -40,10 +40,9 @@ export interface StarlightTypeDocOptions {
    */
   output?: string
   /**
-   * The generated documentation sidebar group label.
-   * @default 'API'
+   * The sidebar configuration for the generated documentation.
    */
-  sidebarLabel?: string
+  sidebar?: StarlightTypeDocSidebarOptions
   /**
    * The path to the `tsconfig.json` file to use for the documentation generation.
    */
@@ -58,4 +57,18 @@ export interface StarlightTypeDocOptions {
    * @default false
    */
   watch?: boolean
+}
+
+export interface StarlightTypeDocSidebarOptions {
+  /**
+   * Wheter the generated documentation sidebar group should be collapsed by default.
+   * Note that nested sidebar groups are always collapsed.
+   * @default false
+   */
+  collapsed?: boolean
+  /**
+   * The generated documentation sidebar group label.
+   * @default 'API'
+   */
+  label?: string
 }

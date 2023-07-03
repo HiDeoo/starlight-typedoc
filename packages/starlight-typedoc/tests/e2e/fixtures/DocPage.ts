@@ -57,6 +57,7 @@ export class DocPage {
 
     for (const category of await list.locator('> li > details').all()) {
       items.push({
+        collapsed: !(await category.getAttribute('open')),
         label: await category.locator(`> summary > h2`).textContent(),
         items: await this.#getTypeDocSidebarChildrenItems(category.locator('> ul')),
       })
@@ -70,6 +71,10 @@ export class DocPage {
 
     return items
   }
+
+  async isTypeDocSidebarCollapsed() {
+    return (await this.#typeDocSidebarRootDetails.getAttribute('open')) === null
+  }
 }
 
 type TypeDocSidebarItem = TypeDocSidebarItemGroup | TypeDocSidebarItemLink
@@ -79,6 +84,7 @@ interface TypeDocSidebarItemLink {
 }
 
 interface TypeDocSidebarItemGroup {
+  collapsed: boolean
   items: (TypeDocSidebarItemGroup | TypeDocSidebarItemLink)[]
   label: string | null
 }
