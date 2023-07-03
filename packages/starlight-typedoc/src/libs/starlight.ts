@@ -3,15 +3,23 @@ import path from 'node:path'
 import { slug } from 'github-slugger'
 import type { DeclarationReflection, ProjectReflection } from 'typedoc'
 
+import type { StarlightTypeDocSidebarOptions } from '..'
+
+const sidebarDefaultOptions = {
+  collapsed: false,
+  label: 'API',
+} satisfies StarlightTypeDocSidebarOptions
+
 export function getSidebarGroupFromReflections(
-  label = 'API',
+  options: StarlightTypeDocSidebarOptions = {},
   reflections: ProjectReflection | DeclarationReflection,
   outputDirectory: string
 ): SidebarGroup {
   const groups = reflections.groups ?? []
 
   return {
-    label,
+    label: options.label ?? sidebarDefaultOptions.label,
+    collapsed: options.collapsed ?? sidebarDefaultOptions.collapsed,
     items: groups
       .flatMap((group) => {
         if (group.title === 'Modules') {
@@ -22,13 +30,21 @@ export function getSidebarGroupFromReflections(
 
             const url = path.parse(child.url)
 
-            return getSidebarGroupFromReflections(child.name, child, `${outputDirectory}/${slug(url.dir)}`)
+            return getSidebarGroupFromReflections(
+              { collapsed: true, label: child.name },
+              child,
+              `${outputDirectory}/${url.dir}`
+            )
           })
         }
 
         return {
+          collapsed: true,
           label: group.title,
-          autogenerate: { directory: `${outputDirectory}/${slug(group.title.toLowerCase())}` },
+          autogenerate: {
+            collapsed: true,
+            directory: `${outputDirectory}/${slug(group.title.toLowerCase())}`,
+          },
         }
       })
       .filter((item): item is SidebarGroup => item !== undefined),
@@ -43,13 +59,16 @@ ${content}
 
 export type SidebarGroup =
   | {
+      collapsed?: boolean
       items: (LinkItem | SidebarGroup)[]
       label: string
     }
   | {
       autogenerate: {
+        collapsed?: boolean
         directory: string
       }
+      collapsed?: boolean
       label: string
     }
 
