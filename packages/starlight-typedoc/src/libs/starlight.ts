@@ -33,7 +33,7 @@ export function getSidebarGroupFromReflections(
             return getSidebarGroupFromReflections(
               { collapsed: true, label: child.name },
               child,
-              `${outputDirectory}/${slug(url.dir)}`
+              `${outputDirectory}/${url.dir}`
             )
           })
         }
