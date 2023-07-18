@@ -8,7 +8,13 @@ import { bootstrapApp, type TypeDocConfig } from './libs/typedoc'
 export async function generateTypeDoc(options: StarlightTypeDocOptions): Promise<SidebarGroup> {
   const outputDirectory = options.output ?? 'api'
 
-  const app = await bootstrapApp(options.entryPoints, options.tsconfig, options.typeDoc, outputDirectory)
+  const app = await bootstrapApp(
+    options.entryPoints,
+    options.tsconfig,
+    options.typeDoc,
+    outputDirectory,
+    options.pagination ?? false
+  )
   const reflections = app.convert()
 
   if (!reflections?.groups || reflections.groups.length === 0) {
@@ -43,6 +49,11 @@ export interface StarlightTypeDocOptions {
    * The sidebar configuration for the generated documentation.
    */
   sidebar?: StarlightTypeDocSidebarOptions
+  /**
+   * Whether the footer should include previous and next page links for the generated documentation.
+   * @default false
+   */
+  pagination?: boolean
   /**
    * The path to the `tsconfig.json` file to use for the documentation generation.
    */
