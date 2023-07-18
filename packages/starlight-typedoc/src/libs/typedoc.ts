@@ -27,13 +27,14 @@ export async function bootstrapApp(
   entryPoints: TypeDocOptions['entryPoints'],
   tsconfig: TypeDocOptions['tsconfig'],
   config: TypeDocConfig = {},
-  outputDirectory: string
+  outputDirectory: string,
+  pagination: boolean
 ) {
   const app = new Application()
   app.logger = new StarlightTypeDocLogger()
   app.options.addReader(new TSConfigReader())
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
-  app.renderer.on(PageEvent.END, onRendererPageEnd)
+  app.renderer.on(PageEvent.END, (event: PageEvent<DeclarationReflection>) => onRendererPageEnd(event, pagination))
 
   loadMarkdownPlugin(app)
 
@@ -48,7 +49,7 @@ export async function bootstrapApp(
   return app
 }
 
-function onRendererPageEnd(event: PageEvent<DeclarationReflection>) {
+function onRendererPageEnd(event: PageEvent<DeclarationReflection>, pagination: boolean) {
   if (!event.contents) {
     return
   } else if (/^module\..*\/README\.md$/.test(event.url)) {
@@ -57,7 +58,12 @@ function onRendererPageEnd(event: PageEvent<DeclarationReflection>) {
     return
   }
 
-  event.contents = addFrontmatter(event.contents, { editUrl: false, title: event.model.name })
+  event.contents = addFrontmatter(event.contents, {
+    editUrl: false,
+    next: pagination,
+    prev: pagination,
+    title: event.model.name,
+  })
 }
 
 function getMarkdownPluginConfig(outputDirectory: string): TypeDocConfig {

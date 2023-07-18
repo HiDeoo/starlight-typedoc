@@ -5,6 +5,7 @@ import { generateTypeDoc } from 'starlight-typedoc'
 const typeDocSidebarGroup = await generateTypeDoc({
   entryPoints: ['../fixtures/src/Bar.ts', '../fixtures/src/Foo.ts'],
   output: 'api-multiple-entrypoints',
+  pagination: true,
   sidebar: {
     collapsed: true,
   },

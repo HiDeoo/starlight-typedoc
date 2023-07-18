@@ -79,6 +79,7 @@ The `generateTypeDoc` function returns a group of [`SidebarItem`](https://starli
 | `entryPoints` | The path(s) to the entry point(s) to document.                                                                            |    ✅    |
 | `tsconfig`    | The path to the `tsconfig.json` file to use for the documentation generation.                                             |    ✅    |
 | `output`      | The output directory containing the generated documentation markdown files relative to the `src/content/docs/` directory. |          |
+| `pagination`  | Whether the footer should include previous and next page links for the generated documentation.                           |          |
 | `sidebar`     | The generated documentation [sidebar configuration](#sidebar-configuration).                                              |          |
 | `typeDoc`     | Additional [TypeDoc configuration](https://typedoc.org/options).                                                          |          |
 | `watch`       | Whether to watch the entry point(s) for changes and regenerate the documentation when needed.                             |          |
