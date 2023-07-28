@@ -1,5 +1,5 @@
 import { Application, type DeclarationReflection, PageEvent, TSConfigReader, type TypeDocOptions } from 'typedoc'
-import { load as loadMarkdownPlugin } from 'typedoc-plugin-markdown'
+import { load as loadMarkdownPlugin, type PluginOptions } from 'typedoc-plugin-markdown'
 
 import { StarlightTypeDocLogger } from './logger'
 import { addFrontmatter } from './markdown'
@@ -74,4 +74,4 @@ function getMarkdownPluginConfig(outputDirectory: string): TypeDocConfig {
   }
 }
 
-export type TypeDocConfig = Partial<Omit<TypeDocOptions, 'entryPoints' | 'tsconfig'>>
+export type TypeDocConfig = Partial<Omit<TypeDocOptions, 'entryPoints' | 'tsconfig'> & PluginOptions>
