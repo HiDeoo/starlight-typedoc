@@ -62,7 +62,8 @@ function onRendererPageEnd(event: PageEvent<DeclarationReflection>, pagination: 
     editUrl: false,
     next: pagination,
     prev: pagination,
-    title: event.model.name,
+    // Wrap in quotes to prevent issue with special characters in frontmatter
+    title: `"${event.model.name}"`,
   })
 }
 
