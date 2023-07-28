@@ -1,5 +1,5 @@
 {
-  "name": "starlight-typedoc-fixtures",
+  "name": "@starlight-typedoc/fixtures",
   "version": "0.0.1",
   "license": "MIT",
   "description": "Astro integration for Starlight to generate documentation from TypeScript using TypeDoc.",

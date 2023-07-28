@@ -10,6 +10,9 @@ const typeDocSidebarGroup = await generateTypeDoc({
     collapsed: true,
   },
   tsconfig: '../fixtures/tsconfig.json',
+  typeDoc: {
+    readme: undefined,
+  },
 })
 
 export default defineConfig({
