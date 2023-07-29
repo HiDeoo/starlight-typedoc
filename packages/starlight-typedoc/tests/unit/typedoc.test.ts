@@ -96,7 +96,7 @@ test('should support overriding typedoc-plugin-markdown readme and index page ge
   await generateTypeDoc({
     ...starlightTypeDocOptions,
     typeDoc: {
-      readme: undefined,
+      readme: 'README.md',
       skipIndexPage: false,
     },
     entryPoints: ['../../fixtures/src/Bar.ts', '../../fixtures/src/Foo.ts'],
