@@ -40,8 +40,8 @@ export async function bootstrapApp(
 
   await app.bootstrapWithPlugins({
     ...defaultTypeDocConfig,
-    ...config,
     ...getMarkdownPluginConfig(outputDirectory),
+    ...config,
     entryPoints,
     tsconfig,
   })
