@@ -108,3 +108,52 @@ test('should support overriding typedoc-plugin-markdown readme and index page ge
   expect(filePaths.some((filePath) => filePath.endsWith('API.md'))).toBe(true)
   expect(filePaths.some((filePath) => filePath.endsWith('README.md'))).toBe(true)
 })
+
+test('should output modules with index', async () => {
+  await generateTypeDoc({
+    ...starlightTypeDocOptions,
+    typeDoc: {
+      outputFileStrategy: 'modules',
+      entryFileName: 'index.md',
+      skipIndexPage: false,
+      flattenOutputFiles: true,
+    },
+    entryPoints: ['../../fixtures/src/module.ts'],
+  })
+
+  const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
+  const filePaths = writeFileSyncSpy.mock.calls.map((call) => call[0].toString())
+
+  expect(filePaths.some((filePath) => filePath.endsWith('index.md'))).toBe(true)
+  expect(filePaths.some((filePath) => filePath.endsWith('Namespace.bar.md'))).toBe(true)
+  expect(filePaths.some((filePath) => filePath.endsWith('Namespace.foo.md'))).toBe(true)
+  expect(filePaths.some((filePath) => filePath.endsWith('Namespace.functions.md'))).toBe(true)
+  expect(filePaths.some((filePath) => filePath.endsWith('Namespace.shared.md'))).toBe(true)
+  expect(filePaths.some((filePath) => filePath.endsWith('Namespace.types.md'))).toBe(true)
+})
+
+test('should output index with correct module path', async () => {
+  await generateTypeDoc({
+    ...starlightTypeDocOptions,
+    typeDoc: {
+      outputFileStrategy: 'modules',
+      entryFileName: 'index.md',
+      skipIndexPage: false,
+      flattenOutputFiles: true,
+    },
+    entryPoints: ['../../fixtures/src/module.ts'],
+  })
+
+  const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
+  const [, indexString] = writeFileSyncSpy.mock.calls.find((call) => call[0].toString().endsWith('index.md')) as [
+    fs.PathOrFileDescriptor,
+    string
+  ]
+  const indexContents = indexString.split('\n')
+
+  expect(indexContents.find((line) => line.startsWith('- [bar]'))).toBe('- [bar](/api/namespacebar/)')
+  expect(indexContents.find((line) => line.startsWith('- [foo]'))).toBe('- [foo](/api/namespacefoo/)')
+  expect(indexContents.find((line) => line.startsWith('- [functions]'))).toBe('- [functions](/api/namespacefunctions/)')
+  expect(indexContents.find((line) => line.startsWith('- [shared]'))).toBe('- [shared](/api/namespaceshared/)')
+  expect(indexContents.find((line) => line.startsWith('- [types]'))).toBe('- [types](/api/namespacetypes/)')
+})

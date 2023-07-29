@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "dev:single-entrypoints": "astro dev --config astro.config.ts",
+    "dev:module": "astro dev --config astro.module.config.ts",
     "dev:multiple-entrypoints": "astro dev --config astro.multiple-entrypoints.config.ts",
     "start": "astro dev",
     "build": "pnpm -F starlight-typedoc build && astro build",
