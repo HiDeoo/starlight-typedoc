@@ -145,15 +145,17 @@ test('should output index with correct module path', async () => {
   })
 
   const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
-  const [, indexString] = writeFileSyncSpy.mock.calls.find((call) => call[0].toString().endsWith('index.md')) as [
+  const [, content] = writeFileSyncSpy.mock.calls.find((call) => call[0].toString().endsWith('index.md')) as [
     fs.PathOrFileDescriptor,
     string
   ]
-  const indexContents = indexString.split('\n')
 
-  expect(indexContents.find((line) => line.startsWith('- [bar]'))).toBe('- [bar](/api/namespacebar/)')
-  expect(indexContents.find((line) => line.startsWith('- [foo]'))).toBe('- [foo](/api/namespacefoo/)')
-  expect(indexContents.find((line) => line.startsWith('- [functions]'))).toBe('- [functions](/api/namespacefunctions/)')
-  expect(indexContents.find((line) => line.startsWith('- [shared]'))).toBe('- [shared](/api/namespaceshared/)')
-  expect(indexContents.find((line) => line.startsWith('- [types]'))).toBe('- [types](/api/namespacetypes/)')
+  expect(
+    content.includes(`
+- [bar](/api/namespacebar/)
+- [foo](/api/namespacefoo/)
+- [functions](/api/namespacefunctions/)
+- [shared](/api/namespaceshared/)
+- [types](/api/namespacetypes/)`)
+  ).toBe(true)
 })
