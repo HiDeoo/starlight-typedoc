@@ -136,6 +136,7 @@ test('should output index with correct module path', async () => {
   await generateTypeDoc({
     ...starlightTypeDocOptions,
     typeDoc: {
+      ...starlightTypeDocOptions.typeDoc,
       outputFileStrategy: 'modules',
       entryFileName: 'index.md',
       skipIndexPage: false,
