@@ -34,12 +34,19 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
 
     const filePath = path.parse(url)
     const [, anchor] = filePath.base.split('#')
-    const segments = filePath.dir.split('/').map((segment) => slug(segment))
+    const segments = filePath.dir
+      .split('/')
+      .map((segment) => slug(segment))
+      .filter((segment) => segment !== '')
     const baseUrl = this.options.getValue('baseUrl')
 
-    return `${typeof baseUrl === 'string' ? baseUrl : ''}${segments.join('/')}/${slug(filePath.name)}/${
-      anchor && anchor.length > 0 ? `#${anchor}` : ''
-    }`
+    let constructedUrl = typeof baseUrl === 'string' ? baseUrl : ''
+    constructedUrl += segments.length > 0 ? `${segments.join('/')}/` : ''
+    constructedUrl += slug(filePath.name)
+    constructedUrl += '/'
+    constructedUrl += anchor && anchor.length > 0 ? `#${anchor}` : ''
+
+    return constructedUrl
   }
 
   override comment: (comment: Comment, headingLevel?: number | undefined) => string = (comment, headingLevel) => {

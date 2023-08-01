@@ -96,6 +96,7 @@ test('should support overriding typedoc-plugin-markdown readme and index page ge
   await generateTypeDoc({
     ...starlightTypeDocOptions,
     typeDoc: {
+      ...starlightTypeDocOptions.typeDoc,
       readme: 'README.md',
       skipIndexPage: false,
     },
@@ -107,4 +108,59 @@ test('should support overriding typedoc-plugin-markdown readme and index page ge
 
   expect(filePaths.some((filePath) => filePath.endsWith('API.md'))).toBe(true)
   expect(filePaths.some((filePath) => filePath.endsWith('README.md'))).toBe(true)
+})
+
+test('should output modules with index', async () => {
+  await generateTypeDoc({
+    ...starlightTypeDocOptions,
+    typeDoc: {
+      ...starlightTypeDocOptions.typeDoc,
+      outputFileStrategy: 'modules',
+      entryFileName: 'index.md',
+      skipIndexPage: false,
+      flattenOutputFiles: true,
+    },
+    entryPoints: ['../../fixtures/src/module.ts'],
+  })
+
+  const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
+  const filePaths = writeFileSyncSpy.mock.calls.map((call) => call[0].toString())
+
+  expect(filePaths).toEqual([
+    expect.stringMatching(/index\.md$/),
+    expect.stringMatching(/Namespace\.bar\.md$/),
+    expect.stringMatching(/Namespace\.foo\.md$/),
+    expect.stringMatching(/Namespace\.functions\.md$/),
+    expect.stringMatching(/Namespace\.shared\.md$/),
+    expect.stringMatching(/Namespace\.types\.md$/),
+  ])
+})
+
+test('should output index with correct module path', async () => {
+  await generateTypeDoc({
+    ...starlightTypeDocOptions,
+    typeDoc: {
+      ...starlightTypeDocOptions.typeDoc,
+      outputFileStrategy: 'modules',
+      entryFileName: 'index.md',
+      skipIndexPage: false,
+      flattenOutputFiles: true,
+    },
+    entryPoints: ['../../fixtures/src/module.ts'],
+  })
+
+  const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
+  const [, content] = writeFileSyncSpy.mock.calls.find((call) => call[0].toString().endsWith('index.md')) as [
+    fs.PathOrFileDescriptor,
+    string
+  ]
+
+  expect(
+    content.includes(`
+- [bar](/api/namespacebar/)
+- [foo](/api/namespacefoo/)
+- [functions](/api/namespacefunctions/)
+- [shared](/api/namespaceshared/)
+- [types](/api/namespacetypes/)`)
+  ).toBe(true)
 })
