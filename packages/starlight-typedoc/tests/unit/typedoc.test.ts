@@ -114,6 +114,7 @@ test('should output modules with index', async () => {
   await generateTypeDoc({
     ...starlightTypeDocOptions,
     typeDoc: {
+      ...starlightTypeDocOptions.typeDoc,
       outputFileStrategy: 'modules',
       entryFileName: 'index.md',
       skipIndexPage: false,
@@ -125,12 +126,14 @@ test('should output modules with index', async () => {
   const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
   const filePaths = writeFileSyncSpy.mock.calls.map((call) => call[0].toString())
 
-  expect(filePaths.some((filePath) => filePath.endsWith('index.md'))).toBe(true)
-  expect(filePaths.some((filePath) => filePath.endsWith('Namespace.bar.md'))).toBe(true)
-  expect(filePaths.some((filePath) => filePath.endsWith('Namespace.foo.md'))).toBe(true)
-  expect(filePaths.some((filePath) => filePath.endsWith('Namespace.functions.md'))).toBe(true)
-  expect(filePaths.some((filePath) => filePath.endsWith('Namespace.shared.md'))).toBe(true)
-  expect(filePaths.some((filePath) => filePath.endsWith('Namespace.types.md'))).toBe(true)
+  expect(filePaths).toEqual([
+    expect.stringMatching(/index\.md$/),
+    expect.stringMatching(/Namespace\.bar\.md$/),
+    expect.stringMatching(/Namespace\.foo\.md$/),
+    expect.stringMatching(/Namespace\.functions\.md$/),
+    expect.stringMatching(/Namespace\.shared\.md$/),
+    expect.stringMatching(/Namespace\.types\.md$/),
+  ])
 })
 
 test('should output index with correct module path', async () => {
