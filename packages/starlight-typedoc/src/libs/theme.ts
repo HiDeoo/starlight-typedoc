@@ -1,7 +1,7 @@
 import path from 'node:path'
 
 import { slug } from 'github-slugger'
-import type { Comment, CommentTag, Options, PageEvent, Reflection } from 'typedoc'
+import { Reflection, type Comment, type CommentTag, type Options, type PageEvent } from 'typedoc'
 import { MarkdownTheme, MarkdownThemeRenderContext } from 'typedoc-plugin-markdown'
 
 import { getAsideMarkdown } from './starlight'
@@ -71,6 +71,22 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
         filteredComment.modifierTags.add(modifierTag)
       }
     }
+
+    filteredComment.summary = comment.summary.map((part) => {
+      if (
+        part.kind === 'inline-tag' &&
+        (part.tag === '@link' || part.tag === '@linkcode' || part.tag === '@linkplain') &&
+        part.target instanceof Reflection
+      ) {
+        const partURL = this.relativeURL(part.target.url)
+
+        if (partURL) {
+          return { ...part, target: partURL }
+        }
+      }
+
+      return part
+    })
 
     let markdown = this.#markdownThemeRenderContext.comment(filteredComment, headingLevel)
 

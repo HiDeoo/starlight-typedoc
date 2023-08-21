@@ -23,6 +23,8 @@ export function doThingC() {
 
 /**
  * A function that does another thing but faster.
+ *
+ * This is a faster alternative to {@link doThingB}.
  */
 export function doThingFaster() {
   return 'thingB'

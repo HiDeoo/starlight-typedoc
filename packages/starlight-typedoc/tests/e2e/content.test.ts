@@ -73,3 +73,10 @@ test('should support TypeDoc plugins', async ({ docPage }) => {
 
   expect(mdnLinkHref?.startsWith('https://developer.mozilla.org')).toBe(true)
 })
+
+test('should properly format links in summary', async ({ docPage }) => {
+  await docPage.goto('functions/functiondothingfaster')
+
+  await docPage.content.getByRole('link', { exact: true, name: 'doThingB' }).click()
+  await docPage.page.waitForURL('**/api/functions/functiondothingb/')
+})
