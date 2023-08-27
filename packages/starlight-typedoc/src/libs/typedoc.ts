@@ -1,5 +1,5 @@
 import { Application, type DeclarationReflection, PageEvent, TSConfigReader, type TypeDocOptions } from 'typedoc'
-import { load as loadMarkdownPlugin, type PluginOptions } from 'typedoc-plugin-markdown'
+import type { PluginOptions } from 'typedoc-plugin-markdown'
 
 import { StarlightTypeDocLogger } from './logger'
 import { addFrontmatter } from './markdown'
@@ -30,21 +30,19 @@ export async function bootstrapApp(
   outputDirectory: string,
   pagination: boolean
 ) {
-  const app = new Application()
+  const app = await Application.bootstrapWithPlugins({
+    ...defaultTypeDocConfig,
+    ...getMarkdownPluginConfig(outputDirectory),
+    ...config,
+    // typedoc-plugin-markdown must be applied here so that it isn't overwritten by any additional applied plugins
+    plugin: [...(config.plugin ?? []), 'typedoc-plugin-markdown'],
+    entryPoints,
+    tsconfig,
+  })
   app.logger = new StarlightTypeDocLogger()
   app.options.addReader(new TSConfigReader())
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
   app.renderer.on(PageEvent.END, (event: PageEvent<DeclarationReflection>) => onRendererPageEnd(event, pagination))
-
-  loadMarkdownPlugin(app)
-
-  await app.bootstrapWithPlugins({
-    ...defaultTypeDocConfig,
-    ...getMarkdownPluginConfig(outputDirectory),
-    ...config,
-    entryPoints,
-    tsconfig,
-  })
 
   return app
 }
