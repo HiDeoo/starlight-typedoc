@@ -52,7 +52,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
   override comment: (comment: Comment, headingLevel?: number | undefined) => string = (comment, headingLevel) => {
     const filteredComment = { ...comment } as Comment
     filteredComment.blockTags = []
-    filteredComment.modifierTags = new Set<string>()
+    filteredComment.modifierTags = new Set<`@${string}`>()
 
     const customTags: CustomTag[] = []
 

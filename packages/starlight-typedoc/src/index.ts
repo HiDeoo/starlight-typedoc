@@ -15,7 +15,7 @@ export async function generateTypeDoc(options: StarlightTypeDocOptions): Promise
     outputDirectory,
     options.pagination ?? false
   )
-  const reflections = app.convert()
+  const reflections = await app.convert()
 
   if (!reflections?.groups || reflections.groups.length === 0) {
     throw new Error('Failed to generate TypeDoc documentation.')
