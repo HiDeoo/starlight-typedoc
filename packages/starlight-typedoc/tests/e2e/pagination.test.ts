@@ -13,7 +13,7 @@ test('should not include pagination links by default', async ({ docPage }) => {
 test('should not include pagination links if configured to do so', async ({ docPage }) => {
   docPage.useMultipleEntryPoints()
 
-  await docPage.goto('modulebar/classes/classbar')
+  await docPage.goto('bar/classes/classbar')
 
   const { next, prev } = getPrevNext(docPage)
 
