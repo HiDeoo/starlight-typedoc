@@ -1,4 +1,11 @@
-import { Application, type DeclarationReflection, PageEvent, TSConfigReader, type TypeDocOptions } from 'typedoc'
+import {
+  Application,
+  type DeclarationReflection,
+  PageEvent,
+  TSConfigReader,
+  type TypeDocOptions,
+  ParameterType,
+} from 'typedoc'
 import type { PluginOptions } from 'typedoc-plugin-markdown'
 
 import { StarlightTypeDocLogger } from './logger'
@@ -17,7 +24,6 @@ const defaultTypeDocConfig: TypeDocConfig = {
 const markdownPluginConfig: TypeDocConfig = {
   hideBreadcrumbs: true,
   hideInPageTOC: true,
-  hideKindPrefix: true,
   hidePageHeader: true,
   hidePageTitle: true,
   skipIndexPage: true,
@@ -28,11 +34,11 @@ export async function bootstrapApp(
   tsconfig: TypeDocOptions['tsconfig'],
   config: TypeDocConfig = {},
   outputDirectory: string,
-  pagination: boolean
+  pagination: boolean,
 ) {
   const app = await Application.bootstrapWithPlugins({
     ...defaultTypeDocConfig,
-    ...getMarkdownPluginConfig(outputDirectory),
+    ...markdownPluginConfig,
     ...config,
     // typedoc-plugin-markdown must be applied here so that it isn't overwritten by any additional applied plugins
     plugin: [...(config.plugin ?? []), 'typedoc-plugin-markdown'],
@@ -42,7 +48,15 @@ export async function bootstrapApp(
   app.logger = new StarlightTypeDocLogger()
   app.options.addReader(new TSConfigReader())
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
-  app.renderer.on(PageEvent.END, (event: PageEvent<DeclarationReflection>) => onRendererPageEnd(event, pagination))
+  app.renderer.on(PageEvent.END, (event: PageEvent<DeclarationReflection>) => {
+    onRendererPageEnd(event, pagination)
+  })
+  app.options.addDeclaration({
+    defaultValue: `/${outputDirectory}${outputDirectory.endsWith('/') ? '' : '/'}`,
+    help: 'The starlight-typedoc output directory containing the generated documentation markdown files relative to the `src/content/docs/` directory.',
+    name: 'starlight-typedoc-output',
+    type: ParameterType.String,
+  })
 
   return app
 }
@@ -50,7 +64,7 @@ export async function bootstrapApp(
 function onRendererPageEnd(event: PageEvent<DeclarationReflection>, pagination: boolean) {
   if (!event.contents) {
     return
-  } else if (/^module\..*\/README\.md$/.test(event.url)) {
+  } else if (/^.+\/README\.md$/.test(event.url)) {
     // Do not save `README.md` files for multiple entry points.
     event.preventDefault()
     return
@@ -63,13 +77,6 @@ function onRendererPageEnd(event: PageEvent<DeclarationReflection>, pagination: 
     // Wrap in quotes to prevent issue with special characters in frontmatter
     title: `"${event.model.name}"`,
   })
-}
-
-function getMarkdownPluginConfig(outputDirectory: string): TypeDocConfig {
-  return {
-    ...markdownPluginConfig,
-    baseUrl: `/${outputDirectory}${outputDirectory.endsWith('/') ? '' : '/'}`,
-  }
 }
 
 export type TypeDocConfig = Partial<Omit<TypeDocOptions, 'entryPoints' | 'tsconfig'> & PluginOptions>

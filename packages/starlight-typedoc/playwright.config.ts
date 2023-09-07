@@ -14,13 +14,13 @@ export default defineConfig({
       command: 'pnpm run dev:single-entrypoints',
       cwd: '../../example',
       reuseExistingServer: !process.env['CI'],
-      url: 'http://localhost:3000',
+      url: 'http://localhost:4321',
     },
     {
       command: 'pnpm run dev:multiple-entrypoints',
       cwd: '../../example',
       reuseExistingServer: !process.env['CI'],
-      url: 'http://localhost:3001',
+      url: 'http://localhost:4322',
     },
   ],
 })

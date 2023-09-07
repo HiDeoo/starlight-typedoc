@@ -43,13 +43,13 @@ test('should properly format links with anchors for a single entry point', async
 test('should properly format links with anchors for multiple entry points', async ({ docPage }) => {
   docPage.useMultipleEntryPoints()
 
-  await docPage.goto('modulefoo/classes/classfoo')
+  await docPage.goto('foo/classes/classfoo')
 
   const barConstructorLinkHref = await docPage.content
     .getByRole('link', { exact: true, name: 'constructor' })
     .getAttribute('href')
 
-  expect(barConstructorLinkHref).toEqual('/api-multiple-entrypoints/modulebar/classes/classbar/#constructor')
+  expect(barConstructorLinkHref).toEqual('/api-multiple-entrypoints/bar/classes/classbar/#constructor')
 })
 
 test('should disable edit links', async ({ docPage }) => {
@@ -67,7 +67,7 @@ test('should support TypeDoc plugins', async ({ docPage }) => {
 
   const mdnLink = docPage.page.getByRole('link', { exact: true, name: 'HTMLElement' })
 
-  expect(mdnLink).toBeVisible()
+  await expect(mdnLink).toBeVisible()
 
   const mdnLinkHref = await mdnLink.getAttribute('href')
 

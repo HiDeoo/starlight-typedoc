@@ -8,7 +8,7 @@ export class DocPage {
   constructor(public readonly page: Page) {}
 
   async goto(url: string) {
-    const baseUrl = `http://localhost:${this.#useMultipleEntryPoints ? 3001 : 3000}/${
+    const baseUrl = `http://localhost:${this.#useMultipleEntryPoints ? 4322 : 4321}/${
       this.#useMultipleEntryPoints ? 'api-multiple-entrypoints' : 'api'
     }`
 

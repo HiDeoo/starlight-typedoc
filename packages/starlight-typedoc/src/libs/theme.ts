@@ -38,7 +38,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
       .split('/')
       .map((segment) => slug(segment))
       .filter((segment) => segment !== '')
-    const baseUrl = this.options.getValue('baseUrl')
+    const baseUrl = this.options.getValue('starlight-typedoc-output')
 
     let constructedUrl = typeof baseUrl === 'string' ? baseUrl : ''
     constructedUrl += segments.length > 0 ? `${segments.join('/')}/` : ''
@@ -49,7 +49,12 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
     return constructedUrl
   }
 
-  override comment: (comment: Comment, headingLevel?: number | undefined) => string = (comment, headingLevel) => {
+  override comment: (
+    comment: Comment,
+    headingLevel?: number | undefined,
+    showSummary?: boolean | undefined,
+    showTags?: boolean | undefined,
+  ) => string = (comment, headingLevel, showSummary, showTags) => {
     const filteredComment = { ...comment } as Comment
     filteredComment.blockTags = []
     filteredComment.modifierTags = new Set<`@${string}`>()
@@ -88,7 +93,11 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
       return part
     })
 
-    let markdown = this.#markdownThemeRenderContext.comment(filteredComment, headingLevel)
+    let markdown = this.#markdownThemeRenderContext.comment(filteredComment, headingLevel, showSummary, showTags)
+
+    if (showTags === true && showSummary === false) {
+      return markdown
+    }
 
     for (const customCommentTag of customTags) {
       switch (customCommentTag.type) {
@@ -140,7 +149,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
       markdown,
       'caution',
       title,
-      'This API should not be used in production and may be trimmed from a public release.'
+      'This API should not be used in production and may be trimmed from a public release.',
     )
   }
 }

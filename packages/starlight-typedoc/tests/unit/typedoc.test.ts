@@ -29,7 +29,7 @@ test('should throw an error with no exports', async () => {
     generateTypeDoc({
       ...starlightTypeDocOptions,
       entryPoints: ['../../fixtures/src/noExports.ts'],
-    })
+    }),
   ).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to generate TypeDoc documentation."')
 })
 
@@ -48,7 +48,7 @@ test('should support providing custom TypeDoc options', async () => {
         ...starlightTypeDocOptions.typeDoc,
         excludeNotDocumented: true,
       },
-    })
+    }),
   ).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to generate TypeDoc documentation."')
 })
 
@@ -152,7 +152,7 @@ test('should output index with correct module path', async () => {
   const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
   const [, content] = writeFileSyncSpy.mock.calls.find((call) => call[0].toString().endsWith('index.md')) as [
     fs.PathOrFileDescriptor,
-    string
+    string,
   ]
 
   expect(
@@ -161,6 +161,6 @@ test('should output index with correct module path', async () => {
 - [foo](/api/namespacefoo/)
 - [functions](/api/namespacefunctions/)
 - [shared](/api/namespaceshared/)
-- [types](/api/namespacetypes/)`)
+- [types](/api/namespacetypes/)`),
   ).toBe(true)
 })

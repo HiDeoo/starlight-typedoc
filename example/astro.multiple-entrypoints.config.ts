@@ -10,6 +10,8 @@ const typeDocSidebarGroup = await generateTypeDoc({
     collapsed: true,
   },
   tsconfig: '../fixtures/tsconfig.json',
+  // @ts-expect-error - Fake the `readme` option not being set to ensure that frontmatter titles are escaped properly.
+  // @see https://github.com/HiDeoo/starlight-typedoc/pull/7
   typeDoc: {
     readme: undefined,
   },
@@ -32,6 +34,6 @@ export default defineConfig({
     }),
   ],
   server: {
-    port: 3001,
+    port: 4322,
   },
 })
