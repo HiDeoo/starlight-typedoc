@@ -13,7 +13,7 @@ export async function generateTypeDoc(options: StarlightTypeDocOptions): Promise
     options.tsconfig,
     options.typeDoc,
     outputDirectory,
-    options.pagination ?? false
+    options.pagination ?? false,
   )
   const reflections = await app.convert()
 

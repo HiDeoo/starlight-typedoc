@@ -67,7 +67,7 @@ test('should support TypeDoc plugins', async ({ docPage }) => {
 
   const mdnLink = docPage.page.getByRole('link', { exact: true, name: 'HTMLElement' })
 
-  expect(mdnLink).toBeVisible()
+  await expect(mdnLink).toBeVisible()
 
   const mdnLinkHref = await mdnLink.getAttribute('href')
 

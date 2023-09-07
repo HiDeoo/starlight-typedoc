@@ -140,7 +140,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
       markdown,
       'caution',
       title,
-      'This API should not be used in production and may be trimmed from a public release.'
+      'This API should not be used in production and may be trimmed from a public release.',
     )
   }
 }

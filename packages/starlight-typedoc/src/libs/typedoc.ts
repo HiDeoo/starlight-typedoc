@@ -28,7 +28,7 @@ export async function bootstrapApp(
   tsconfig: TypeDocOptions['tsconfig'],
   config: TypeDocConfig = {},
   outputDirectory: string,
-  pagination: boolean
+  pagination: boolean,
 ) {
   const app = await Application.bootstrapWithPlugins({
     ...defaultTypeDocConfig,
@@ -42,7 +42,9 @@ export async function bootstrapApp(
   app.logger = new StarlightTypeDocLogger()
   app.options.addReader(new TSConfigReader())
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
-  app.renderer.on(PageEvent.END, (event: PageEvent<DeclarationReflection>) => onRendererPageEnd(event, pagination))
+  app.renderer.on(PageEvent.END, (event: PageEvent<DeclarationReflection>) => {
+    onRendererPageEnd(event, pagination)
+  })
 
   return app
 }

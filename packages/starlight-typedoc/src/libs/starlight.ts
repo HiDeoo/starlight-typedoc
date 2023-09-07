@@ -13,7 +13,7 @@ const sidebarDefaultOptions = {
 export function getSidebarGroupFromReflections(
   options: StarlightTypeDocSidebarOptions = {},
   reflections: ProjectReflection | DeclarationReflection,
-  outputDirectory: string
+  outputDirectory: string,
 ): SidebarGroup {
   const groups = reflections.groups ?? []
 
@@ -33,7 +33,7 @@ export function getSidebarGroupFromReflections(
             return getSidebarGroupFromReflections(
               { collapsed: true, label: child.name },
               child,
-              `${outputDirectory}/${url.dir}`
+              `${outputDirectory}/${url.dir}`,
             )
           })
         }
