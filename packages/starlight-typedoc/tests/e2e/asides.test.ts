@@ -2,7 +2,7 @@ import type { DocPage } from './fixtures/DocPage'
 import { expect, test } from './test'
 
 test('should use an aside for the deprecated tag with no content', async ({ docPage }) => {
-  await docPage.goto('functions/functiondothingb')
+  await docPage.goto('functions/dothingb')
 
   const name = 'Deprecated'
   const { aside, title, content } = await getAside(docPage, name)
@@ -13,7 +13,7 @@ test('should use an aside for the deprecated tag with no content', async ({ docP
 })
 
 test('should use an aside for the deprecated tag with custom content', async ({ docPage }) => {
-  await docPage.goto('functions/functiondothingc')
+  await docPage.goto('functions/dothingc')
 
   const name = 'Deprecated'
   const { aside, title, content } = await getAside(docPage, name)
@@ -24,9 +24,9 @@ test('should use an aside for the deprecated tag with custom content', async ({ 
 })
 
 const releaseStageCases: [releaseStage: string, url: string][] = [
-  ['Alpha', 'classes/classbar'],
-  ['Beta', 'variables/variableanobject'],
-  ['Experimental', 'interfaces/interfacething'],
+  ['Alpha', 'classes/bar'],
+  ['Beta', 'variables/anobject'],
+  ['Experimental', 'interfaces/thing'],
 ]
 
 for (const [releaseStage, url] of releaseStageCases) {

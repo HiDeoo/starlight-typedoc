@@ -89,7 +89,7 @@ test('should not add `README.md` module files for multiple entry points', async 
   const filePaths = writeFileSyncSpy.mock.calls.map((call) => call[0].toString())
 
   expect(writeFileSyncSpy).toHaveBeenCalled()
-  expect(filePaths.some((filePath) => filePath.endsWith('README.md'))).toBe(false)
+  expect(filePaths.some((filePath) => /\/(?:Bar|Foo)\/README\.md$/.test(filePath))).toBe(false)
 })
 
 test('should support overriding typedoc-plugin-markdown readme and index page generation', async () => {
@@ -98,7 +98,6 @@ test('should support overriding typedoc-plugin-markdown readme and index page ge
     typeDoc: {
       ...starlightTypeDocOptions.typeDoc,
       readme: 'README.md',
-      skipIndexPage: false,
     },
     entryPoints: ['../../fixtures/src/Bar.ts', '../../fixtures/src/Foo.ts'],
   })
@@ -117,8 +116,6 @@ test('should output modules with index', async () => {
       ...starlightTypeDocOptions.typeDoc,
       outputFileStrategy: 'modules',
       entryFileName: 'index.md',
-      skipIndexPage: false,
-      flattenOutputFiles: true,
     },
     entryPoints: ['../../fixtures/src/module.ts'],
   })
@@ -128,11 +125,11 @@ test('should output modules with index', async () => {
 
   expect(filePaths).toEqual([
     expect.stringMatching(/index\.md$/),
-    expect.stringMatching(/Namespace\.bar\.md$/),
-    expect.stringMatching(/Namespace\.foo\.md$/),
-    expect.stringMatching(/Namespace\.functions\.md$/),
-    expect.stringMatching(/Namespace\.shared\.md$/),
-    expect.stringMatching(/Namespace\.types\.md$/),
+    expect.stringMatching(/namespaces\/bar\.md$/),
+    expect.stringMatching(/namespaces\/foo\.md$/),
+    expect.stringMatching(/namespaces\/functions\.md$/),
+    expect.stringMatching(/namespaces\/shared\.md$/),
+    expect.stringMatching(/namespaces\/types\.md$/),
   ])
 })
 
@@ -143,8 +140,6 @@ test('should output index with correct module path', async () => {
       ...starlightTypeDocOptions.typeDoc,
       outputFileStrategy: 'modules',
       entryFileName: 'index.md',
-      skipIndexPage: false,
-      flattenOutputFiles: true,
     },
     entryPoints: ['../../fixtures/src/module.ts'],
   })
@@ -157,10 +152,10 @@ test('should output index with correct module path', async () => {
 
   expect(
     content.includes(`
-- [bar](/api/namespacebar/)
-- [foo](/api/namespacefoo/)
-- [functions](/api/namespacefunctions/)
-- [shared](/api/namespaceshared/)
-- [types](/api/namespacetypes/)`),
+- [bar](/api/namespaces/bar/)
+- [foo](/api/namespaces/foo/)
+- [functions](/api/namespaces/functions/)
+- [shared](/api/namespaces/shared/)
+- [types](/api/namespaces/types/)`),
   ).toBe(true)
 })

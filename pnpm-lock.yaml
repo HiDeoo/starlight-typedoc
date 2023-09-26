@@ -51,8 +51,8 @@ importers:
         specifier: '0.25'
         version: 0.25.0(typescript@5.1.6)
       typedoc-plugin-markdown:
-        specifier: 4.0.0-next.20
-        version: 4.0.0-next.20(typedoc@0.25.0)
+        specifier: 4.0.0-next.21
+        version: 4.0.0-next.21(typedoc@0.25.0)
       typedoc-plugin-mdn-links:
         specifier: 3.0.3
         version: 3.0.3(typedoc@0.25.0)
@@ -75,8 +75,8 @@ importers:
         specifier: '>=0.25.0'
         version: 0.25.0(typescript@5.1.6)
       typedoc-plugin-markdown:
-        specifier: '>=4.0.0-next.20'
-        version: 4.0.0-next.20(typedoc@0.25.0)
+        specifier: '>=4.0.0-next.21'
+        version: 4.0.0-next.21(typedoc@0.25.0)
     devDependencies:
       '@astrojs/starlight':
         specifier: 0.9.0
@@ -6372,10 +6372,10 @@ packages:
       is-typed-array: 1.1.12
     dev: true
 
-  /typedoc-plugin-markdown@4.0.0-next.20(typedoc@0.25.0):
-    resolution: {integrity: sha512-mQoLUSk6KLPMv1zpcTk43h8+8aD+T65qPh99/umSsczd1yTOyZiA0h0kAlsrZrAM8SWoJEn/fZWgV3JMR3Bb4Q==}
+  /typedoc-plugin-markdown@4.0.0-next.21(typedoc@0.25.0):
+    resolution: {integrity: sha512-Fvk4TTjLTwS5hsKmrT1YvdM6T2ljL2Mj8NISg9UhbNXYb3pY1ucFE4w66u2ntqadElWqsCsWLLemX3FMeykTkw==}
     peerDependencies:
-      typedoc: '>=0.24.0'
+      typedoc: '>=0.25.0'
     dependencies:
       typedoc: 0.25.0(typescript@5.1.6)
     dev: false

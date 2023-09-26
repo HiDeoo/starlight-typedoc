@@ -2,7 +2,7 @@ import type { DocPage } from './fixtures/DocPage'
 import { expect, test } from './test'
 
 test('should not include pagination links by default', async ({ docPage }) => {
-  await docPage.goto('classes/classfoo')
+  await docPage.goto('classes/foo')
 
   const { next, prev } = getPrevNext(docPage)
 
@@ -13,7 +13,7 @@ test('should not include pagination links by default', async ({ docPage }) => {
 test('should not include pagination links if configured to do so', async ({ docPage }) => {
   docPage.useMultipleEntryPoints()
 
-  await docPage.goto('bar/classes/classbar')
+  await docPage.goto('bar/classes/bar')
 
   const { next, prev } = getPrevNext(docPage)
 
