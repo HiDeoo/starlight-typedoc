@@ -1,7 +1,7 @@
 import { expect, test } from './test'
 
-const singleEntrypointUrl = 'classes/classfoo'
-const multipleEntrypointsUrl = 'bar/classes/classbar'
+const singleEntrypointUrl = 'classes/foo'
+const multipleEntrypointsUrl = 'bar/classes/bar'
 
 test('should include the TypeDoc sidebar group for a single entry point', async ({ docPage }) => {
   await docPage.goto(singleEntrypointUrl)

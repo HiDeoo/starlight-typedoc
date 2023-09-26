@@ -1,11 +1,11 @@
 import { expect, test } from './test'
 
 test('should add titles to the frontmatter', async ({ docPage }) => {
-  await docPage.goto('classes/classfoo')
+  await docPage.goto('classes/foo')
 
   expect(docPage.title).toBe('Foo')
 
-  await docPage.goto('functions/functiondothinga')
+  await docPage.goto('functions/dothinga')
 
   expect(docPage.title).toBe('doThingA')
 })
@@ -31,25 +31,25 @@ test('should properly format links for multiple entry points', async ({ docPage 
 })
 
 test('should properly format links with anchors for a single entry point', async ({ docPage }) => {
-  await docPage.goto('classes/classfoo')
+  await docPage.goto('classes/foo')
 
   const barConstructorLinkHref = await docPage.content
     .getByRole('link', { exact: true, name: 'constructor' })
     .getAttribute('href')
 
-  expect(barConstructorLinkHref).toEqual('/api/classes/classbar/#constructor')
+  expect(barConstructorLinkHref).toEqual('/api/classes/bar/#constructors')
 })
 
 test('should properly format links with anchors for multiple entry points', async ({ docPage }) => {
   docPage.useMultipleEntryPoints()
 
-  await docPage.goto('foo/classes/classfoo')
+  await docPage.goto('foo/classes/foo')
 
   const barConstructorLinkHref = await docPage.content
     .getByRole('link', { exact: true, name: 'constructor' })
     .getAttribute('href')
 
-  expect(barConstructorLinkHref).toEqual('/api-multiple-entrypoints/bar/classes/classbar/#constructor')
+  expect(barConstructorLinkHref).toEqual('/api-multiple-entrypoints/bar/classes/bar/#constructors')
 })
 
 test('should disable edit links', async ({ docPage }) => {
@@ -63,7 +63,7 @@ test('should disable edit links', async ({ docPage }) => {
 })
 
 test('should support TypeDoc plugins', async ({ docPage }) => {
-  await docPage.goto('classes/classfoo')
+  await docPage.goto('classes/foo')
 
   const mdnLink = docPage.page.getByRole('link', { exact: true, name: 'HTMLElement' })
 
@@ -75,8 +75,8 @@ test('should support TypeDoc plugins', async ({ docPage }) => {
 })
 
 test('should properly format links in summary', async ({ docPage }) => {
-  await docPage.goto('functions/functiondothingfaster')
+  await docPage.goto('functions/dothingfaster')
 
   await docPage.content.getByRole('link', { exact: true, name: 'doThingB' }).click()
-  await docPage.page.waitForURL('**/api/functions/functiondothingb/')
+  await docPage.page.waitForURL('**/api/functions/dothingb/')
 })

@@ -26,7 +26,6 @@ const markdownPluginConfig: TypeDocConfig = {
   hideInPageTOC: true,
   hidePageHeader: true,
   hidePageTitle: true,
-  skipIndexPage: true,
 }
 
 export async function bootstrapApp(
