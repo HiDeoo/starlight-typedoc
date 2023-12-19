@@ -30,7 +30,7 @@ test('should throw an error with no exports', async () => {
       ...starlightTypeDocOptions,
       entryPoints: ['../../fixtures/src/noExports.ts'],
     }),
-  ).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to generate TypeDoc documentation."')
+  ).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Failed to generate TypeDoc documentation.]`)
 })
 
 test('should support providing custom TypeDoc options', async () => {
@@ -49,7 +49,7 @@ test('should support providing custom TypeDoc options', async () => {
         excludeNotDocumented: true,
       },
     }),
-  ).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to generate TypeDoc documentation."')
+  ).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Failed to generate TypeDoc documentation.]`)
 })
 
 test('should generate the doc in `src/content/docs/api` by default', async () => {
