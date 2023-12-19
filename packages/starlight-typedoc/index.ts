@@ -1,37 +1,23 @@
-import path from 'node:path'
-
+import type { StarlightPlugin } from '@astrojs/starlight/types'
 import type { TypeDocOptions } from 'typedoc'
 
-import { getSidebarGroupFromReflections, type SidebarGroup } from './libs/starlight'
-import { bootstrapApp, type TypeDocConfig } from './libs/typedoc'
+import { getSidebarFromReflections, getSidebarGroupPlaceholder } from './libs/starlight'
+import { generateTypeDoc, type TypeDocConfig } from './libs/typedoc'
 
-export async function generateTypeDoc(options: StarlightTypeDocOptions): Promise<SidebarGroup> {
-  const outputDirectory = options.output ?? 'api'
+export const typeDocSidebarGroup = getSidebarGroupPlaceholder()
 
-  const app = await bootstrapApp(
-    options.entryPoints,
-    options.tsconfig,
-    options.typeDoc,
-    outputDirectory,
-    options.pagination ?? false,
-  )
-  const reflections = await app.convert()
+export default function starlightTypeDocPlugin(options: StarlightTypeDocOptions): StarlightPlugin {
+  return {
+    name: 'starlight-typedoc-plugin',
+    hooks: {
+      async setup({ config, updateConfig }) {
+        const { outputDirectory, reflections } = await generateTypeDoc(options)
+        const sidebar = getSidebarFromReflections(config.sidebar, options.sidebar, reflections, outputDirectory)
 
-  if (!reflections?.groups || reflections.groups.length === 0) {
-    throw new Error('Failed to generate TypeDoc documentation.')
+        updateConfig({ sidebar })
+      },
+    },
   }
-
-  const outputPath = path.join('src/content/docs', outputDirectory)
-
-  if (options.watch) {
-    app.convertAndWatch(async (reflections) => {
-      await app.generateDocs(reflections, outputPath)
-    })
-  } else {
-    await app.generateDocs(reflections, outputPath)
-  }
-
-  return getSidebarGroupFromReflections(options.sidebar, reflections, outputDirectory)
 }
 
 export interface StarlightTypeDocOptions {

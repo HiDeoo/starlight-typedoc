@@ -2,7 +2,8 @@ import fs from 'node:fs'
 
 import { afterAll, afterEach, beforeAll, expect, test, vi } from 'vitest'
 
-import { generateTypeDoc, type StarlightTypeDocOptions } from '../../src'
+import type { StarlightTypeDocOptions } from '../..'
+import { generateTypeDoc } from '../../libs/typedoc'
 
 const starlightTypeDocOptions = {
   tsconfig: '../../fixtures/tsconfig.json',

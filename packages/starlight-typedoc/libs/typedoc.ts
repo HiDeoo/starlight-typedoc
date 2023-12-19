@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import {
   Application,
   type DeclarationReflection,
@@ -7,6 +9,8 @@ import {
   ParameterType,
 } from 'typedoc'
 import type { PluginOptions } from 'typedoc-plugin-markdown'
+
+import type { StarlightTypeDocOptions } from '..'
 
 import { StarlightTypeDocLogger } from './logger'
 import { addFrontmatter } from './markdown'
@@ -28,7 +32,36 @@ const markdownPluginConfig: TypeDocConfig = {
   hidePageTitle: true,
 }
 
-export async function bootstrapApp(
+export async function generateTypeDoc(options: StarlightTypeDocOptions) {
+  const outputDirectory = options.output ?? 'api'
+
+  const app = await bootstrapApp(
+    options.entryPoints,
+    options.tsconfig,
+    options.typeDoc,
+    outputDirectory,
+    options.pagination ?? false,
+  )
+  const reflections = await app.convert()
+
+  if (!reflections?.groups || reflections.groups.length === 0) {
+    throw new Error('Failed to generate TypeDoc documentation.')
+  }
+
+  const outputPath = path.join('src/content/docs', outputDirectory)
+
+  if (options.watch) {
+    app.convertAndWatch(async (reflections) => {
+      await app.generateDocs(reflections, outputPath)
+    })
+  } else {
+    await app.generateDocs(reflections, outputPath)
+  }
+
+  return { outputDirectory, reflections }
+}
+
+async function bootstrapApp(
   entryPoints: TypeDocOptions['entryPoints'],
   tsconfig: TypeDocOptions['tsconfig'],
   config: TypeDocConfig = {},
