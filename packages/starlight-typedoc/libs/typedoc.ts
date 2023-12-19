@@ -1,5 +1,6 @@
 import path from 'node:path'
 
+import type { AstroIntegrationLogger } from 'astro'
 import {
   Application,
   type DeclarationReflection,
@@ -32,7 +33,7 @@ const markdownPluginConfig: TypeDocConfig = {
   hidePageTitle: true,
 }
 
-export async function generateTypeDoc(options: StarlightTypeDocOptions) {
+export async function generateTypeDoc(options: StarlightTypeDocOptions, logger: AstroIntegrationLogger) {
   const outputDirectory = options.output ?? 'api'
 
   const app = await bootstrapApp(
@@ -41,6 +42,7 @@ export async function generateTypeDoc(options: StarlightTypeDocOptions) {
     options.typeDoc,
     outputDirectory,
     options.pagination ?? false,
+    logger,
   )
   const reflections = await app.convert()
 
@@ -67,6 +69,7 @@ async function bootstrapApp(
   config: TypeDocConfig = {},
   outputDirectory: string,
   pagination: boolean,
+  logger: AstroIntegrationLogger,
 ) {
   const app = await Application.bootstrapWithPlugins({
     ...defaultTypeDocConfig,
@@ -77,7 +80,7 @@ async function bootstrapApp(
     entryPoints,
     tsconfig,
   })
-  app.logger = new StarlightTypeDocLogger()
+  app.logger = new StarlightTypeDocLogger(logger)
   app.options.addReader(new TSConfigReader())
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
   app.renderer.on(PageEvent.END, (event: PageEvent<DeclarationReflection>) => {

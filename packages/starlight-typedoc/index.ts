@@ -10,8 +10,8 @@ export default function starlightTypeDocPlugin(options: StarlightTypeDocOptions)
   return {
     name: 'starlight-typedoc-plugin',
     hooks: {
-      async setup({ config, updateConfig }) {
-        const { outputDirectory, reflections } = await generateTypeDoc(options)
+      async setup({ config, logger, updateConfig }) {
+        const { outputDirectory, reflections } = await generateTypeDoc(options, logger)
         const sidebar = getSidebarFromReflections(config.sidebar, options.sidebar, reflections, outputDirectory)
 
         updateConfig({ sidebar })

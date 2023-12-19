@@ -1,14 +1,14 @@
-import { bold, cyan, dim, red, reset, yellow } from 'kleur/colors'
+import type { AstroIntegrationLogger } from 'astro'
 import { LogLevel, Logger } from 'typedoc'
 
-// https://github.com/withastro/astro/blob/1c7b6359563f5e83325121efb2e61915d818a35a/packages/astro/src/core/logger/node.ts
 export class StarlightTypeDocLogger extends Logger {
-  #dateTimeFormat = new Intl.DateTimeFormat([], {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  })
-  #type = '[typedoc]'
+  #logger: AstroIntegrationLogger
+
+  constructor(logger: AstroIntegrationLogger) {
+    super()
+
+    this.#logger = logger
+  }
 
   override log(message: string, level: LogLevel): void {
     super.log(message, level)
@@ -17,32 +17,23 @@ export class StarlightTypeDocLogger extends Logger {
       return
     }
 
-    const destination = level < LogLevel.Error ? process.stdout : process.stderr
-
-    destination.write(this.#getPrefix(level))
-    destination.write(message)
-    destination.write('\n')
-  }
-
-  #getPrefix(level: LogLevel) {
-    const dateTime = dim(`${this.#dateTimeFormat.format(new Date())} `)
-    let type = bold(this.#type)
-
     switch (level) {
-      case LogLevel.Info: {
-        type = bold(cyan(this.#type))
+      case LogLevel.Error: {
+        this.#logger.error(message)
         break
       }
       case LogLevel.Warn: {
-        type = bold(yellow(this.#type))
+        this.#logger.warn(message)
         break
       }
-      case LogLevel.Error: {
-        type = bold(red(this.#type))
+      case LogLevel.Verbose: {
+        this.#logger.debug(message)
+        break
+      }
+      default: {
+        this.#logger.info(message)
         break
       }
     }
-
-    return reset(`${dateTime}${type} `)
   }
 }

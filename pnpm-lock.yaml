@@ -68,9 +68,6 @@ importers:
       github-slugger:
         specifier: 2.0.0
         version: 2.0.0
-      kleur:
-        specifier: 4.1.5
-        version: 4.1.5
       typedoc:
         specifier: '>=0.25.0'
         version: 0.25.0(typescript@5.1.6)
