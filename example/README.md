@@ -1,6 +1,6 @@
 <div align="center">
   <h1>starlight-typedoc 📚</h1>
-  <p>Astro integration for Starlight to generate documentation from TypeScript using TypeDoc.</p>
+  <p>Starlight plugin to generate documentation from TypeScript using TypeDoc.</p>
 </div>
 
 <div align="center">

@@ -20,7 +20,7 @@ test('should include the TypeDoc sidebar group for multiple entry points', async
 test('should not collapse the TypeDoc sidebar group by default', async ({ docPage }) => {
   await docPage.goto(singleEntrypointUrl)
 
-  await docPage.page.getByRole('link', { name: 'Getting Started' }).click()
+  await docPage.page.getByRole('link', { name: 'Example Guide' }).click()
 
   expect(await docPage.isTypeDocSidebarCollapsed()).toBe(false)
 })
@@ -30,7 +30,7 @@ test('should collapse the TypeDoc sidebar group if specified', async ({ docPage 
 
   await docPage.goto(multipleEntrypointsUrl)
 
-  await docPage.page.getByRole('link', { name: 'Getting Started' }).first().click()
+  await docPage.page.getByRole('link', { name: 'Example Guide' }).first().click()
 
   expect(await docPage.isTypeDocSidebarCollapsed()).toBe(true)
 })
