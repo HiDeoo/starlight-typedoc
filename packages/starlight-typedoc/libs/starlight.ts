@@ -1,5 +1,6 @@
 import path from 'node:path'
 
+import type { StarlightPlugin } from '@astrojs/starlight/types'
 import { slug } from 'github-slugger'
 import type { DeclarationReflection, ProjectReflection } from 'typedoc'
 
@@ -10,8 +11,51 @@ const sidebarDefaultOptions = {
   label: 'API',
 } satisfies StarlightTypeDocSidebarOptions
 
-export function getSidebarGroupFromReflections(
+const starlightTypeDocSidebarGroupLabel = Symbol('StarlightTypeDocSidebarGroupLabel')
+
+export function getSidebarGroupPlaceholder(): SidebarGroup {
+  return {
+    items: [],
+    label: starlightTypeDocSidebarGroupLabel.toString(),
+  }
+}
+
+export function getSidebarFromReflections(
+  sidebar: StarlightUserConfigSidebar,
   options: StarlightTypeDocSidebarOptions = {},
+  reflections: ProjectReflection | DeclarationReflection,
+  outputDirectory: string,
+): StarlightUserConfigSidebar {
+  if (!sidebar || sidebar.length === 0) {
+    return sidebar
+  }
+
+  const sidebarGroup = getSidebarGroupFromReflections(options, reflections, outputDirectory)
+
+  function replaceSidebarGroupPlaceholder(group: SidebarManualGroup): SidebarGroup {
+    if (group.label === starlightTypeDocSidebarGroupLabel.toString()) {
+      return sidebarGroup
+    }
+
+    if (isSidebarManualGroup(group)) {
+      return {
+        ...group,
+        items: group.items.map((item) => {
+          return isSidebarManualGroup(item) ? replaceSidebarGroupPlaceholder(item) : item
+        }),
+      }
+    }
+
+    return group
+  }
+
+  return sidebar.map((item) => {
+    return isSidebarManualGroup(item) ? replaceSidebarGroupPlaceholder(item) : item
+  })
+}
+
+function getSidebarGroupFromReflections(
+  options: StarlightTypeDocSidebarOptions,
   reflections: ProjectReflection | DeclarationReflection,
   outputDirectory: string,
 ): SidebarGroup {
@@ -57,12 +101,12 @@ ${content}
 :::`
 }
 
-export type SidebarGroup =
-  | {
-      collapsed?: boolean
-      items: (LinkItem | SidebarGroup)[]
-      label: string
-    }
+function isSidebarManualGroup(item: NonNullable<StarlightUserConfigSidebar>[number]): item is SidebarManualGroup {
+  return 'items' in item
+}
+
+type SidebarGroup =
+  | SidebarManualGroup
   | {
       autogenerate: {
         collapsed?: boolean
@@ -72,9 +116,17 @@ export type SidebarGroup =
       label: string
     }
 
+interface SidebarManualGroup {
+  collapsed?: boolean
+  items: (LinkItem | SidebarGroup)[]
+  label: string
+}
+
 interface LinkItem {
   label: string
   link: string
 }
 
 type AsideType = 'caution' | 'danger' | 'note' | 'tip'
+
+type StarlightUserConfigSidebar = Parameters<StarlightPlugin['hooks']['setup']>[0]['config']['sidebar']

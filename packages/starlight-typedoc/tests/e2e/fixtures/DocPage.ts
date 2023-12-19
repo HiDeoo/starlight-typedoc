@@ -9,7 +9,7 @@ export class DocPage {
 
   async goto(url: string) {
     const baseUrl = `http://localhost:${this.#useMultipleEntryPoints ? 4322 : 4321}/${
-      this.#useMultipleEntryPoints ? 'api-multiple-entrypoints' : 'api'
+      this.#useMultipleEntryPoints ? 'multiple-entrypoints/api-multiple-entrypoints' : 'api'
     }`
 
     await this.page.goto(`${baseUrl}${url.startsWith('/') ? url : `/${url}`}${url.endsWith('/') ? '' : '/'}`)
@@ -27,14 +27,12 @@ export class DocPage {
   }
 
   get #sidebar() {
-    return this.page.getByRole('navigation', { name: 'Main' }).locator('div.sidebar')
+    return this.page.getByRole('navigation', { name: 'Main' })
   }
 
   get typeDocSidebarLabel() {
-    return this.#typeDocSidebarRootDetails.getByRole('heading', {
+    return this.#typeDocSidebarRootDetails.getByText(this.#expectedTypeDocSidebarLabel, {
       exact: true,
-      level: 2,
-      name: this.#expectedTypeDocSidebarLabel,
     })
   }
 
@@ -45,7 +43,7 @@ export class DocPage {
   get #typeDocSidebarRootDetails() {
     return this.#sidebar
       .getByRole('listitem')
-      .locator(`details:has(summary > h2:has-text("${this.#expectedTypeDocSidebarLabel}"))`)
+      .locator(`details:has(summary > div > span:has-text("${this.#expectedTypeDocSidebarLabel}"))`)
   }
 
   getTypeDocSidebarItems() {
@@ -58,7 +56,7 @@ export class DocPage {
     for (const category of await list.locator('> li > details').all()) {
       items.push({
         collapsed: !(await category.getAttribute('open')),
-        label: await category.locator(`> summary > h2`).textContent(),
+        label: await category.locator(`> summary > div > span`).textContent(),
         items: await this.#getTypeDocSidebarChildrenItems(category.locator('> ul')),
       })
     }

@@ -2,7 +2,7 @@
   "name": "@starlight-typedoc/fixtures",
   "version": "0.0.1",
   "license": "MIT",
-  "description": "Astro integration for Starlight to generate documentation from TypeScript using TypeDoc.",
+  "description": "Starlight plugin to generate documentation from TypeScript using TypeDoc.",
   "author": "HiDeoo <github@hideoo.dev> (https://hideoo.dev)",
   "type": "module",
   "dependencies": {
@@ -16,6 +16,7 @@
   "sideEffects": false,
   "keywords": [
     "starlight",
+    "plugin",
     "typedoc",
     "typescript",
     "documentation",

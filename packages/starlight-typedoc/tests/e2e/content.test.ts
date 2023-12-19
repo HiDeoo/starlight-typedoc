@@ -49,11 +49,11 @@ test('should properly format links with anchors for multiple entry points', asyn
     .getByRole('link', { exact: true, name: 'constructor' })
     .getAttribute('href')
 
-  expect(barConstructorLinkHref).toEqual('/api-multiple-entrypoints/bar/classes/bar/#constructors')
+  expect(barConstructorLinkHref).toEqual('/multiple-entrypoints/api-multiple-entrypoints/bar/classes/bar/#constructors')
 })
 
 test('should disable edit links', async ({ docPage }) => {
-  await docPage.goto('../guides/getting-started')
+  await docPage.goto('../guides/example')
 
   await expect(docPage.page.getByRole('link', { exact: true, name: 'Edit page' })).toBeVisible()
 

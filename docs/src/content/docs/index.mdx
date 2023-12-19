@@ -1,0 +1,35 @@
+---
+title: Starlight TypeDoc
+description: Starlight plugin to generate documentation from TypeScript using TypeDoc.
+head:
+  - tag: title
+    content: Starlight TypeDoc
+template: splash
+editUrl: false
+lastUpdated: false
+hero:
+  tagline: Starlight plugin to generate documentation from TypeScript using TypeDoc.
+  image:
+    html: '📚'
+  actions:
+    - text: Getting Started
+      link: /getting-started/
+      icon: rocket
+      variant: primary
+    - text: Example
+      link: https://starlight-typedoc-example.vercel.app/api/functions/dothingc/
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+## Next steps
+
+<CardGrid stagger>
+  <Card title="Configure the plugin" icon="setting">
+    Edit your config in `astro.config.mjs`.
+  </Card>
+  <Card title="Read the docs" icon="open-book">
+    Learn more in [the Starlight TypeDoc Docs](/getting-started/).
+  </Card>
+</CardGrid>

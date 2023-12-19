@@ -1,3 +1,6 @@
+import path from 'node:path'
+
+import type { AstroIntegrationLogger } from 'astro'
 import {
   Application,
   type DeclarationReflection,
@@ -7,6 +10,8 @@ import {
   ParameterType,
 } from 'typedoc'
 import type { PluginOptions } from 'typedoc-plugin-markdown'
+
+import type { StarlightTypeDocOptions } from '..'
 
 import { StarlightTypeDocLogger } from './logger'
 import { addFrontmatter } from './markdown'
@@ -28,12 +33,45 @@ const markdownPluginConfig: TypeDocConfig = {
   hidePageTitle: true,
 }
 
-export async function bootstrapApp(
+export async function generateTypeDoc(options: StarlightTypeDocOptions, base: string, logger: AstroIntegrationLogger) {
+  const outputDirectory = options.output ?? 'api'
+
+  const app = await bootstrapApp(
+    options.entryPoints,
+    options.tsconfig,
+    options.typeDoc,
+    outputDirectory,
+    options.pagination ?? false,
+    base,
+    logger,
+  )
+  const reflections = await app.convert()
+
+  if (!reflections?.groups || reflections.groups.length === 0) {
+    throw new Error('Failed to generate TypeDoc documentation.')
+  }
+
+  const outputPath = path.join('src/content/docs', outputDirectory)
+
+  if (options.watch) {
+    app.convertAndWatch(async (reflections) => {
+      await app.generateDocs(reflections, outputPath)
+    })
+  } else {
+    await app.generateDocs(reflections, outputPath)
+  }
+
+  return { outputDirectory, reflections }
+}
+
+async function bootstrapApp(
   entryPoints: TypeDocOptions['entryPoints'],
   tsconfig: TypeDocOptions['tsconfig'],
   config: TypeDocConfig = {},
   outputDirectory: string,
   pagination: boolean,
+  base: string,
+  logger: AstroIntegrationLogger,
 ) {
   const app = await Application.bootstrapWithPlugins({
     ...defaultTypeDocConfig,
@@ -44,14 +82,14 @@ export async function bootstrapApp(
     entryPoints,
     tsconfig,
   })
-  app.logger = new StarlightTypeDocLogger()
+  app.logger = new StarlightTypeDocLogger(logger)
   app.options.addReader(new TSConfigReader())
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
   app.renderer.on(PageEvent.END, (event: PageEvent<DeclarationReflection>) => {
     onRendererPageEnd(event, pagination)
   })
   app.options.addDeclaration({
-    defaultValue: `/${outputDirectory}${outputDirectory.endsWith('/') ? '' : '/'}`,
+    defaultValue: path.posix.join(base, `/${outputDirectory}${outputDirectory.endsWith('/') ? '' : '/'}`),
     help: 'The starlight-typedoc output directory containing the generated documentation markdown files relative to the `src/content/docs/` directory.',
     name: 'starlight-typedoc-output',
     type: ParameterType.String,

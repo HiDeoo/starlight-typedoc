@@ -1,17 +1,6 @@
 import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
-import { generateTypeDoc } from 'starlight-typedoc'
-
-const typeDocSidebarGroup = await generateTypeDoc({
-  entryPoints: ['../fixtures/src/index.ts'],
-  tsconfig: '../fixtures/tsconfig.json',
-  sidebar: {
-    label: 'API (auto-generated)',
-  },
-  typeDoc: {
-    plugin: ['typedoc-plugin-mdn-links'],
-  },
-})
+import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc'
 
 export default defineConfig({
   integrations: [
@@ -19,17 +8,26 @@ export default defineConfig({
       editLink: {
         baseUrl: 'https://github.com/HiDeoo/starlight-typedoc/edit/main/example/',
       },
+      plugins: [
+        starlightTypeDoc({
+          entryPoints: ['../fixtures/src/index.ts'],
+          tsconfig: '../fixtures/tsconfig.json',
+          sidebar: {
+            label: 'API (auto-generated)',
+          },
+          typeDoc: {
+            plugin: ['typedoc-plugin-mdn-links'],
+          },
+        }),
+      ],
       sidebar: [
         {
           label: 'Guides',
-          items: [{ label: 'Getting Started', link: '/guides/getting-started/' }],
+          items: [{ label: 'Example Guide', link: '/guides/example/' }],
         },
         typeDocSidebarGroup,
       ],
-      social: {
-        github: 'https://github.com/HiDeoo/starlight-typedoc',
-      },
-      title: 'Starlight TypeDoc',
+      title: 'Starlight TypeDoc Example',
     }),
   ],
 })

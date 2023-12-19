@@ -20,7 +20,7 @@ export default defineConfig({
       command: 'pnpm run dev:multiple-entrypoints',
       cwd: '../../example',
       reuseExistingServer: !process.env['CI'],
-      url: 'http://localhost:4322',
+      url: 'http://localhost:4322/multiple-entrypoints/',
     },
   ],
 })

@@ -13,9 +13,13 @@
   <br />
 </div>
 
-## Fixtures
+## Docs
 
-This folder contains fixtures used for the example and tests.
+Run the docs locally using your favorite package manager, e.g. with [pnpm](https://pnpm.io):
+
+```shell
+pnpm run dev
+```
 
 ## License
 

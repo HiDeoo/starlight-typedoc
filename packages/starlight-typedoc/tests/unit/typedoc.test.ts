@@ -1,8 +1,10 @@
 import fs from 'node:fs'
 
+import type { AstroIntegrationLogger } from 'astro'
 import { afterAll, afterEach, beforeAll, expect, test, vi } from 'vitest'
 
-import { generateTypeDoc, type StarlightTypeDocOptions } from '../../src'
+import type { StarlightTypeDocOptions } from '../..'
+import { generateTypeDoc } from '../../libs/typedoc'
 
 const starlightTypeDocOptions = {
   tsconfig: '../../fixtures/tsconfig.json',
@@ -26,11 +28,11 @@ afterAll(() => {
 
 test('should throw an error with no exports', async () => {
   await expect(
-    generateTypeDoc({
+    generateTestTypeDoc({
       ...starlightTypeDocOptions,
       entryPoints: ['../../fixtures/src/noExports.ts'],
     }),
-  ).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to generate TypeDoc documentation."')
+  ).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Failed to generate TypeDoc documentation.]`)
 })
 
 test('should support providing custom TypeDoc options', async () => {
@@ -39,21 +41,21 @@ test('should support providing custom TypeDoc options', async () => {
     entryPoints: ['../../fixtures/src/noDocs.ts'],
   }
 
-  await expect(generateTypeDoc(options)).resolves.not.toThrow()
+  await expect(generateTestTypeDoc(options)).resolves.not.toThrow()
 
   await expect(
-    generateTypeDoc({
+    generateTestTypeDoc({
       ...options,
       typeDoc: {
         ...starlightTypeDocOptions.typeDoc,
         excludeNotDocumented: true,
       },
     }),
-  ).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to generate TypeDoc documentation."')
+  ).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Failed to generate TypeDoc documentation.]`)
 })
 
 test('should generate the doc in `src/content/docs/api` by default', async () => {
-  await generateTypeDoc({
+  await generateTestTypeDoc({
     ...starlightTypeDocOptions,
     entryPoints: ['../../fixtures/src/functions.ts'],
   })
@@ -67,7 +69,7 @@ test('should generate the doc in `src/content/docs/api` by default', async () =>
 test('should generate the doc in a custom output directory relative to `src/content/docs/`', async () => {
   const output = 'dist-api'
 
-  await generateTypeDoc({
+  await generateTestTypeDoc({
     ...starlightTypeDocOptions,
     entryPoints: ['../../fixtures/src/functions.ts'],
     output,
@@ -80,7 +82,7 @@ test('should generate the doc in a custom output directory relative to `src/cont
 })
 
 test('should not add `README.md` module files for multiple entry points', async () => {
-  await generateTypeDoc({
+  await generateTestTypeDoc({
     ...starlightTypeDocOptions,
     entryPoints: ['../../fixtures/src/Bar.ts', '../../fixtures/src/Foo.ts'],
   })
@@ -93,7 +95,7 @@ test('should not add `README.md` module files for multiple entry points', async 
 })
 
 test('should support overriding typedoc-plugin-markdown readme and index page generation', async () => {
-  await generateTypeDoc({
+  await generateTestTypeDoc({
     ...starlightTypeDocOptions,
     typeDoc: {
       ...starlightTypeDocOptions.typeDoc,
@@ -110,7 +112,7 @@ test('should support overriding typedoc-plugin-markdown readme and index page ge
 })
 
 test('should output modules with index', async () => {
-  await generateTypeDoc({
+  await generateTestTypeDoc({
     ...starlightTypeDocOptions,
     typeDoc: {
       ...starlightTypeDocOptions.typeDoc,
@@ -134,7 +136,7 @@ test('should output modules with index', async () => {
 })
 
 test('should output index with correct module path', async () => {
-  await generateTypeDoc({
+  await generateTestTypeDoc({
     ...starlightTypeDocOptions,
     typeDoc: {
       ...starlightTypeDocOptions.typeDoc,
@@ -159,3 +161,18 @@ test('should output index with correct module path', async () => {
 - [types](/api/namespaces/types/)`),
   ).toBe(true)
 })
+
+function generateTestTypeDoc(options: Parameters<typeof generateTypeDoc>[0]) {
+  return generateTypeDoc(
+    {
+      ...starlightTypeDocOptions,
+      ...options,
+    },
+    '/',
+    {
+      info() {
+        // noop
+      },
+    } as unknown as AstroIntegrationLogger,
+  )
+}
