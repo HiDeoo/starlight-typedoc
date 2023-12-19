@@ -25,6 +25,7 @@
   "sideEffects": false,
   "keywords": [
     "starlight",
+    "plugin",
     "typedoc",
     "typescript",
     "documentation",

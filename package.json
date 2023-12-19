@@ -2,7 +2,7 @@
   "name": "starlight-typedoc-monorepo",
   "version": "0.6.0",
   "license": "MIT",
-  "description": "Astro integration for Starlight to generate documentation from TypeScript using TypeDoc.",
+  "description": "Starlight plugin to generate documentation from TypeScript using TypeDoc.",
   "author": "HiDeoo <github@hideoo.dev> (https://hideoo.dev)",
   "type": "module",
   "scripts": {
@@ -35,6 +35,7 @@
   "sideEffects": false,
   "keywords": [
     "starlight",
+    "plugin",
     "typedoc",
     "typescript",
     "documentation",
