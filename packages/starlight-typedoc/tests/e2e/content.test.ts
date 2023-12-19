@@ -49,7 +49,7 @@ test('should properly format links with anchors for multiple entry points', asyn
     .getByRole('link', { exact: true, name: 'constructor' })
     .getAttribute('href')
 
-  expect(barConstructorLinkHref).toEqual('/api-multiple-entrypoints/bar/classes/bar/#constructors')
+  expect(barConstructorLinkHref).toEqual('/multiple-entrypoints/api-multiple-entrypoints/bar/classes/bar/#constructors')
 })
 
 test('should disable edit links', async ({ docPage }) => {

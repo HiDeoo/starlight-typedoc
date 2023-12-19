@@ -168,6 +168,7 @@ function generateTestTypeDoc(options: Parameters<typeof generateTypeDoc>[0]) {
       ...starlightTypeDocOptions,
       ...options,
     },
+    '/',
     {
       info() {
         // noop

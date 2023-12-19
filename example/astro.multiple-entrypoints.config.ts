@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config'
 import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc'
 
 export default defineConfig({
+  base: '/multiple-entrypoints/',
   integrations: [
     starlight({
       plugins: [

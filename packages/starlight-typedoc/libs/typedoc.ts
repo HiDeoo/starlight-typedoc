@@ -33,7 +33,7 @@ const markdownPluginConfig: TypeDocConfig = {
   hidePageTitle: true,
 }
 
-export async function generateTypeDoc(options: StarlightTypeDocOptions, logger: AstroIntegrationLogger) {
+export async function generateTypeDoc(options: StarlightTypeDocOptions, base: string, logger: AstroIntegrationLogger) {
   const outputDirectory = options.output ?? 'api'
 
   const app = await bootstrapApp(
@@ -42,6 +42,7 @@ export async function generateTypeDoc(options: StarlightTypeDocOptions, logger: 
     options.typeDoc,
     outputDirectory,
     options.pagination ?? false,
+    base,
     logger,
   )
   const reflections = await app.convert()
@@ -69,6 +70,7 @@ async function bootstrapApp(
   config: TypeDocConfig = {},
   outputDirectory: string,
   pagination: boolean,
+  base: string,
   logger: AstroIntegrationLogger,
 ) {
   const app = await Application.bootstrapWithPlugins({
@@ -87,7 +89,7 @@ async function bootstrapApp(
     onRendererPageEnd(event, pagination)
   })
   app.options.addDeclaration({
-    defaultValue: `/${outputDirectory}${outputDirectory.endsWith('/') ? '' : '/'}`,
+    defaultValue: path.posix.join(base, `/${outputDirectory}${outputDirectory.endsWith('/') ? '' : '/'}`),
     help: 'The starlight-typedoc output directory containing the generated documentation markdown files relative to the `src/content/docs/` directory.',
     name: 'starlight-typedoc-output',
     type: ParameterType.String,

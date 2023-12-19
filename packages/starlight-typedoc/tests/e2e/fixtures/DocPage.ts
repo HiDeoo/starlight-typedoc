@@ -9,7 +9,7 @@ export class DocPage {
 
   async goto(url: string) {
     const baseUrl = `http://localhost:${this.#useMultipleEntryPoints ? 4322 : 4321}/${
-      this.#useMultipleEntryPoints ? 'api-multiple-entrypoints' : 'api'
+      this.#useMultipleEntryPoints ? 'multiple-entrypoints/api-multiple-entrypoints' : 'api'
     }`
 
     await this.page.goto(`${baseUrl}${url.startsWith('/') ? url : `/${url}`}${url.endsWith('/') ? '' : '/'}`)
