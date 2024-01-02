@@ -10,8 +10,8 @@ export default defineConfig({
       },
       plugins: [
         starlightTypeDoc({
-          entryPoints: ['../fixtures/src/index.ts'],
-          tsconfig: '../fixtures/tsconfig.json',
+          entryPoints: ['../fixtures/basics/src/index.ts'],
+          tsconfig: '../fixtures/basics/tsconfig.json',
           sidebar: {
             label: 'API (auto-generated)',
           },

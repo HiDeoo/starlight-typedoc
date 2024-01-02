@@ -8,13 +8,13 @@ export default defineConfig({
     starlight({
       plugins: [
         starlightTypeDoc({
-          entryPoints: ['../fixtures/src/Bar.ts', '../fixtures/src/Foo.ts'],
+          entryPoints: ['../fixtures/basics/src/Bar.ts', '../fixtures/basics/src/Foo.ts'],
           output: 'api-multiple-entrypoints',
           pagination: true,
           sidebar: {
             collapsed: true,
           },
-          tsconfig: '../fixtures/tsconfig.json',
+          tsconfig: '../fixtures/basics/tsconfig.json',
           // @ts-expect-error - Fake the `readme` option not being set to ensure that frontmatter titles are escaped properly.
           // @see https://github.com/HiDeoo/starlight-typedoc/pull/7
           typeDoc: {
