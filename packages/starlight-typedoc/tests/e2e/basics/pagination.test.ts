@@ -1,5 +1,5 @@
-import type { DocPage } from './fixtures/DocPage'
-import { expect, test } from './test'
+import type { DocPage } from '../fixtures/DocPage'
+import { expect, test } from '../test'
 
 test('should not include pagination links by default', async ({ docPage }) => {
   await docPage.goto('classes/foo')

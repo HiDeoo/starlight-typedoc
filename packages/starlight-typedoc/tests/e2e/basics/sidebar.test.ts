@@ -1,4 +1,4 @@
-import { expect, test } from './test'
+import { expect, test } from '../test'
 
 const singleEntrypointUrl = 'classes/foo'
 const multipleEntrypointsUrl = 'bar/classes/bar'

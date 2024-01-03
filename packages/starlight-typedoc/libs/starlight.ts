@@ -2,7 +2,7 @@ import path from 'node:path'
 
 import type { StarlightPlugin } from '@astrojs/starlight/types'
 import { slug } from 'github-slugger'
-import type { DeclarationReflection, ProjectReflection } from 'typedoc'
+import { type DeclarationReflection, type ProjectReflection, ReflectionKind } from 'typedoc'
 
 import type { StarlightTypeDocSidebarOptions } from '..'
 
@@ -54,15 +54,42 @@ export function getSidebarFromReflections(
   })
 }
 
-function getSidebarGroupFromReflections(
+function getSidebarGroupFromPackageReflections(
   options: StarlightTypeDocSidebarOptions,
   reflections: ProjectReflection | DeclarationReflection,
   outputDirectory: string,
 ): SidebarGroup {
-  const groups = reflections.groups ?? []
+  const groups = (reflections.children ?? []).map((child) => {
+    if (!child.url) {
+      return undefined
+    }
+
+    const url = path.parse(child.url)
+
+    return getSidebarGroupFromReflections(options, child, `${outputDirectory}/${url.dir}`, child.name)
+  })
 
   return {
     label: options.label ?? sidebarDefaultOptions.label,
+    collapsed: options.collapsed ?? sidebarDefaultOptions.collapsed,
+    items: groups.filter((item): item is SidebarGroup => item !== undefined),
+  }
+}
+
+function getSidebarGroupFromReflections(
+  options: StarlightTypeDocSidebarOptions,
+  reflections: ProjectReflection | DeclarationReflection,
+  outputDirectory: string,
+  label?: string,
+): SidebarGroup {
+  if ((!reflections.groups || reflections.groups.length === 0) && reflections.children) {
+    return getSidebarGroupFromPackageReflections(options, reflections, outputDirectory)
+  }
+
+  const groups = reflections.groups ?? []
+
+  return {
+    label: label ?? options.label ?? sidebarDefaultOptions.label,
     collapsed: options.collapsed ?? sidebarDefaultOptions.collapsed,
     items: groups
       .flatMap((group) => {
@@ -73,11 +100,12 @@ function getSidebarGroupFromReflections(
             }
 
             const url = path.parse(child.url)
+            const isParentKindModule = child.parent?.kind === ReflectionKind.Module
 
             return getSidebarGroupFromReflections(
               { collapsed: true, label: child.name },
               child,
-              `${outputDirectory}/${url.dir}`,
+              `${outputDirectory}/${isParentKindModule ? url.dir.split('/').slice(1).join('/') : url.dir}`,
             )
           })
         }

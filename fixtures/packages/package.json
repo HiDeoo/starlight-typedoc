@@ -1,0 +1,34 @@
+{
+  "name": "@starlight-typedoc/fixtures-packages",
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "Starlight plugin to generate documentation from TypeScript using TypeDoc.",
+  "author": "HiDeoo <github@hideoo.dev> (https://hideoo.dev)",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "dependencies": {
+    "typescript": "5.1.6"
+  },
+  "engines": {
+    "node": ">=18.14.1"
+  },
+  "packageManager": "pnpm@8.6.1",
+  "private": true,
+  "sideEffects": false,
+  "keywords": [
+    "starlight",
+    "plugin",
+    "typedoc",
+    "typescript",
+    "documentation",
+    "astro"
+  ],
+  "homepage": "https://github.com/HiDeoo/starlight-typedoc",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HiDeoo/starlight-typedoc.git"
+  },
+  "bugs": "https://github.com/HiDeoo/starlight-typedoc/issues"
+}

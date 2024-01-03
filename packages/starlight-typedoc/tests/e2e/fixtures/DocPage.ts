@@ -4,13 +4,17 @@ export class DocPage {
   title: string | null = null
 
   #useMultipleEntryPoints = false
+  #usePackagesEntryPoints = false
 
   constructor(public readonly page: Page) {}
 
   async goto(url: string) {
-    const baseUrl = `http://localhost:${this.#useMultipleEntryPoints ? 4322 : 4321}/${
-      this.#useMultipleEntryPoints ? 'multiple-entrypoints/api-multiple-entrypoints' : 'api'
-    }`
+    const baseDir = this.#useMultipleEntryPoints
+      ? 'multiple-entrypoints/api-multiple-entrypoints'
+      : this.#usePackagesEntryPoints
+      ? 'packages-entrypoints/api-packages-entrypoints'
+      : 'api'
+    const baseUrl = `http://localhost:${this.#useMultipleEntryPoints ? 4322 : 4321}/${baseDir}`
 
     await this.page.goto(`${baseUrl}${url.startsWith('/') ? url : `/${url}`}${url.endsWith('/') ? '' : '/'}`)
 
@@ -20,6 +24,10 @@ export class DocPage {
 
   useMultipleEntryPoints() {
     this.#useMultipleEntryPoints = true
+  }
+
+  usePackagesEntryPoints() {
+    this.#usePackagesEntryPoints = true
   }
 
   get content() {
@@ -37,7 +45,7 @@ export class DocPage {
   }
 
   get #expectedTypeDocSidebarLabel() {
-    return this.#useMultipleEntryPoints ? 'API' : 'API (auto-generated)'
+    return this.#useMultipleEntryPoints || this.#usePackagesEntryPoints ? 'API' : 'API (auto-generated)'
   }
 
   get #typeDocSidebarRootDetails() {

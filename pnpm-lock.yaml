@@ -75,6 +75,12 @@ importers:
         specifier: 5.1.6
         version: 5.1.6
 
+  fixtures/packages:
+    dependencies:
+      typescript:
+        specifier: 5.1.6
+        version: 5.1.6
+
   packages/starlight-typedoc:
     dependencies:
       github-slugger:
