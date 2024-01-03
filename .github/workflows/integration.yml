@@ -33,7 +33,7 @@ jobs:
 
       - name: Store Playwright Version
         run: |
-          PLAYWRIGHT_VERSION=$(pnpm playwright --version | sed 's/Version //')
+          PLAYWRIGHT_VERSION=$(pnpm exec playwright --version | sed 's/Version //')
           echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
         working-directory: packages/starlight-typedoc
 
