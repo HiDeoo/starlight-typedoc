@@ -1,15 +1,10 @@
-import path from 'node:path'
-
-import { slug } from 'github-slugger'
 import { Reflection, type Comment, type CommentTag, type Options, type PageEvent } from 'typedoc'
 import { MarkdownTheme, MarkdownThemeRenderContext } from 'typedoc-plugin-markdown'
 
-import { getAsideMarkdown } from './starlight'
+import { getAsideMarkdown, getRelativeURL } from './starlight'
 
 const customBlockTagTypes = ['@deprecated'] as const
 const customModifiersTagTypes = ['@alpha', '@beta', '@experimental'] as const
-
-const externalLinkRegex = /^(http|ftp)s?:\/\//
 
 export class StarlightTypeDocTheme extends MarkdownTheme {
   override getRenderContext(event: PageEvent<Reflection>) {
@@ -26,27 +21,10 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
   }
 
   override relativeURL: (url: string | undefined) => string | null = (url) => {
-    if (!url) {
-      return null
-    } else if (externalLinkRegex.test(url)) {
-      return url
-    }
+    const outputDirectory = this.options.getValue('starlight-typedoc-output')
+    const baseUrl = typeof outputDirectory === 'string' ? outputDirectory : ''
 
-    const filePath = path.parse(url)
-    const [, anchor] = filePath.base.split('#')
-    const segments = filePath.dir
-      .split('/')
-      .map((segment) => slug(segment))
-      .filter((segment) => segment !== '')
-    const baseUrl = this.options.getValue('starlight-typedoc-output')
-
-    let constructedUrl = typeof baseUrl === 'string' ? baseUrl : ''
-    constructedUrl += segments.length > 0 ? `${segments.join('/')}/` : ''
-    constructedUrl += slug(filePath.name)
-    constructedUrl += '/'
-    constructedUrl += anchor && anchor.length > 0 ? `#${anchor}` : ''
-
-    return constructedUrl
+    return getRelativeURL(url, baseUrl)
   }
 
   override comment: (

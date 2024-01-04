@@ -42,6 +42,11 @@ test('should generate the proper items for for a single entry point', async ({ d
 
   expect(items).toMatchObject([
     {
+      label: 'References',
+      items: [{ name: 'doThingARef' }],
+      collapsed: true,
+    },
+    {
       label: 'Enumerations',
       items: [{ name: 'ANumericEnum' }, { name: 'AStringEnum' }],
       collapsed: true,

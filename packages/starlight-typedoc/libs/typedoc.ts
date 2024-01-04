@@ -15,6 +15,7 @@ import type { StarlightTypeDocOptions } from '..'
 
 import { StarlightTypeDocLogger } from './logger'
 import { addFrontmatter } from './markdown'
+import { getStarlightTypeDocOutputDirectory } from './starlight'
 import { StarlightTypeDocTheme } from './theme'
 
 const defaultTypeDocConfig: TypeDocConfig = {
@@ -92,7 +93,7 @@ async function bootstrapApp(
     onRendererPageEnd(event, pagination)
   })
   app.options.addDeclaration({
-    defaultValue: path.posix.join(base, `/${outputDirectory}${outputDirectory.endsWith('/') ? '' : '/'}`),
+    defaultValue: getStarlightTypeDocOutputDirectory(outputDirectory, base),
     help: 'The starlight-typedoc output directory containing the generated documentation markdown files relative to the `src/content/docs/` directory.',
     name: 'starlight-typedoc-output',
     type: ParameterType.String,

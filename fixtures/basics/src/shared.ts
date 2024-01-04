@@ -1,3 +1,5 @@
+export { doThingA as doThingARef } from './functions'
+
 /**
  * This is a string variable.
  */
