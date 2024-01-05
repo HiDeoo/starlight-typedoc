@@ -1,4 +1,4 @@
-import { expect, test } from './test'
+import { expect, test } from '../test'
 
 const singleEntrypointUrl = 'classes/foo'
 const multipleEntrypointsUrl = 'bar/classes/bar'
@@ -41,6 +41,11 @@ test('should generate the proper items for for a single entry point', async ({ d
   const items = await docPage.getTypeDocSidebarItems()
 
   expect(items).toMatchObject([
+    {
+      label: 'References',
+      items: [{ name: 'doThingARef' }],
+      collapsed: true,
+    },
     {
       label: 'Enumerations',
       items: [{ name: 'ANumericEnum' }, { name: 'AStringEnum' }],

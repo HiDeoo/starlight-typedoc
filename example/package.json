@@ -9,6 +9,7 @@
     "dev": "astro dev",
     "dev:single-entrypoints": "astro dev --config astro.config.ts",
     "dev:multiple-entrypoints": "astro dev --config astro.multiple-entrypoints.config.ts",
+    "dev:packages-entrypoints": "pnpm -C ../fixtures/packages run build && astro dev --config astro.packages-entrypoints.config.ts",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",

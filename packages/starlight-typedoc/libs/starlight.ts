@@ -2,9 +2,17 @@ import path from 'node:path'
 
 import type { StarlightPlugin } from '@astrojs/starlight/types'
 import { slug } from 'github-slugger'
-import type { DeclarationReflection, ProjectReflection } from 'typedoc'
+import {
+  type DeclarationReflection,
+  type ProjectReflection,
+  ReflectionKind,
+  ReferenceReflection,
+  type ReflectionGroup,
+} from 'typedoc'
 
 import type { StarlightTypeDocSidebarOptions } from '..'
+
+const externalLinkRegex = /^(http|ftp)s?:\/\//
 
 const sidebarDefaultOptions = {
   collapsed: false,
@@ -24,13 +32,13 @@ export function getSidebarFromReflections(
   sidebar: StarlightUserConfigSidebar,
   options: StarlightTypeDocSidebarOptions = {},
   reflections: ProjectReflection | DeclarationReflection,
-  outputDirectory: string,
+  baseOutputDirectory: string,
 ): StarlightUserConfigSidebar {
   if (!sidebar || sidebar.length === 0) {
     return sidebar
   }
 
-  const sidebarGroup = getSidebarGroupFromReflections(options, reflections, outputDirectory)
+  const sidebarGroup = getSidebarGroupFromReflections(options, reflections, baseOutputDirectory, baseOutputDirectory)
 
   function replaceSidebarGroupPlaceholder(group: SidebarManualGroup): SidebarGroup {
     if (group.label === starlightTypeDocSidebarGroupLabel.toString()) {
@@ -54,15 +62,49 @@ export function getSidebarFromReflections(
   })
 }
 
-function getSidebarGroupFromReflections(
+function getSidebarGroupFromPackageReflections(
   options: StarlightTypeDocSidebarOptions,
   reflections: ProjectReflection | DeclarationReflection,
-  outputDirectory: string,
+  baseOutputDirectory: string,
 ): SidebarGroup {
-  const groups = reflections.groups ?? []
+  const groups = (reflections.children ?? []).map((child) => {
+    if (!child.url) {
+      return undefined
+    }
+
+    const url = path.parse(child.url)
+
+    return getSidebarGroupFromReflections(
+      options,
+      child,
+      baseOutputDirectory,
+      `${baseOutputDirectory}/${url.dir}`,
+      child.name,
+    )
+  })
 
   return {
     label: options.label ?? sidebarDefaultOptions.label,
+    collapsed: options.collapsed ?? sidebarDefaultOptions.collapsed,
+    items: groups.filter((item): item is SidebarGroup => item !== undefined),
+  }
+}
+
+function getSidebarGroupFromReflections(
+  options: StarlightTypeDocSidebarOptions,
+  reflections: ProjectReflection | DeclarationReflection,
+  baseOutputDirectory: string,
+  outputDirectory: string,
+  label?: string,
+): SidebarGroup {
+  if ((!reflections.groups || reflections.groups.length === 0) && reflections.children) {
+    return getSidebarGroupFromPackageReflections(options, reflections, outputDirectory)
+  }
+
+  const groups = reflections.groups ?? []
+
+  return {
+    label: label ?? options.label ?? sidebarDefaultOptions.label,
     collapsed: options.collapsed ?? sidebarDefaultOptions.collapsed,
     items: groups
       .flatMap((group) => {
@@ -73,13 +115,19 @@ function getSidebarGroupFromReflections(
             }
 
             const url = path.parse(child.url)
+            const isParentKindModule = child.parent?.kind === ReflectionKind.Module
 
             return getSidebarGroupFromReflections(
               { collapsed: true, label: child.name },
               child,
-              `${outputDirectory}/${url.dir}`,
+              baseOutputDirectory,
+              `${outputDirectory}/${isParentKindModule ? url.dir.split('/').slice(1).join('/') : url.dir}`,
             )
           })
+        }
+
+        if (isReferenceReflectionGroup(group)) {
+          return getReferencesSidebarGroup(group, baseOutputDirectory)
         }
 
         return {
@@ -95,14 +143,83 @@ function getSidebarGroupFromReflections(
   }
 }
 
+function getReferencesSidebarGroup(
+  group: ReflectionGroup,
+  baseOutputDirectory: string,
+): SidebarManualGroup | undefined {
+  const referenceItems: LinkItem[] = group.children
+    .map((child) => {
+      const reference = child as ReferenceReflection
+      let target = reference.tryGetTargetReflectionDeep()
+
+      if (!target) {
+        return undefined
+      }
+
+      if (target.kindOf(ReflectionKind.TypeLiteral) && target.parent) {
+        target = target.parent
+      }
+
+      if (!target.url) {
+        return undefined
+      }
+
+      return {
+        label: reference.name,
+        link: getRelativeURL(target.url, getStarlightTypeDocOutputDirectory(baseOutputDirectory)),
+      }
+    })
+    .filter((item): item is LinkItem => item !== undefined)
+
+  if (referenceItems.length === 0) {
+    return undefined
+  }
+
+  return {
+    label: group.title,
+    items: referenceItems,
+  }
+}
+
 export function getAsideMarkdown(type: AsideType, title: string, content: string) {
   return `:::${type}[${title}]
 ${content}
 :::`
 }
 
+export function getRelativeURL(url: string | undefined, baseUrl: string): string | null {
+  if (!url) {
+    return null
+  } else if (externalLinkRegex.test(url)) {
+    return url
+  }
+
+  const filePath = path.parse(url)
+  const [, anchor] = filePath.base.split('#')
+  const segments = filePath.dir
+    .split('/')
+    .map((segment) => slug(segment))
+    .filter((segment) => segment !== '')
+
+  let constructedUrl = typeof baseUrl === 'string' ? baseUrl : ''
+  constructedUrl += segments.length > 0 ? `${segments.join('/')}/` : ''
+  constructedUrl += slug(filePath.name)
+  constructedUrl += '/'
+  constructedUrl += anchor && anchor.length > 0 ? `#${anchor}` : ''
+
+  return constructedUrl
+}
+
+export function getStarlightTypeDocOutputDirectory(outputDirectory: string, base = '') {
+  return path.posix.join(base, `/${outputDirectory}${outputDirectory.endsWith('/') ? '' : '/'}`)
+}
+
 function isSidebarManualGroup(item: NonNullable<StarlightUserConfigSidebar>[number]): item is SidebarManualGroup {
   return 'items' in item
+}
+
+function isReferenceReflectionGroup(group: ReflectionGroup) {
+  return group.children.every((child) => child instanceof ReferenceReflection)
 }
 
 type SidebarGroup =

@@ -15,7 +15,10 @@
   "scripts": {
     "test": "pnpm test:unit && pnpm test:e2e",
     "test:unit": "vitest",
-    "test:e2e": "playwright install --with-deps chromium && playwright test",
+    "test:e2e": "pnpm run test:e2e:basics && pnpm run test:e2e:packages",
+    "test:e2e:basics": "TEST_TYPE=basics pnpm run playwright",
+    "test:e2e:packages": "TEST_TYPE=packages pnpm run playwright",
+    "playwright": "playwright install --with-deps chromium && playwright test",
     "lint": "prettier -c --cache . && eslint . --cache --max-warnings=0"
   },
   "dependencies": {

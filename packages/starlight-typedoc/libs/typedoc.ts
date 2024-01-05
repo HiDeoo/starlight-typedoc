@@ -15,6 +15,7 @@ import type { StarlightTypeDocOptions } from '..'
 
 import { StarlightTypeDocLogger } from './logger'
 import { addFrontmatter } from './markdown'
+import { getStarlightTypeDocOutputDirectory } from './starlight'
 import { StarlightTypeDocTheme } from './theme'
 
 const defaultTypeDocConfig: TypeDocConfig = {
@@ -47,7 +48,10 @@ export async function generateTypeDoc(options: StarlightTypeDocOptions, base: st
   )
   const reflections = await app.convert()
 
-  if (!reflections?.groups || reflections.groups.length === 0) {
+  if (
+    (!reflections?.groups || reflections.groups.length === 0) &&
+    !reflections?.children?.some((child) => (child.groups ?? []).length > 0)
+  ) {
     throw new Error('Failed to generate TypeDoc documentation.')
   }
 
@@ -89,7 +93,7 @@ async function bootstrapApp(
     onRendererPageEnd(event, pagination)
   })
   app.options.addDeclaration({
-    defaultValue: path.posix.join(base, `/${outputDirectory}${outputDirectory.endsWith('/') ? '' : '/'}`),
+    defaultValue: getStarlightTypeDocOutputDirectory(outputDirectory, base),
     help: 'The starlight-typedoc output directory containing the generated documentation markdown files relative to the `src/content/docs/` directory.',
     name: 'starlight-typedoc-output',
     type: ParameterType.String,

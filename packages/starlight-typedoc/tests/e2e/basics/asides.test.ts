@@ -1,5 +1,5 @@
-import type { DocPage } from './fixtures/DocPage'
-import { expect, test } from './test'
+import type { DocPage } from '../fixtures/DocPage'
+import { expect, test } from '../test'
 
 test('should use an aside for the deprecated tag with no content', async ({ docPage }) => {
   await docPage.goto('functions/dothingb')

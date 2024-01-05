@@ -3,20 +3,16 @@ import { defineConfig } from 'astro/config'
 import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc'
 
 export default defineConfig({
+  base: '/packages-entrypoints/',
   integrations: [
     starlight({
-      editLink: {
-        baseUrl: 'https://github.com/HiDeoo/starlight-typedoc/edit/main/example/',
-      },
       plugins: [
         starlightTypeDoc({
-          entryPoints: ['../fixtures/basics/src/index.ts'],
-          tsconfig: '../fixtures/basics/tsconfig.json',
-          sidebar: {
-            label: 'API (auto-generated)',
-          },
+          entryPoints: ['../fixtures/packages/packages/*'],
+          output: 'api-packages-entrypoints',
+          tsconfig: '../fixtures/packages/tsconfig.json',
           typeDoc: {
-            plugin: ['typedoc-plugin-mdn-links'],
+            entryPointStrategy: 'packages',
           },
         }),
       ],
@@ -27,7 +23,7 @@ export default defineConfig({
         },
         typeDocSidebarGroup,
       ],
-      title: 'Starlight TypeDoc Example',
+      title: 'Starlight TypeDoc Packages Entry Points Example',
     }),
   ],
 })

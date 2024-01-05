@@ -7,7 +7,7 @@ import type { StarlightTypeDocOptions } from '../..'
 import { generateTypeDoc } from '../../libs/typedoc'
 
 const starlightTypeDocOptions = {
-  tsconfig: '../../fixtures/tsconfig.json',
+  tsconfig: '../../fixtures/basics/tsconfig.json',
   typeDoc: {
     logLevel: 4,
   },
@@ -30,7 +30,7 @@ test('should throw an error with no exports', async () => {
   await expect(
     generateTestTypeDoc({
       ...starlightTypeDocOptions,
-      entryPoints: ['../../fixtures/src/noExports.ts'],
+      entryPoints: ['../../fixtures/basics/src/noExports.ts'],
     }),
   ).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Failed to generate TypeDoc documentation.]`)
 })
@@ -38,7 +38,7 @@ test('should throw an error with no exports', async () => {
 test('should support providing custom TypeDoc options', async () => {
   const options = {
     ...starlightTypeDocOptions,
-    entryPoints: ['../../fixtures/src/noDocs.ts'],
+    entryPoints: ['../../fixtures/basics/src/noDocs.ts'],
   }
 
   await expect(generateTestTypeDoc(options)).resolves.not.toThrow()
@@ -57,7 +57,7 @@ test('should support providing custom TypeDoc options', async () => {
 test('should generate the doc in `src/content/docs/api` by default', async () => {
   await generateTestTypeDoc({
     ...starlightTypeDocOptions,
-    entryPoints: ['../../fixtures/src/functions.ts'],
+    entryPoints: ['../../fixtures/basics/src/functions.ts'],
   })
 
   const mkdirSyncSpy = vi.mocked(fs.mkdirSync)
@@ -71,7 +71,7 @@ test('should generate the doc in a custom output directory relative to `src/cont
 
   await generateTestTypeDoc({
     ...starlightTypeDocOptions,
-    entryPoints: ['../../fixtures/src/functions.ts'],
+    entryPoints: ['../../fixtures/basics/src/functions.ts'],
     output,
   })
 
@@ -84,7 +84,7 @@ test('should generate the doc in a custom output directory relative to `src/cont
 test('should not add `README.md` module files for multiple entry points', async () => {
   await generateTestTypeDoc({
     ...starlightTypeDocOptions,
-    entryPoints: ['../../fixtures/src/Bar.ts', '../../fixtures/src/Foo.ts'],
+    entryPoints: ['../../fixtures/basics/src/Bar.ts', '../../fixtures/basics/src/Foo.ts'],
   })
 
   const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
@@ -101,7 +101,7 @@ test('should support overriding typedoc-plugin-markdown readme and index page ge
       ...starlightTypeDocOptions.typeDoc,
       readme: 'README.md',
     },
-    entryPoints: ['../../fixtures/src/Bar.ts', '../../fixtures/src/Foo.ts'],
+    entryPoints: ['../../fixtures/basics/src/Bar.ts', '../../fixtures/basics/src/Foo.ts'],
   })
 
   const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
@@ -119,7 +119,7 @@ test('should output modules with index', async () => {
       outputFileStrategy: 'modules',
       entryFileName: 'index.md',
     },
-    entryPoints: ['../../fixtures/src/module.ts'],
+    entryPoints: ['../../fixtures/basics/src/module.ts'],
   })
 
   const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
@@ -143,7 +143,7 @@ test('should output index with correct module path', async () => {
       outputFileStrategy: 'modules',
       entryFileName: 'index.md',
     },
-    entryPoints: ['../../fixtures/src/module.ts'],
+    entryPoints: ['../../fixtures/basics/src/module.ts'],
   })
 
   const writeFileSyncSpy = vi.mocked(fs.writeFileSync)

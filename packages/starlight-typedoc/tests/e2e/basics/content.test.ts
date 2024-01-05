@@ -1,4 +1,4 @@
-import { expect, test } from './test'
+import { expect, test } from '../test'
 
 test('should add titles to the frontmatter', async ({ docPage }) => {
   await docPage.goto('classes/foo')
