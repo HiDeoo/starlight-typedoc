@@ -47,6 +47,13 @@ The path to the `tsconfig.json` file to use for the documentation generation.
 
 The output directory containing the generated documentation markdown files relative to the `src/content/docs/` directory.
 
+### `pagination`
+
+**Type:** `boolean`  
+**Default:** `false`
+
+Whether the footer should include previous and next page links for the generated documentation.
+
 ### `sidebar`
 
 **Type:** [`StarlightTypeDocSidebarOptions`](#sidebar-configuration)
