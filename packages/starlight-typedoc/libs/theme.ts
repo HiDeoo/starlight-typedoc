@@ -7,98 +7,100 @@ const customBlockTagTypes = ['@deprecated'] as const
 const customModifiersTagTypes = ['@alpha', '@beta', '@experimental'] as const
 
 export class StarlightTypeDocTheme extends MarkdownTheme {
-  override getRenderContext(event: PageEvent<Reflection>) {
-    return new StarlightTypeDocThemeRenderContext(event, this.application.options)
+  override getRenderContext(event: PageEvent<Reflection>): StarlightTypeDocThemeRenderContext {
+    return new StarlightTypeDocThemeRenderContext(this, event, this.application.options)
   }
 }
 
 class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
   #markdownThemeRenderContext: MarkdownThemeRenderContext
 
-  constructor(event: PageEvent<Reflection>, options: Options) {
-    super(event, options)
-    this.#markdownThemeRenderContext = new MarkdownThemeRenderContext(event, options)
+  constructor(theme: MarkdownTheme, event: PageEvent<Reflection> | null, options: Options) {
+    super(theme, event, options)
+
+    this.#markdownThemeRenderContext = new MarkdownThemeRenderContext(theme, event, options)
   }
 
-  override relativeURL: (url: string | undefined) => string | null = (url) => {
+  override parseUrl = (url: string) => {
     const outputDirectory = this.options.getValue('starlight-typedoc-output')
     const baseUrl = typeof outputDirectory === 'string' ? outputDirectory : ''
 
-    return getRelativeURL(url, baseUrl)
+    return getRelativeURL(url, baseUrl, this.page?.url)
   }
 
-  override comment: (
-    comment: Comment,
-    headingLevel?: number | undefined,
-    showSummary?: boolean | undefined,
-    showTags?: boolean | undefined,
-  ) => string = (comment, headingLevel, showSummary, showTags) => {
-    const filteredComment = { ...comment } as Comment
-    filteredComment.blockTags = []
-    filteredComment.modifierTags = new Set<`@${string}`>()
+  override partials: MarkdownThemeRenderContext['partials'] = {
+    // @ts-expect-error - https://github.com/tgreyuk/typedoc-plugin-markdown/blob/37f9de583074e725159f57d70f3ed130007a964c/docs/pages/customizing/custom-theme.mdx
+    ...this.partials,
+    comment: (comment, headingLevel, showSummary, showTags) => {
+      const filteredComment = { ...comment } as Comment
+      filteredComment.blockTags = []
+      filteredComment.modifierTags = new Set<`@${string}`>()
 
-    const customTags: CustomTag[] = []
+      const customTags: CustomTag[] = []
 
-    for (const blockTag of comment.blockTags) {
-      if (this.#isCustomBlockCommentTagType(blockTag.tag)) {
-        customTags.push({ blockTag, type: blockTag.tag })
-      } else {
-        filteredComment.blockTags.push(blockTag)
-      }
-    }
-
-    for (const modifierTag of comment.modifierTags) {
-      if (this.#isCustomModifierCommentTagType(modifierTag)) {
-        customTags.push({ type: modifierTag })
-      } else {
-        filteredComment.modifierTags.add(modifierTag)
-      }
-    }
-
-    filteredComment.summary = comment.summary.map((part) => {
-      if (
-        part.kind === 'inline-tag' &&
-        (part.tag === '@link' || part.tag === '@linkcode' || part.tag === '@linkplain') &&
-        part.target instanceof Reflection
-      ) {
-        const partURL = this.relativeURL(part.target.url)
-
-        if (partURL) {
-          return { ...part, target: partURL }
+      for (const blockTag of comment.blockTags) {
+        if (this.#isCustomBlockCommentTagType(blockTag.tag)) {
+          customTags.push({ blockTag, type: blockTag.tag })
+        } else {
+          filteredComment.blockTags.push(blockTag)
         }
       }
 
-      return part
-    })
+      for (const modifierTag of comment.modifierTags) {
+        if (this.#isCustomModifierCommentTagType(modifierTag)) {
+          customTags.push({ type: modifierTag })
+        } else {
+          filteredComment.modifierTags.add(modifierTag)
+        }
+      }
 
-    let markdown = this.#markdownThemeRenderContext.comment(filteredComment, headingLevel, showSummary, showTags)
+      filteredComment.summary = comment.summary.map((part) => {
+        if (
+          part.kind === 'inline-tag' &&
+          (part.tag === '@link' || part.tag === '@linkcode' || part.tag === '@linkplain') &&
+          part.target instanceof Reflection &&
+          typeof part.target.url === 'string'
+        ) {
+          return { ...part, target: this.parseUrl(part.target.url) }
+        }
 
-    if (showTags === true && showSummary === false) {
+        return part
+      })
+
+      let markdown = this.#markdownThemeRenderContext.partials.comment(
+        filteredComment,
+        headingLevel,
+        showSummary,
+        showTags,
+      )
+
+      if (showTags === true && showSummary === false) {
+        return markdown
+      }
+
+      for (const customCommentTag of customTags) {
+        switch (customCommentTag.type) {
+          case '@alpha': {
+            markdown = this.#addReleaseStageAside(markdown, 'Alpha')
+            break
+          }
+          case '@beta': {
+            markdown = this.#addReleaseStageAside(markdown, 'Beta')
+            break
+          }
+          case '@deprecated': {
+            markdown = this.#addDeprecatedAside(markdown, customCommentTag.blockTag)
+            break
+          }
+          case '@experimental': {
+            markdown = this.#addReleaseStageAside(markdown, 'Experimental')
+            break
+          }
+        }
+      }
+
       return markdown
-    }
-
-    for (const customCommentTag of customTags) {
-      switch (customCommentTag.type) {
-        case '@alpha': {
-          markdown = this.#addReleaseStageAside(markdown, 'Alpha')
-          break
-        }
-        case '@beta': {
-          markdown = this.#addReleaseStageAside(markdown, 'Beta')
-          break
-        }
-        case '@deprecated': {
-          markdown = this.#addDeprecatedAside(markdown, customCommentTag.blockTag)
-          break
-        }
-        case '@experimental': {
-          markdown = this.#addReleaseStageAside(markdown, 'Experimental')
-          break
-        }
-      }
-    }
-
-    return markdown
+    },
   }
 
   #isCustomBlockCommentTagType = (tag: string): tag is CustomBlockTagType => {
@@ -116,7 +118,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
   #addDeprecatedAside(markdown: string, blockTag: CommentTag) {
     const content =
       blockTag.content.length > 0
-        ? this.commentParts(blockTag.content)
+        ? this.partials.commentParts(blockTag.content)
         : 'This API is no longer supported and may be removed in a future release.'
 
     return this.#addAside(markdown, 'caution', 'Deprecated', content)

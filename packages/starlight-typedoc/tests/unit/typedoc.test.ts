@@ -94,7 +94,7 @@ test('should not add `README.md` module files for multiple entry points', async 
   expect(filePaths.some((filePath) => /\/(?:Bar|Foo)\/README\.md$/.test(filePath))).toBe(false)
 })
 
-test('should support overriding typedoc-plugin-markdown readme and index page generation', async () => {
+test('should support overriding typedoc-plugin-markdown readme page generation', async () => {
   await generateTestTypeDoc({
     ...starlightTypeDocOptions,
     typeDoc: {
@@ -107,7 +107,7 @@ test('should support overriding typedoc-plugin-markdown readme and index page ge
   const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
   const filePaths = writeFileSyncSpy.mock.calls.map((call) => call[0].toString())
 
-  expect(filePaths.some((filePath) => filePath.endsWith('API.md'))).toBe(true)
+  expect(filePaths.some((filePath) => filePath.endsWith('modules.md'))).toBe(true)
   expect(filePaths.some((filePath) => filePath.endsWith('README.md'))).toBe(true)
 })
 

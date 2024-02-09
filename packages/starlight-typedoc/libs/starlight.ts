@@ -187,14 +187,16 @@ ${content}
 :::`
 }
 
-export function getRelativeURL(url: string | undefined, baseUrl: string): string | null {
-  if (!url) {
-    return null
-  } else if (externalLinkRegex.test(url)) {
+export function getRelativeURL(url: string, baseUrl: string, pageUrl?: string): string {
+  if (externalLinkRegex.test(url)) {
     return url
   }
 
-  const filePath = path.parse(url)
+  const currentDirname = path.dirname(pageUrl ?? '')
+  const urlDirname = path.dirname(url)
+  const relativeUrl = currentDirname === urlDirname ? url : path.posix.join(currentDirname, url)
+
+  const filePath = path.parse(relativeUrl)
   const [, anchor] = filePath.base.split('#')
   const segments = filePath.dir
     .split('/')
