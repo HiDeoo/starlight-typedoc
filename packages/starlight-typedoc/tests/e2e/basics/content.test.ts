@@ -78,5 +78,5 @@ test('should properly format links in summary', async ({ docPage }) => {
   await docPage.goto('functions/dothingfaster')
 
   await docPage.content.getByRole('link', { exact: true, name: 'doThingB' }).click()
-  await docPage.page.waitForURL('**/api/functions/dothingb/')
+  await docPage.page.waitForURL('**/api/functions/dothingb')
 })
