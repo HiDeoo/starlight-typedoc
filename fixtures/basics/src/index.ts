@@ -1,5 +1,6 @@
 export * from './Bar'
 export * from './Foo'
+export * from './Baz'
 export * from './functions'
 export * from './shared'
 export * from './types'

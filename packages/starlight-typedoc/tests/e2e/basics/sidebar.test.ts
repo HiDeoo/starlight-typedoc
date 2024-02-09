@@ -53,7 +53,7 @@ test('should generate the proper items for for a single entry point', async ({ d
     },
     {
       label: 'Classes',
-      items: [{ name: 'Bar' }, { name: 'Foo' }],
+      items: [{ name: 'Bar' }, { name: 'Baz' }, { name: 'Foo' }],
       collapsed: true,
     },
     {
@@ -76,6 +76,8 @@ test('should generate the proper items for for a single entry point', async ({ d
       items: [{ name: 'doThingA' }, { name: 'doThingB' }, { name: 'doThingC' }, { name: 'doThingFaster' }],
       collapsed: true,
     },
+    // `MyCustomGroup` defined in `fixtures/basics/src/Baz.ts` does not have a directory on disk which means it should
+    // not be included in the sidebar.
   ])
 })
 

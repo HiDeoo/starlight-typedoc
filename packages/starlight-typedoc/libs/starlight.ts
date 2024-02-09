@@ -130,12 +130,23 @@ function getSidebarGroupFromReflections(
           return getReferencesSidebarGroup(group, baseOutputDirectory)
         }
 
+        const directory = `${outputDirectory}/${slug(group.title.toLowerCase())}`
+
+        // The groups generated using the `@group` tag do not have an associated directory on disk.
+        const isGroupWithDirectory = group.children.some((child) =>
+          path.posix.join(baseOutputDirectory, child.url ?? '').startsWith(directory),
+        )
+
+        if (!isGroupWithDirectory) {
+          return undefined
+        }
+
         return {
           collapsed: true,
           label: group.title,
           autogenerate: {
             collapsed: true,
-            directory: `${outputDirectory}/${slug(group.title.toLowerCase())}`,
+            directory,
           },
         }
       })
