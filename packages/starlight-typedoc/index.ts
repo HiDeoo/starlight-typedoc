@@ -1,22 +1,42 @@
+import { randomBytes } from 'node:crypto'
+
 import type { StarlightPlugin } from '@astrojs/starlight/types'
 import type { TypeDocOptions } from 'typedoc'
 
-import { getSidebarFromReflections, getSidebarGroupPlaceholder } from './libs/starlight'
+import { getSidebarFromReflections, getSidebarGroupPlaceholder, type SidebarGroup } from './libs/starlight'
 import { generateTypeDoc, type TypeDocConfig } from './libs/typedoc'
 
 export const typeDocSidebarGroup = getSidebarGroupPlaceholder()
 
 export default function starlightTypeDocPlugin(options: StarlightTypeDocOptions): StarlightPlugin {
-  return {
-    name: 'starlight-typedoc-plugin',
-    hooks: {
-      async setup({ astroConfig, config, logger, updateConfig }) {
-        const { outputDirectory, reflections } = await generateTypeDoc(options, astroConfig.base, logger)
-        const sidebar = getSidebarFromReflections(config.sidebar, options.sidebar, reflections, outputDirectory)
+  return makeStarlightTypeDocPlugin(typeDocSidebarGroup)(options)
+}
 
-        updateConfig({ sidebar })
+export function createStarlightTypeDocPlugin(): [plugin: typeof starlightTypeDocPlugin, sidebarGroup: SidebarGroup] {
+  const sidebarGroup = getSidebarGroupPlaceholder(Symbol(randomBytes(24).toString('base64url')))
+
+  return [makeStarlightTypeDocPlugin(sidebarGroup), sidebarGroup]
+}
+
+function makeStarlightTypeDocPlugin(sidebarGroup: SidebarGroup): (options: StarlightTypeDocOptions) => StarlightPlugin {
+  return function starlightTypeDocPlugin(options: StarlightTypeDocOptions) {
+    return {
+      name: 'starlight-typedoc-plugin',
+      hooks: {
+        async setup({ astroConfig, config, logger, updateConfig }) {
+          const { outputDirectory, reflections } = await generateTypeDoc(options, astroConfig.base, logger)
+          const sidebar = getSidebarFromReflections(
+            config.sidebar,
+            sidebarGroup,
+            options.sidebar,
+            reflections,
+            outputDirectory,
+          )
+
+          updateConfig({ sidebar })
+        },
       },
-    },
+    }
   }
 }
 

@@ -2,3 +2,5 @@
 api/
 api-multiple-entrypoints/
 api-packages-entrypoints/
+api-multiple-plugins-bar/
+api-multiple-plugins-foo/

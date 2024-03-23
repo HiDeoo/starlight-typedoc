@@ -1,5 +1,6 @@
 ---
 title: Configuration
+description: An overview of all the configuration options supported by the Starlight TypeDoc plugin.
 ---
 
 The Starlight TypeDoc plugin can be configured inside the `astro.config.mjs` configuration file of your project:

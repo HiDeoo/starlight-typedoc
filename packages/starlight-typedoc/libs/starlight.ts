@@ -21,15 +21,16 @@ const sidebarDefaultOptions = {
 
 const starlightTypeDocSidebarGroupLabel = Symbol('StarlightTypeDocSidebarGroupLabel')
 
-export function getSidebarGroupPlaceholder(): SidebarGroup {
+export function getSidebarGroupPlaceholder(label = starlightTypeDocSidebarGroupLabel): SidebarGroup {
   return {
     items: [],
-    label: starlightTypeDocSidebarGroupLabel.toString(),
+    label: label.toString(),
   }
 }
 
 export function getSidebarFromReflections(
   sidebar: StarlightUserConfigSidebar,
+  sidebarGroupPlaceholder: SidebarGroup,
   options: StarlightTypeDocSidebarOptions = {},
   reflections: ProjectReflection | DeclarationReflection,
   baseOutputDirectory: string,
@@ -41,7 +42,7 @@ export function getSidebarFromReflections(
   const sidebarGroup = getSidebarGroupFromReflections(options, reflections, baseOutputDirectory, baseOutputDirectory)
 
   function replaceSidebarGroupPlaceholder(group: SidebarManualGroup): SidebarGroup {
-    if (group.label === starlightTypeDocSidebarGroupLabel.toString()) {
+    if (group.label === sidebarGroupPlaceholder.label) {
       return sidebarGroup
     }
 
@@ -235,7 +236,7 @@ function isReferenceReflectionGroup(group: ReflectionGroup) {
   return group.children.every((child) => child instanceof ReferenceReflection)
 }
 
-type SidebarGroup =
+export type SidebarGroup =
   | SidebarManualGroup
   | {
       autogenerate: {
