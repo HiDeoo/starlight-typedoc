@@ -105,5 +105,5 @@ test('should replace multiple placeholders', () => {
 })
 
 function getTestSidebar(sidebar: Parameters<typeof getSidebarFromReflections>[0]) {
-  return getSidebarFromReflections(sidebar, {}, {} as ProjectReflection, 'api')
+  return getSidebarFromReflections(sidebar, typeDocSidebarGroup, {}, {} as ProjectReflection, 'api')
 }

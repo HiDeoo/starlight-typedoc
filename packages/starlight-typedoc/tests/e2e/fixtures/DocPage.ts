@@ -5,6 +5,7 @@ export class DocPage {
 
   #useMultipleEntryPoints = false
   #usePackagesEntryPoints = false
+  #useMultiplePlugins = false
 
   constructor(public readonly page: Page) {}
 
@@ -13,6 +14,8 @@ export class DocPage {
       ? 'multiple-entrypoints/api-multiple-entrypoints'
       : this.#usePackagesEntryPoints
       ? 'packages-entrypoints/api-packages-entrypoints'
+      : this.#useMultiplePlugins
+      ? 'multiple-plugins'
       : 'api'
     const baseUrl = `http://localhost:${this.#useMultipleEntryPoints ? 4322 : 4321}/${baseDir}`
 
@@ -28,6 +31,10 @@ export class DocPage {
 
   usePackagesEntryPoints() {
     this.#usePackagesEntryPoints = true
+  }
+
+  useMultiplePlugins() {
+    this.#useMultiplePlugins = true
   }
 
   get content() {
@@ -56,6 +63,10 @@ export class DocPage {
 
   getTypeDocSidebarItems() {
     return this.#getTypeDocSidebarChildrenItems(this.#typeDocSidebarRootDetails.locator('> ul'))
+  }
+
+  async getSidebarItems() {
+    return this.#getTypeDocSidebarChildrenItems(this.#sidebar.locator('ul.top-level'))
   }
 
   async #getTypeDocSidebarChildrenItems(list: Locator): Promise<TypeDocSidebarItem[]> {

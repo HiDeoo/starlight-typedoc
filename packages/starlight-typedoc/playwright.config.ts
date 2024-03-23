@@ -5,7 +5,7 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'], headless: true },
     },
   ],
   testDir: `tests/e2e/${process.env['TEST_TYPE']}`,
@@ -23,6 +23,15 @@ export default defineConfig({
             cwd: '../../example',
             reuseExistingServer: !process.env['CI'],
             url: 'http://localhost:4322/multiple-entrypoints/',
+          },
+        ]
+      : process.env['TEST_TYPE'] === 'plugins'
+      ? [
+          {
+            command: 'pnpm run dev:multiple-plugins',
+            cwd: '../../example',
+            reuseExistingServer: !process.env['CI'],
+            url: 'http://localhost:4321/multiple-plugins/',
           },
         ]
       : [

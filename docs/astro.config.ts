@@ -9,8 +9,17 @@ export default defineConfig({
         baseUrl: 'https://github.com/HiDeoo/starlight-typedoc/edit/main/docs/',
       },
       sidebar: [
-        { label: 'Getting Started', link: '/getting-started/' },
-        { label: 'Configuration', link: '/configuration/' },
+        {
+          label: 'Start Here',
+          items: [
+            { label: 'Getting Started', link: '/getting-started/' },
+            { label: 'Configuration', link: '/configuration/' },
+          ],
+        },
+        {
+          label: 'Guides',
+          items: [{ label: 'Multiple Instances', link: '/guides/multiple-instances/' }],
+        },
       ],
       social: {
         github: 'https://github.com/HiDeoo/starlight-typedoc',
