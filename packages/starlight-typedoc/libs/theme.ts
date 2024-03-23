@@ -1,4 +1,13 @@
-import { Reflection, type Comment, type CommentTag, type Options, type PageEvent } from 'typedoc'
+import path from 'node:path'
+
+import {
+  Reflection,
+  type Comment,
+  type CommentTag,
+  type Options,
+  type PageEvent,
+  type CommentDisplayPart,
+} from 'typedoc'
 import { MarkdownTheme, MarkdownThemeRenderContext } from 'typedoc-plugin-markdown'
 
 import { getAsideMarkdown, getRelativeURL } from './starlight'
@@ -42,6 +51,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
         if (this.#isCustomBlockCommentTagType(blockTag.tag)) {
           customTags.push({ blockTag, type: blockTag.tag })
         } else {
+          blockTag.content = blockTag.content.map((part) => this.#parseCommentDisplayPart(part))
           filteredComment.blockTags.push(blockTag)
         }
       }
@@ -54,18 +64,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
         }
       }
 
-      filteredComment.summary = comment.summary.map((part) => {
-        if (
-          part.kind === 'inline-tag' &&
-          (part.tag === '@link' || part.tag === '@linkcode' || part.tag === '@linkplain') &&
-          part.target instanceof Reflection &&
-          typeof part.target.url === 'string'
-        ) {
-          return { ...part, target: this.parseUrl(part.target.url) }
-        }
-
-        return part
-      })
+      filteredComment.summary = comment.summary.map((part) => this.#parseCommentDisplayPart(part))
 
       let markdown = this.#markdownThemeRenderContext.partials.comment(
         filteredComment,
@@ -101,6 +100,19 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
 
       return markdown
     },
+  }
+
+  #parseCommentDisplayPart = (part: CommentDisplayPart): CommentDisplayPart => {
+    if (
+      part.kind === 'inline-tag' &&
+      (part.tag === '@link' || part.tag === '@linkcode' || part.tag === '@linkplain') &&
+      part.target instanceof Reflection &&
+      typeof part.target.url === 'string'
+    ) {
+      return { ...part, target: this.parseUrl(path.posix.join('..', part.target.url)) }
+    }
+
+    return part
   }
 
   #isCustomBlockCommentTagType = (tag: string): tag is CustomBlockTagType => {

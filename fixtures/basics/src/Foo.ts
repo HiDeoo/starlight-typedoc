@@ -11,6 +11,10 @@ export class Foo extends Bar {
    */
   readonly foo = 'foo'
 
+  /**
+   * Parse a thing.
+   * @see {@link Thing}
+   */
   parseThing(thing: Thing) {
     return thing
   }

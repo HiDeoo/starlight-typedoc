@@ -80,3 +80,10 @@ test('should properly format links in summary', async ({ docPage }) => {
   await docPage.content.getByRole('link', { exact: true, name: 'doThingB' }).click()
   await docPage.page.waitForURL('**/api/functions/dothingb')
 })
+
+test('should properly format links in block tag comments', async ({ docPage }) => {
+  await docPage.goto('classes/foo')
+
+  await docPage.content.locator('h4:has-text("See") + p a').click()
+  await docPage.page.waitForURL('**/api/interfaces/thing')
+})
