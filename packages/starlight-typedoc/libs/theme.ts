@@ -109,7 +109,12 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
       part.target instanceof Reflection &&
       typeof part.target.url === 'string'
     ) {
-      return { ...part, target: this.parseUrl(path.posix.join('..', part.target.url)) }
+      return {
+        ...part,
+        target: this.parseUrl(
+          path.posix.join(this.options.getValue('entryPointStrategy') === 'packages' ? '../..' : '..', part.target.url),
+        ),
+      }
     }
 
     return part
