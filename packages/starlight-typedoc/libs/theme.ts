@@ -24,23 +24,27 @@ export class StarlightTypeDocTheme extends MarkdownTheme {
 class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
   #markdownThemeRenderContext: MarkdownThemeRenderContext
 
-  constructor(theme: MarkdownTheme, event: PageEvent<Reflection> | null, options: Options) {
+  constructor(theme: MarkdownTheme, event: PageEvent<Reflection>, options: Options) {
     super(theme, event, options)
 
     this.#markdownThemeRenderContext = new MarkdownThemeRenderContext(theme, event, options)
   }
 
-  override parseUrl = (url: string) => {
-    const outputDirectory = this.options.getValue('starlight-typedoc-output')
-    const baseUrl = typeof outputDirectory === 'string' ? outputDirectory : ''
+  override helpers: MarkdownThemeRenderContext['helpers'] = {
+    // @ts-expect-error https://github.com/tgreyuk/typedoc-plugin-markdown/blob/2bc4136a364c1d1ab44789d6148cd19c425ce63c/docs/pages/docs/customizing-output.mdx#custom-theme
+    ...this.helpers,
+    getRelativeUrl: (url: string) => {
+      const outputDirectory = this.options.getValue('starlight-typedoc-output')
+      const baseUrl = typeof outputDirectory === 'string' ? outputDirectory : ''
 
-    return getRelativeURL(url, baseUrl, this.page?.url)
+      return getRelativeURL(url, baseUrl, this.page.url)
+    },
   }
 
   override partials: MarkdownThemeRenderContext['partials'] = {
-    // @ts-expect-error - https://github.com/tgreyuk/typedoc-plugin-markdown/blob/37f9de583074e725159f57d70f3ed130007a964c/docs/pages/customizing/custom-theme.mdx
+    // @ts-expect-error https://github.com/tgreyuk/typedoc-plugin-markdown/blob/2bc4136a364c1d1ab44789d6148cd19c425ce63c/docs/pages/docs/customizing-output.mdx#custom-theme
     ...this.partials,
-    comment: (comment, headingLevel, showSummary, showTags) => {
+    comment: (comment, options) => {
       const filteredComment = { ...comment } as Comment
       filteredComment.blockTags = []
       filteredComment.modifierTags = new Set<`@${string}`>()
@@ -66,14 +70,9 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
 
       filteredComment.summary = comment.summary.map((part) => this.#parseCommentDisplayPart(part))
 
-      let markdown = this.#markdownThemeRenderContext.partials.comment(
-        filteredComment,
-        headingLevel,
-        showSummary,
-        showTags,
-      )
+      let markdown = this.#markdownThemeRenderContext.partials.comment(filteredComment, options)
 
-      if (showTags === true && showSummary === false) {
+      if (options?.showSummary === false) {
         return markdown
       }
 
@@ -111,7 +110,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
     ) {
       return {
         ...part,
-        target: this.parseUrl(
+        target: this.helpers.getRelativeUrl(
           path.posix.join(this.options.getValue('entryPointStrategy') === 'packages' ? '../..' : '..', part.target.url),
         ),
       }
