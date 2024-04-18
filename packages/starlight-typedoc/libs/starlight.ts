@@ -206,7 +206,8 @@ export function getRelativeURL(url: string, baseUrl: string, pageUrl?: string): 
 
   const currentDirname = path.dirname(pageUrl ?? '')
   const urlDirname = path.dirname(url)
-  const relativeUrl = currentDirname === urlDirname ? url : path.posix.relative(currentDirname, url)
+  const relativeUrl =
+    currentDirname === urlDirname ? url : path.posix.join(currentDirname, path.posix.relative(currentDirname, url))
 
   const filePath = path.parse(relativeUrl)
   const [, anchor] = filePath.base.split('#')
