@@ -22,8 +22,12 @@ test('should generate the proper items for for multiple entry points', async ({ 
       label: 'bar',
       items: [
         {
+          label: 'Interfaces',
+          items: [{ name: 'DoBarBetterOptions' }],
+        },
+        {
           label: 'Functions',
-          items: [{ name: 'doBar' }],
+          items: [{ name: 'doBar' }, { name: 'doBarBetter' }],
         },
       ],
       collapsed: true,
