@@ -29,7 +29,6 @@ const defaultTypeDocConfig: TypeDocConfig = {
 
 const markdownPluginConfig: TypeDocConfig = {
   hideBreadcrumbs: true,
-  hideInPageTOC: true,
   hidePageHeader: true,
   hidePageTitle: true,
 }
@@ -88,6 +87,7 @@ async function bootstrapApp(
   })
   app.logger = new StarlightTypeDocLogger(logger)
   app.options.addReader(new TSConfigReader())
+  // @ts-expect-error - Invalid theme typing
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
   app.renderer.on(PageEvent.END, (event: PageEvent<DeclarationReflection>) => {
     onRendererPageEnd(event, pagination)

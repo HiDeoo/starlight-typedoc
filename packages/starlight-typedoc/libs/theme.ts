@@ -8,7 +8,7 @@ import {
   type PageEvent,
   type CommentDisplayPart,
 } from 'typedoc'
-import { MarkdownTheme, MarkdownThemeRenderContext } from 'typedoc-plugin-markdown'
+import { MarkdownTheme, MarkdownThemeContext } from 'typedoc-plugin-markdown'
 
 import { getAsideMarkdown, getRelativeURL } from './starlight'
 
@@ -21,27 +21,23 @@ export class StarlightTypeDocTheme extends MarkdownTheme {
   }
 }
 
-class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
-  #markdownThemeRenderContext: MarkdownThemeRenderContext
+class StarlightTypeDocThemeRenderContext extends MarkdownThemeContext {
+  #markdownThemeContext: MarkdownThemeContext
 
   constructor(theme: MarkdownTheme, event: PageEvent<Reflection>, options: Options) {
     super(theme, event, options)
 
-    this.#markdownThemeRenderContext = new MarkdownThemeRenderContext(theme, event, options)
+    this.#markdownThemeContext = new MarkdownThemeContext(theme, event, options)
   }
 
-  override helpers: MarkdownThemeRenderContext['helpers'] = {
-    // @ts-expect-error https://github.com/tgreyuk/typedoc-plugin-markdown/blob/2bc4136a364c1d1ab44789d6148cd19c425ce63c/docs/pages/docs/customizing-output.mdx#custom-theme
-    ...this.helpers,
-    getRelativeUrl: (url: string) => {
-      const outputDirectory = this.options.getValue('starlight-typedoc-output')
-      const baseUrl = typeof outputDirectory === 'string' ? outputDirectory : ''
+  override getRelativeUrl(url: string): string {
+    const outputDirectory = this.options.getValue('starlight-typedoc-output')
+    const baseUrl = typeof outputDirectory === 'string' ? outputDirectory : ''
 
-      return getRelativeURL(url, baseUrl, this.page.url)
-    },
+    return getRelativeURL(url, baseUrl, this.page.url)
   }
 
-  override partials: MarkdownThemeRenderContext['partials'] = {
+  override partials: MarkdownThemeContext['partials'] = {
     // @ts-expect-error https://github.com/tgreyuk/typedoc-plugin-markdown/blob/2bc4136a364c1d1ab44789d6148cd19c425ce63c/docs/pages/docs/customizing-output.mdx#custom-theme
     ...this.partials,
     comment: (comment, options) => {
@@ -70,7 +66,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
 
       filteredComment.summary = comment.summary.map((part) => this.#parseCommentDisplayPart(part))
 
-      let markdown = this.#markdownThemeRenderContext.partials.comment(filteredComment, options)
+      let markdown = this.#markdownThemeContext.partials.comment(filteredComment, options)
 
       if (options?.showSummary === false) {
         return markdown
@@ -110,7 +106,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeRenderContext {
     ) {
       return {
         ...part,
-        target: this.helpers.getRelativeUrl(
+        target: this.getRelativeUrl(
           path.posix.join(this.options.getValue('entryPointStrategy') === 'packages' ? '../..' : '..', part.target.url),
         ),
       }
