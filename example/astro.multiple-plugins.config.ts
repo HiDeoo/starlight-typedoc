@@ -30,7 +30,7 @@ export default defineConfig({
       sidebar: [
         {
           label: 'Bar Content',
-          items: [barTypeDocSidebarGroup],
+          items: [{ ...barTypeDocSidebarGroup, badge: 'generated' }],
         },
         {
           label: 'Foo Content',

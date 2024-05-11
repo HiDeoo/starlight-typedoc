@@ -75,7 +75,7 @@ export class DocPage {
     for (const category of await list.locator('> li > details').all()) {
       items.push({
         collapsed: !(await category.getAttribute('open')),
-        label: await category.locator(`> summary > div > span`).textContent(),
+        label: await category.locator(`> summary > div > span:not(.sl-badge)`).textContent(),
         items: await this.#getTypeDocSidebarChildrenItems(category.locator('> ul')),
       })
     }

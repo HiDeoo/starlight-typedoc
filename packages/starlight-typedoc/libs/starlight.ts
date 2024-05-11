@@ -43,7 +43,7 @@ export function getSidebarFromReflections(
 
   function replaceSidebarGroupPlaceholder(group: SidebarManualGroup): SidebarGroup {
     if (group.label === sidebarGroupPlaceholder.label) {
-      return sidebarGroup
+      return group.badge ? { ...sidebarGroup, badge: group.badge } : sidebarGroup
     }
 
     if (isSidebarManualGroup(group)) {
@@ -252,6 +252,13 @@ interface SidebarManualGroup {
   collapsed?: boolean
   items: (LinkItem | SidebarGroup)[]
   label: string
+  badge?:
+    | string
+    | {
+        text: string
+        variant: 'note' | 'danger' | 'success' | 'caution' | 'tip' | 'default'
+      }
+    | undefined
 }
 
 interface LinkItem {
