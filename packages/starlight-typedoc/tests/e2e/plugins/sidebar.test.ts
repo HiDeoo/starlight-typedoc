@@ -42,3 +42,11 @@ test('should generate the proper items for for multiple plugins with different c
     },
   ])
 })
+
+test('should support having a badge', async ({ docPage }) => {
+  docPage.useMultiplePlugins()
+
+  await docPage.goto('api-multiple-plugins-bar/classes/bar')
+
+  await expect(docPage.page.locator('.sl-badge:has-text("generated")')).toBeVisible()
+})
