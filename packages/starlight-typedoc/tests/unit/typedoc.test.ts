@@ -63,7 +63,7 @@ test('should generate the doc in `src/content/docs/api` by default', async () =>
   const mkdirSyncSpy = vi.mocked(fs.mkdirSync)
 
   expect(mkdirSyncSpy).toHaveBeenCalled()
-  expect(mkdirSyncSpy.mock.calls[0]?.[0].toString().endsWith(`src/content/docs/api`)).toBe(true)
+  expect(mkdirSyncSpy.mock.calls[0]?.[0].toString()).toMatch(/src[/\\]content[/\\]docs[/\\]api$/)
 })
 
 test('should generate the doc in a custom output directory relative to `src/content/docs/`', async () => {
@@ -78,7 +78,9 @@ test('should generate the doc in a custom output directory relative to `src/cont
   const mkdirSyncSpy = vi.mocked(fs.mkdirSync)
 
   expect(mkdirSyncSpy).toHaveBeenCalled()
-  expect(mkdirSyncSpy.mock.calls[0]?.[0].toString().endsWith(`src/content/docs/${output}`)).toBe(true)
+  expect(mkdirSyncSpy.mock.calls[0]?.[0].toString()).toMatch(
+    new RegExp(`src[/\\\\]content[/\\\\]docs[/\\\\]${output}$`),
+  )
 })
 
 test('should not add `README.md` module files for multiple entry points', async () => {

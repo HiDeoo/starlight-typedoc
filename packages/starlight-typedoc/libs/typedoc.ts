@@ -105,7 +105,7 @@ async function bootstrapApp(
 function onRendererPageEnd(event: PageEvent<DeclarationReflection>, pagination: boolean) {
   if (!event.contents) {
     return
-  } else if (/^.+\/README\.md$/.test(event.url)) {
+  } else if (/^.+[/\\]README\.md$/.test(event.url)) {
     // Do not save `README.md` files for multiple entry points.
     event.preventDefault()
     return
