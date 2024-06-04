@@ -135,7 +135,7 @@ function getSidebarGroupFromReflections(
 
         // The groups generated using the `@group` tag do not have an associated directory on disk.
         const isGroupWithDirectory = group.children.some((child) =>
-          path.posix.join(baseOutputDirectory, child.url ?? '').startsWith(directory),
+          path.posix.join(baseOutputDirectory, child.url?.replace('\\', '/') ?? '').startsWith(directory),
         )
 
         if (!isGroupWithDirectory) {
@@ -212,7 +212,7 @@ export function getRelativeURL(url: string, baseUrl: string, pageUrl?: string): 
   const filePath = path.parse(relativeUrl)
   const [, anchor] = filePath.base.split('#')
   const segments = filePath.dir
-    .split('/')
+    .split(/[/\\]/)
     .map((segment) => slug(segment))
     .filter((segment) => segment !== '')
 

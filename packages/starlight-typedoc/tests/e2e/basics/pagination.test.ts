@@ -10,7 +10,7 @@ test('should not include pagination links by default', async ({ docPage }) => {
   await expect(prev).not.toBeVisible()
 })
 
-test('should not include pagination links if configured to do so', async ({ docPage }) => {
+test('should include pagination links if configured to do so', async ({ docPage }) => {
   docPage.useMultipleEntryPoints()
 
   await docPage.goto('bar/classes/bar')
