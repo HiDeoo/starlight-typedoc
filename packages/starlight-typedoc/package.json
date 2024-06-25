@@ -26,10 +26,10 @@
     "github-slugger": "2.0.0"
   },
   "devDependencies": {
-    "@astrojs/starlight": "0.15.1",
+    "@astrojs/starlight": "0.24.4",
     "@playwright/test": "1.35.0",
     "@types/node": "18.16.16",
-    "astro": "4.0.6",
+    "astro": "4.11.1",
     "cross-env": "7.0.3",
     "typescript": "5.1.6",
     "vitest": "1.0.4"
