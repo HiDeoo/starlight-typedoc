@@ -5,6 +5,7 @@ import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc'
 export default defineConfig({
   integrations: [
     starlight({
+      customCss: ['./src/styles/custom.css'],
       editLink: {
         baseUrl: 'https://github.com/HiDeoo/starlight-typedoc/edit/main/example/',
       },

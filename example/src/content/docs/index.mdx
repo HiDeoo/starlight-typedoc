@@ -1,18 +1,36 @@
 ---
-title: Welcome to Starlight TypeDoc
+title: Starlight TypeDoc Example
 description: Starlight plugin to generate documentation from TypeScript using TypeDoc.
+head:
+  - tag: title
+    content: Starlight TypeDoc Example
 template: splash
 editUrl: false
+lastUpdated: false
 hero:
   tagline: Starlight plugin to generate documentation from TypeScript using TypeDoc.
   image:
-    file: ../../assets/houston.webp
+    html: '📚'
   actions:
     - text: Check Example
       link: /api/functions/dothingc/
       icon: right-arrow
       variant: primary
-    - text: Getting Started
+    - text: Documentation
       link: https://starlight-typedoc.vercel.app/
-      icon: rocket
+      icon: external
 ---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+## Next steps
+
+<CardGrid stagger>
+  <Card title="Explore the example" icon="magnifier">
+    Browse through the example pages to see how the plugin works.
+  </Card>
+  <Card title="Install the plugin" icon="puzzle">
+    Check the [getting started](https://starlight-typedoc.vercel.app/getting-started/) guide for installation
+    instructions.
+  </Card>
+</CardGrid>
