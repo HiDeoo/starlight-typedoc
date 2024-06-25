@@ -20,6 +20,10 @@ export default defineConfig({
           label: 'Guides',
           items: [{ label: 'Multiple Instances', link: '/guides/multiple-instances/' }],
         },
+        {
+          label: 'Resources',
+          items: [{ label: 'Plugins and Tools', link: '/resources/starlight/' }],
+        },
       ],
       social: {
         github: 'https://github.com/HiDeoo/starlight-typedoc',
