@@ -15,6 +15,7 @@ const starlightTypeDocOptions = {
 
 beforeAll(() => {
   vi.spyOn(fs, 'mkdirSync').mockReturnValue(undefined)
+  vi.spyOn(fs, 'rmSync').mockReturnValue(undefined)
   vi.spyOn(fs, 'writeFileSync').mockReturnValue(undefined)
 })
 
@@ -89,11 +90,11 @@ test('should not add `README.md` module files for multiple entry points', async 
     entryPoints: ['../../fixtures/basics/src/Bar.ts', '../../fixtures/basics/src/Foo.ts'],
   })
 
-  const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
-  const filePaths = writeFileSyncSpy.mock.calls.map((call) => call[0].toString())
+  const rmSyncSpy = vi.mocked(fs.rmSync)
+  const filePaths = rmSyncSpy.mock.calls.map((call) => call[0].toString())
 
-  expect(writeFileSyncSpy).toHaveBeenCalled()
-  expect(filePaths.some((filePath) => /\/(?:Bar|Foo)\/README\.md$/.test(filePath))).toBe(false)
+  expect(rmSyncSpy).toHaveBeenCalled()
+  expect(filePaths.filter((filePath) => /\/(?:Bar|Foo)\/README\.md$/.test(filePath)).length).toBe(2)
 })
 
 test('should support overriding typedoc-plugin-markdown readme page generation', async () => {

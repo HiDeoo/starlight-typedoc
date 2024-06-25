@@ -1,13 +1,15 @@
+import fs from 'node:fs'
 import path from 'node:path'
 
 import type { AstroIntegrationLogger } from 'astro'
 import {
   Application,
-  type DeclarationReflection,
   PageEvent,
   TSConfigReader,
   type TypeDocOptions,
   ParameterType,
+  type Reflection,
+  RendererEvent,
 } from 'typedoc'
 import type { PluginOptions } from 'typedoc-plugin-markdown'
 
@@ -76,6 +78,8 @@ async function bootstrapApp(
   base: string,
   logger: AstroIntegrationLogger,
 ) {
+  const pagesToRemove: string[] = []
+
   const app = await Application.bootstrapWithPlugins({
     ...defaultTypeDocConfig,
     ...markdownPluginConfig,
@@ -87,10 +91,15 @@ async function bootstrapApp(
   })
   app.logger = new StarlightTypeDocLogger(logger)
   app.options.addReader(new TSConfigReader())
-  // @ts-expect-error - Invalid theme typing
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
-  app.renderer.on(PageEvent.END, (event: PageEvent<DeclarationReflection>) => {
-    onRendererPageEnd(event, pagination)
+  app.renderer.on(PageEvent.END, (event: PageEvent<Reflection>) => {
+    const shouldRemovePage = onRendererPageEnd(event, pagination)
+    if (shouldRemovePage) {
+      pagesToRemove.push(event.filename)
+    }
+  })
+  app.renderer.on(RendererEvent.END, () => {
+    onRendererEnd(pagesToRemove)
   })
   app.options.addDeclaration({
     defaultValue: getStarlightTypeDocOutputDirectory(outputDirectory, base),
@@ -102,13 +111,16 @@ async function bootstrapApp(
   return app
 }
 
-function onRendererPageEnd(event: PageEvent<DeclarationReflection>, pagination: boolean) {
+// Returning `true` will delete the page from the filesystem.
+function onRendererPageEnd(event: PageEvent<Reflection>, pagination: boolean) {
   if (!event.contents) {
-    return
+    return false
   } else if (/^.+[/\\]README\.md$/.test(event.url)) {
     // Do not save `README.md` files for multiple entry points.
-    event.preventDefault()
-    return
+    // It is no longer supported in TypeDoc 0.26.0 to call `event.preventDefault()` to prevent the file from being saved.
+    // https://github.com/TypeStrong/typedoc/commit/6e6b3b662c92b3d4bc24b6c6c0c6e227e063c759
+    // event.preventDefault()
+    return true
   }
 
   event.contents = addFrontmatter(event.contents, {
@@ -118,6 +130,14 @@ function onRendererPageEnd(event: PageEvent<DeclarationReflection>, pagination: 
     // Wrap in quotes to prevent issue with special characters in frontmatter
     title: `"${event.model.name}"`,
   })
+
+  return false
+}
+
+function onRendererEnd(pagesToRemove: string[]) {
+  for (const page of pagesToRemove) {
+    fs.rmSync(page, { force: true })
+  }
 }
 
 export type TypeDocConfig = Partial<Omit<TypeDocOptions, 'entryPoints' | 'tsconfig'> & PluginOptions>

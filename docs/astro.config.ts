@@ -20,6 +20,14 @@ export default defineConfig({
           label: 'Guides',
           items: [{ label: 'Multiple Instances', link: '/guides/multiple-instances/' }],
         },
+        {
+          label: 'Resources',
+          items: [
+            { label: 'Showcase', link: '/resources/showcase/' },
+            { label: 'Plugins and Tools', link: '/resources/starlight/' },
+          ],
+        },
+        { label: 'Demo', link: 'https://starlight-typedoc-example.vercel.app/api/functions/dothingc/' },
       ],
       social: {
         github: 'https://github.com/HiDeoo/starlight-typedoc',

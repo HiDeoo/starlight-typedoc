@@ -65,7 +65,7 @@ test('should disable edit links', async ({ docPage }) => {
 test('should support TypeDoc plugins', async ({ docPage }) => {
   await docPage.goto('classes/foo')
 
-  const mdnLink = docPage.page.getByRole('link', { exact: true, name: 'HTMLElement ↗️' })
+  const mdnLink = docPage.page.getByRole('link', { exact: true, name: 'HTMLElement' })
 
   await expect(mdnLink).toBeVisible()
 
