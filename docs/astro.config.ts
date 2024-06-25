@@ -24,6 +24,7 @@ export default defineConfig({
           label: 'Resources',
           items: [{ label: 'Plugins and Tools', link: '/resources/starlight/' }],
         },
+        { label: 'Demo', link: 'https://starlight-typedoc-example.vercel.app/api/functions/dothingc/' },
       ],
       social: {
         github: 'https://github.com/HiDeoo/starlight-typedoc',
