@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import type { AstroIntegrationLogger } from 'astro'
+import type { AstroConfig, AstroIntegrationLogger } from 'astro'
 import {
   Application,
   PageEvent,
@@ -35,7 +35,11 @@ const markdownPluginConfig: TypeDocConfig = {
   hidePageTitle: true,
 }
 
-export async function generateTypeDoc(options: StarlightTypeDocOptions, base: string, logger: AstroIntegrationLogger) {
+export async function generateTypeDoc(
+  options: StarlightTypeDocOptions,
+  config: AstroConfig,
+  logger: AstroIntegrationLogger,
+) {
   const outputDirectory = options.output ?? 'api'
 
   const app = await bootstrapApp(
@@ -44,7 +48,7 @@ export async function generateTypeDoc(options: StarlightTypeDocOptions, base: st
     options.typeDoc,
     outputDirectory,
     options.pagination ?? false,
-    base,
+    config.base,
     logger,
   )
   const reflections = await app.convert()
@@ -56,7 +60,7 @@ export async function generateTypeDoc(options: StarlightTypeDocOptions, base: st
     throw new Error('Failed to generate TypeDoc documentation.')
   }
 
-  const outputPath = path.join('src/content/docs', outputDirectory)
+  const outputPath = path.join(`${config.srcDir.pathname}/content/docs`, outputDirectory)
 
   if (options.watch) {
     app.convertAndWatch(async (reflections) => {
