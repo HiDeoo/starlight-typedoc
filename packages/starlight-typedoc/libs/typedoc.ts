@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import url from 'node:url'
 
 import type { AstroConfig, AstroIntegrationLogger } from 'astro'
 import {
@@ -60,7 +61,7 @@ export async function generateTypeDoc(
     throw new Error('Failed to generate TypeDoc documentation.')
   }
 
-  const outputPath = path.join(`${config.srcDir.pathname}/content/docs`, outputDirectory)
+  const outputPath = path.join(url.fileURLToPath(config.srcDir), 'content/docs', outputDirectory)
 
   if (options.watch) {
     app.convertAndWatch(async (reflections) => {
