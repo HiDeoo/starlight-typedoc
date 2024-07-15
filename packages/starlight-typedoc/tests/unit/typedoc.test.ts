@@ -78,13 +78,13 @@ test('should generate the doc in `/content/docs/api` of the srcDir via the Astro
       ...starlightTypeDocOptions,
       entryPoints: ['../../fixtures/basics/src/functions.ts'],
     },
-    { srcDir: new URL('docs/src', import.meta.url) } as AstroConfig,
+    { srcDir: new URL('www/src', import.meta.url) },
   )
 
   const mkdirSyncSpy = vi.mocked(fs.mkdirSync)
 
   expect(mkdirSyncSpy).toHaveBeenCalled()
-  expect(mkdirSyncSpy.mock.calls[0]?.[0].toString()).toMatch(/docs[/\\]src[/\\]content[/\\]docs[/\\]api$/)
+  expect(mkdirSyncSpy.mock.calls[0]?.[0].toString()).toMatch(/www[/\\]src[/\\]content[/\\]docs[/\\]api$/)
 })
 
 test('should generate the doc in a custom output directory relative to `src/content/docs/`', async () => {
@@ -187,14 +187,14 @@ test('should output index with correct module path', async () => {
 
 function generateTestTypeDoc(
   options: Parameters<typeof generateTypeDoc>[0],
-  config: AstroConfig = starlightTypeDocAstroConfig as AstroConfig,
+  config: Partial<AstroConfig> = starlightTypeDocAstroConfig,
 ) {
   return generateTypeDoc(
     {
       ...starlightTypeDocOptions,
       ...options,
     },
-    config,
+    config as AstroConfig,
     {
       info() {
         // noop
