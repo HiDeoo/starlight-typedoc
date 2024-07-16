@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 
-import type { AstroIntegrationLogger } from 'astro'
+import type { AstroIntegrationLogger, AstroConfig } from 'astro'
 import { afterAll, afterEach, beforeAll, expect, test, vi } from 'vitest'
 
 import type { StarlightTypeDocOptions } from '../..'
@@ -12,6 +12,11 @@ const starlightTypeDocOptions = {
     logLevel: 4,
   },
 } satisfies Partial<StarlightTypeDocOptions>
+
+const starlightTypeDocAstroConfig: Partial<AstroConfig> = {
+  // './src' is the default value supplied by Astro — https://docs.astro.build/en/reference/configuration-reference/#srcdir
+  srcDir: new URL('src', import.meta.url),
+}
 
 beforeAll(() => {
   vi.spyOn(fs, 'mkdirSync').mockReturnValue(undefined)
@@ -65,6 +70,21 @@ test('should generate the doc in `src/content/docs/api` by default', async () =>
 
   expect(mkdirSyncSpy).toHaveBeenCalled()
   expect(mkdirSyncSpy.mock.calls[0]?.[0].toString()).toMatch(/src[/\\]content[/\\]docs[/\\]api$/)
+})
+
+test('should generate the doc in `/content/docs/api` of the srcDir via the AstroConfig', async () => {
+  await generateTestTypeDoc(
+    {
+      ...starlightTypeDocOptions,
+      entryPoints: ['../../fixtures/basics/src/functions.ts'],
+    },
+    { srcDir: new URL('www/src', import.meta.url) },
+  )
+
+  const mkdirSyncSpy = vi.mocked(fs.mkdirSync)
+
+  expect(mkdirSyncSpy).toHaveBeenCalled()
+  expect(mkdirSyncSpy.mock.calls[0]?.[0].toString()).toMatch(/www[/\\]src[/\\]content[/\\]docs[/\\]api$/)
 })
 
 test('should generate the doc in a custom output directory relative to `src/content/docs/`', async () => {
@@ -165,13 +185,16 @@ test('should output index with correct module path', async () => {
   ).toBe(true)
 })
 
-function generateTestTypeDoc(options: Parameters<typeof generateTypeDoc>[0]) {
+function generateTestTypeDoc(
+  options: Parameters<typeof generateTypeDoc>[0],
+  config: Partial<AstroConfig> = starlightTypeDocAstroConfig,
+) {
   return generateTypeDoc(
     {
       ...starlightTypeDocOptions,
       ...options,
     },
-    '/',
+    config as AstroConfig,
     {
       info() {
         // noop
