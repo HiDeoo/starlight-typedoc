@@ -12,7 +12,7 @@ import {
   type Reflection,
   RendererEvent,
 } from 'typedoc'
-import type { PluginOptions } from 'typedoc-plugin-markdown'
+import type { MarkdownPageEvent, PluginOptions } from 'typedoc-plugin-markdown'
 
 import type { StarlightTypeDocOptions } from '..'
 
@@ -117,7 +117,7 @@ async function bootstrapApp(
 }
 
 // Returning `true` will delete the page from the filesystem.
-function onRendererPageEnd(event: PageEvent<Reflection>, pagination: boolean) {
+function onRendererPageEnd(event: MarkdownPageEvent, pagination: boolean) {
   if (!event.contents) {
     return false
   } else if (/^.+[/\\]README\.md$/.test(event.url)) {
@@ -128,13 +128,20 @@ function onRendererPageEnd(event: PageEvent<Reflection>, pagination: boolean) {
     return true
   }
 
-  event.contents = addFrontmatter(event.contents, {
-    editUrl: false,
-    next: pagination,
-    prev: pagination,
-    // Wrap in quotes to prevent issue with special characters in frontmatter
-    title: `"${event.model.name}"`,
-  })
+  if (event.frontmatter) {
+    event.frontmatter['editUrl'] = false
+    event.frontmatter['next'] = pagination
+    event.frontmatter['prev'] = pagination
+    event.frontmatter['title'] = event.model.name
+  } else {
+    event.contents = addFrontmatter(event.contents, {
+      editUrl: false,
+      next: pagination,
+      prev: pagination,
+      // Wrap in quotes to prevent issue with special characters in frontmatter
+      title: `"${event.model.name}"`,
+    })
+  }
 
   return false
 }

@@ -18,7 +18,10 @@ export default defineConfig({
         },
         {
           label: 'Guides',
-          items: [{ label: 'Multiple Instances', link: '/guides/multiple-instances/' }],
+          items: [
+            { label: 'Multiple Instances', link: '/guides/multiple-instances/' },
+            { label: 'Frontmatter', link: '/guides/frontmatter/' },
+          ],
         },
         {
           label: 'Resources',
