@@ -74,6 +74,16 @@ test('should support TypeDoc plugins', async ({ docPage }) => {
   expect(mdnLinkHref?.startsWith('https://developer.mozilla.org')).toBe(true)
 })
 
+test('should support plugins customizing the frontmatter', async ({ docPage }) => {
+  await docPage.goto('variables/anobject')
+
+  const sidebarBadge = docPage.page.locator('a[aria-current="page"] .sl-badge')
+
+  await expect(sidebarBadge).toBeVisible()
+
+  expect(await sidebarBadge.textContent()).toBe('New')
+})
+
 test('should properly format links in summary', async ({ docPage }) => {
   await docPage.goto('functions/dothingfaster')
 

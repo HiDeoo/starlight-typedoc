@@ -65,6 +65,9 @@ importers:
       typedoc:
         specifier: 0.26.2
         version: 0.26.2(typescript@5.1.6)
+      typedoc-plugin-frontmatter:
+        specifier: 1.0.0
+        version: 1.0.0(typedoc-plugin-markdown@4.1.0)
       typedoc-plugin-markdown:
         specifier: 4.1.0
         version: 4.1.0(typedoc@0.26.2)
@@ -6223,6 +6226,15 @@ packages:
       for-each: 0.3.3
       is-typed-array: 1.1.12
     dev: true
+
+  /typedoc-plugin-frontmatter@1.0.0(typedoc-plugin-markdown@4.1.0):
+    resolution: {integrity: sha512-Mqn96+RjUjPUz/42H8MOp/8eOKjE5MVIgZRFDGmSI2YuggnMZSfh5MMpvd6ykjNTpq7gV5D2iwjqLt8nYRg9rg==}
+    peerDependencies:
+      typedoc-plugin-markdown: '>=4.0.0'
+    dependencies:
+      typedoc-plugin-markdown: 4.1.0(typedoc@0.26.2)
+      yaml: 2.4.5
+    dev: false
 
   /typedoc-plugin-markdown@4.1.0(typedoc@0.26.2):
     resolution: {integrity: sha512-sUiEJVaa6+MOFShRy14j1OP/VXC5OLyHNecJ2nKeGuBy2M3YiMatSLoIiddFAqVptSuILJTZiJzCBIY6yzAVyg==}

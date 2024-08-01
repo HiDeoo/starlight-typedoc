@@ -17,7 +17,7 @@ export default defineConfig({
             label: 'API (auto-generated)',
           },
           typeDoc: {
-            plugin: ['typedoc-plugin-mdn-links'],
+            plugin: ['typedoc-plugin-mdn-links', 'typedoc-plugin-frontmatter', './src/plugins/frontmatter.js'],
           },
         }),
       ],

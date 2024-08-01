@@ -23,6 +23,7 @@
     "sharp": "0.32.6",
     "starlight-typedoc": "workspace:*",
     "typedoc": "0.26.2",
+    "typedoc-plugin-frontmatter": "1.0.0",
     "typedoc-plugin-markdown": "4.1.0",
     "typedoc-plugin-mdn-links": "3.0.3"
   },
