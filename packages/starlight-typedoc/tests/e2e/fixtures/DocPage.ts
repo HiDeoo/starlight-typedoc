@@ -80,7 +80,7 @@ export class DocPage {
       })
     }
 
-    for (const link of await list.locator('> li > a').all()) {
+    for (const link of await list.locator('> li > a > span:not(.sl-badge)').all()) {
       const name = await link.textContent()
 
       items.push({ name: name ? name.trim() : null })
