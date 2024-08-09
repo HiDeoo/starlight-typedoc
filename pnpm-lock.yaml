@@ -63,17 +63,17 @@ importers:
         specifier: workspace:*
         version: link:../packages/starlight-typedoc
       typedoc:
-        specifier: 0.26.2
-        version: 0.26.2(typescript@5.1.6)
+        specifier: 0.26.5
+        version: 0.26.5(typescript@5.1.6)
       typedoc-plugin-frontmatter:
         specifier: 1.0.0
         version: 1.0.0(typedoc-plugin-markdown@4.1.0)
       typedoc-plugin-markdown:
         specifier: 4.1.0
-        version: 4.1.0(typedoc@0.26.2)
+        version: 4.1.0(typedoc@0.26.5)
       typedoc-plugin-mdn-links:
         specifier: 3.0.3
-        version: 3.0.3(typedoc@0.26.2)
+        version: 3.0.3(typedoc@0.26.5)
 
   fixtures/basics:
     dependencies:
@@ -93,11 +93,11 @@ importers:
         specifier: 2.0.0
         version: 2.0.0
       typedoc:
-        specifier: '>=0.26.0'
-        version: 0.26.2(typescript@5.1.6)
+        specifier: '>=0.26.5'
+        version: 0.26.5(typescript@5.1.6)
       typedoc-plugin-markdown:
         specifier: '>=4.0.0'
-        version: 4.1.0(typedoc@0.26.2)
+        version: 4.1.0(typedoc@0.26.5)
     devDependencies:
       '@astrojs/starlight':
         specifier: 0.24.4
@@ -180,7 +180,7 @@ packages:
       remark-parse: 11.0.0
       remark-rehype: 11.1.0
       remark-smartypants: 3.0.1
-      shiki: 1.9.0
+      shiki: 1.12.1
       unified: 11.0.5
       unist-util-remove-position: 5.0.0
       unist-util-visit: 5.0.0
@@ -743,7 +743,7 @@ packages:
     resolution: {integrity: sha512-aFQBPepv0zhVXqJFAvfQ4vXYv/meJKiqmEEKSxdjAfwXllIV49PDlnGEXmbGYjR4hUQQjbfDgzAbrbfePc3YVQ==}
     dependencies:
       '@expressive-code/core': 0.35.3
-      shiki: 1.9.0
+      shiki: 1.12.1
 
   /@expressive-code/plugin-text-markers@0.35.3:
     resolution: {integrity: sha512-gDdnQrfDRXw5Y+PKHJDkpAUdf2pthYOthGcgy3JB8GOTQ3EL1h+755Ct/bGc4MR6jn+dgnQP47uHMWQaccvN6Q==}
@@ -1298,6 +1298,11 @@ packages:
     os: [win32]
     requiresBuild: true
     optional: true
+
+  /@shikijs/core@1.12.1:
+    resolution: {integrity: sha512-biCz/mnkMktImI6hMfMX3H9kOeqsInxWEyCHbSlL8C/2TR1FqfmGxTLRNwYCKsyCyxWLbB8rEqXRVZuyxuLFmA==}
+    dependencies:
+      '@types/hast': 3.0.4
 
   /@shikijs/core@1.9.0:
     resolution: {integrity: sha512-cbSoY8P/jgGByG8UOl3jnP/CWg/Qk+1q+eAKWtcrU3pNoILF8wTsLB0jT44qUBV8Ce1SvA9uqcM9Xf+u3fJFBw==}
@@ -4772,8 +4777,8 @@ packages:
       brace-expansion: 1.1.11
     dev: true
 
-  /minimatch@9.0.4:
-    resolution: {integrity: sha512-KqWh+VchfxcMNRAJjj2tnsSJdNbHsVgnkBhTNrW7AjVo6OvLtxw8zfT9oLw1JSohlFzJ8jCoTgaoXvJ+kHt6fw==}
+  /minimatch@9.0.5:
+    resolution: {integrity: sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==}
     engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
       brace-expansion: 2.0.1
@@ -5719,6 +5724,12 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
+  /shiki@1.12.1:
+    resolution: {integrity: sha512-nwmjbHKnOYYAe1aaQyEBHvQymJgfm86ZSS7fT8OaPRr4sbAcBNz7PbfAikMEFSDQ6se2j2zobkXvVKcBOm0ysg==}
+    dependencies:
+      '@shikijs/core': 1.12.1
+      '@types/hast': 3.0.4
+
   /shiki@1.9.0:
     resolution: {integrity: sha512-i6//Lqgn7+7nZA0qVjoYH0085YdNk4MC+tJV4bo+HgjgRMJ0JmkLZzFAuvVioJqLkcGDK5GAMpghZEZkCnwxpQ==}
     dependencies:
@@ -6232,29 +6243,29 @@ packages:
     peerDependencies:
       typedoc-plugin-markdown: '>=4.0.0'
     dependencies:
-      typedoc-plugin-markdown: 4.1.0(typedoc@0.26.2)
+      typedoc-plugin-markdown: 4.1.0(typedoc@0.26.5)
       yaml: 2.4.5
     dev: false
 
-  /typedoc-plugin-markdown@4.1.0(typedoc@0.26.2):
+  /typedoc-plugin-markdown@4.1.0(typedoc@0.26.5):
     resolution: {integrity: sha512-sUiEJVaa6+MOFShRy14j1OP/VXC5OLyHNecJ2nKeGuBy2M3YiMatSLoIiddFAqVptSuILJTZiJzCBIY6yzAVyg==}
     engines: {node: '>= 18'}
     peerDependencies:
       typedoc: 0.26.x
     dependencies:
-      typedoc: 0.26.2(typescript@5.1.6)
+      typedoc: 0.26.5(typescript@5.1.6)
     dev: false
 
-  /typedoc-plugin-mdn-links@3.0.3(typedoc@0.26.2):
+  /typedoc-plugin-mdn-links@3.0.3(typedoc@0.26.5):
     resolution: {integrity: sha512-NXhIpwQnsg7BcyMCHVqj3tUK+DL4g3Bt96JbFl4APzTGFkA+iM6GfZ/fn3TAqJ8O0CXG5R9BfWxolw1m1omNuQ==}
     peerDependencies:
       typedoc: '>= 0.23.14 || 0.24.x'
     dependencies:
-      typedoc: 0.26.2(typescript@5.1.6)
+      typedoc: 0.26.5(typescript@5.1.6)
     dev: false
 
-  /typedoc@0.26.2(typescript@5.1.6):
-    resolution: {integrity: sha512-q/t+M+PZqhN9gPWLBZ3CCvP+KT8O1tyYkSzEYbcQ6mo89avdIrMlBEl3vfo5BgSzwC6Lbmq0W64E8RkY+eVsLA==}
+  /typedoc@0.26.5(typescript@5.1.6):
+    resolution: {integrity: sha512-Vn9YKdjKtDZqSk+by7beZ+xzkkr8T8CYoiasqyt4TTRFy5+UHzL/mF/o4wGBjRF+rlWQHDb0t6xCpA3JNL5phg==}
     engines: {node: '>= 18'}
     hasBin: true
     peerDependencies:
@@ -6262,8 +6273,8 @@ packages:
     dependencies:
       lunr: 2.3.9
       markdown-it: 14.1.0
-      minimatch: 9.0.4
-      shiki: 1.9.0
+      minimatch: 9.0.5
+      shiki: 1.12.1
       typescript: 5.1.6
       yaml: 2.4.5
     dev: false

@@ -97,6 +97,9 @@ async function bootstrapApp(
   app.logger = new StarlightTypeDocLogger(logger)
   app.options.addReader(new TSConfigReader())
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
+  app.renderer.on(PageEvent.BEGIN, (event: PageEvent<Reflection>) => {
+    onRendererPageBegin(event, pagination)
+  })
   app.renderer.on(PageEvent.END, (event: PageEvent<Reflection>) => {
     const shouldRemovePage = onRendererPageEnd(event, pagination)
     if (shouldRemovePage) {
@@ -116,6 +119,15 @@ async function bootstrapApp(
   return app
 }
 
+function onRendererPageBegin(event: MarkdownPageEvent, pagination: boolean) {
+  if (event.frontmatter) {
+    event.frontmatter['editUrl'] = false
+    event.frontmatter['next'] = pagination
+    event.frontmatter['prev'] = pagination
+    event.frontmatter['title'] = event.model.name
+  }
+}
+
 // Returning `true` will delete the page from the filesystem.
 function onRendererPageEnd(event: MarkdownPageEvent, pagination: boolean) {
   if (!event.contents) {
@@ -128,12 +140,7 @@ function onRendererPageEnd(event: MarkdownPageEvent, pagination: boolean) {
     return true
   }
 
-  if (event.frontmatter) {
-    event.frontmatter['editUrl'] = false
-    event.frontmatter['next'] = pagination
-    event.frontmatter['prev'] = pagination
-    event.frontmatter['title'] = event.model.name
-  } else {
+  if (!event.frontmatter) {
     event.contents = addFrontmatter(event.contents, {
       editUrl: false,
       next: pagination,

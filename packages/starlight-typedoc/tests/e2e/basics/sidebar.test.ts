@@ -68,12 +68,7 @@ test('should generate the proper items for for a single entry point', async ({ d
     },
     {
       label: 'Variables',
-      items: [
-        { name: 'anObject New' },
-        { name: 'anObjectAsConst' },
-        { name: 'anUndefinedString' },
-        { name: 'aString' },
-      ],
+      items: [{ name: 'anObject' }, { name: 'anObjectAsConst' }, { name: 'anUndefinedString' }, { name: 'aString' }],
       collapsed: true,
     },
     {
