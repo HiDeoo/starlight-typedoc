@@ -24,15 +24,14 @@ function makeStarlightTypeDocPlugin(sidebarGroup: SidebarGroup): (options: Starl
       name: 'starlight-typedoc-plugin',
       hooks: {
         async setup({ astroConfig, config, logger, updateConfig }) {
-          const { outputDirectory, reflections } = await generateTypeDoc(options, astroConfig, logger)
+          const { baseOutputDirectory, reflections } = await generateTypeDoc(options, astroConfig, logger)
           const sidebar = getSidebarFromReflections(
             config.sidebar,
             sidebarGroup,
             options.sidebar,
             reflections,
-            outputDirectory,
+            baseOutputDirectory,
           )
-
           updateConfig({ sidebar })
         },
       },
@@ -60,6 +59,11 @@ export interface StarlightTypeDocOptions {
    * @default false
    */
   pagination?: boolean
+  /**
+   * The locale where the documentation should be generated. For example, if you pass 'en', the documentation will be generated
+   * relative to `src/content/docs/en/`
+   */
+  locale?: string
   /**
    * The path to the `tsconfig.json` file to use for the documentation generation.
    */

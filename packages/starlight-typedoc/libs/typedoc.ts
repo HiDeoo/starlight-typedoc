@@ -41,7 +41,8 @@ export async function generateTypeDoc(
   config: AstroConfig,
   logger: AstroIntegrationLogger,
 ) {
-  const outputDirectory = options.output ?? 'api'
+  const baseOutputDirectory = options.output ?? 'api'
+  const outputDirectory = options.locale ? `${options.locale}/${baseOutputDirectory}` : baseOutputDirectory
 
   const app = await bootstrapApp(
     options.entryPoints,
@@ -71,7 +72,7 @@ export async function generateTypeDoc(
     await app.generateDocs(reflections, outputPath)
   }
 
-  return { outputDirectory, reflections }
+  return { baseOutputDirectory, outputDirectory, reflections }
 }
 
 async function bootstrapApp(
@@ -96,6 +97,7 @@ async function bootstrapApp(
   })
   app.logger = new StarlightTypeDocLogger(logger)
   app.options.addReader(new TSConfigReader())
+  // @ts-expect-error - Type 'new (renderer: Renderer) => StarlightTypeDocTheme' is not assignable to type 'new (renderer: Renderer) => Theme'
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
   app.renderer.on(PageEvent.BEGIN, (event: PageEvent<Reflection>) => {
     onRendererPageBegin(event, pagination)

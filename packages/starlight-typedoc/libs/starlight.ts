@@ -120,7 +120,7 @@ function getSidebarGroupFromReflections(
 
             return getSidebarGroupFromReflections(
               { collapsed: true, label: child.name },
-              child,
+              child as DeclarationReflection,
               baseOutputDirectory,
               `${outputDirectory}/${isParentKindModule ? url.dir.split('/').slice(1).join('/') : url.dir}`,
             )
