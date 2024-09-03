@@ -130,7 +130,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeContext {
   #addDeprecatedAside(markdown: string, blockTag: CommentTag) {
     const content =
       blockTag.content.length > 0
-        ? this.partials.commentParts(blockTag.content)
+        ? this.helpers.getCommentParts(blockTag.content)
         : 'This API is no longer supported and may be removed in a future release.'
 
     return this.#addAside(markdown, 'caution', 'Deprecated', content)
