@@ -67,10 +67,10 @@ importers:
         version: 0.26.5(typescript@5.1.6)
       typedoc-plugin-frontmatter:
         specifier: 1.0.0
-        version: 1.0.0(typedoc-plugin-markdown@4.1.0)
+        version: 1.0.0(typedoc-plugin-markdown@4.1.1)
       typedoc-plugin-markdown:
-        specifier: 4.1.0
-        version: 4.1.0(typedoc@0.26.5)
+        specifier: 4.1.1
+        version: 4.1.1(typedoc@0.26.5)
       typedoc-plugin-mdn-links:
         specifier: 3.0.3
         version: 3.0.3(typedoc@0.26.5)
@@ -752,6 +752,7 @@ packages:
 
   /@hideoo/eslint-config-astro@2.0.1(eslint@8.48.0)(typescript@5.1.6):
     resolution: {integrity: sha512-FoGp882BXZ6omezj4qJc3tHGa8JR1zidIaMaPER94X3qFkepelHJioaiZwIHWudVKipRD6iVnZdB7tOEUpSEow==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       eslint: '>=8.45.0'
     dependencies:
@@ -768,6 +769,7 @@ packages:
 
   /@hideoo/eslint-config-base@2.0.1(@typescript-eslint/parser@6.5.0)(eslint-import-resolver-typescript@3.6.0)(eslint@8.48.0):
     resolution: {integrity: sha512-f9FzxJZ+aQTe2yV04oJJbUb2w0sj45/3z0uPYrPMQA6SnkVKYFF3ZBL+wDHGcX0JlrFx6go+ZIuLroRBQQA3wA==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       eslint: '>=8.45.0'
     dependencies:
@@ -785,6 +787,7 @@ packages:
 
   /@hideoo/eslint-config-react@2.0.1(eslint@8.48.0)(typescript@5.1.6):
     resolution: {integrity: sha512-JvslAPoGj0eyr5zzFvi3LIyNInXo4mqIRral2HAE7bOoIylgHZuApKZLX0ApRfVCw3EG6K/dYlE7T08wn0Seqg==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       eslint: '>=8.45.0'
     dependencies:
@@ -803,6 +806,7 @@ packages:
 
   /@hideoo/eslint-config-typescript@2.0.1(eslint@8.48.0)(typescript@5.1.6):
     resolution: {integrity: sha512-nkiefkrsZ/kNJOJAnMaKxPjyi/BhaiD48xMmu5nt7DQgSfS0ZOHv6nKS/SxdUPx3pv2lmEpNYfHd4OKrbL0DkQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       eslint: '>=8.45.0'
       typescript: '>=4.0.2 || 5.1.6'
@@ -1179,6 +1183,7 @@ packages:
   /@playwright/test@1.35.0:
     resolution: {integrity: sha512-6qXdd5edCBynOwsz1YcNfgX8tNWeuS9fxy5o59D0rvHXxRtjXRebB4gE4vFVfEMXl/z8zTnAzfOs7aQDEs8G4Q==}
     engines: {node: '>=16'}
+    deprecated: Please update to the latest version of Playwright to test up-to-date browsers.
     hasBin: true
     dependencies:
       '@types/node': 18.16.16
@@ -1303,9 +1308,6 @@ packages:
     resolution: {integrity: sha512-biCz/mnkMktImI6hMfMX3H9kOeqsInxWEyCHbSlL8C/2TR1FqfmGxTLRNwYCKsyCyxWLbB8rEqXRVZuyxuLFmA==}
     dependencies:
       '@types/hast': 3.0.4
-
-  /@shikijs/core@1.9.0:
-    resolution: {integrity: sha512-cbSoY8P/jgGByG8UOl3jnP/CWg/Qk+1q+eAKWtcrU3pNoILF8wTsLB0jT44qUBV8Ce1SvA9uqcM9Xf+u3fJFBw==}
 
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -1866,7 +1868,7 @@ packages:
       rehype: 13.0.1
       resolve: 1.22.8
       semver: 7.6.2
-      shiki: 1.9.0
+      shiki: 1.12.1
       string-width: 7.1.0
       strip-ansi: 7.1.0
       tsconfck: 3.1.0(typescript@5.1.6)
@@ -5730,11 +5732,6 @@ packages:
       '@shikijs/core': 1.12.1
       '@types/hast': 3.0.4
 
-  /shiki@1.9.0:
-    resolution: {integrity: sha512-i6//Lqgn7+7nZA0qVjoYH0085YdNk4MC+tJV4bo+HgjgRMJ0JmkLZzFAuvVioJqLkcGDK5GAMpghZEZkCnwxpQ==}
-    dependencies:
-      '@shikijs/core': 1.9.0
-
   /side-channel@1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
     dependencies:
@@ -6238,12 +6235,12 @@ packages:
       is-typed-array: 1.1.12
     dev: true
 
-  /typedoc-plugin-frontmatter@1.0.0(typedoc-plugin-markdown@4.1.0):
+  /typedoc-plugin-frontmatter@1.0.0(typedoc-plugin-markdown@4.1.1):
     resolution: {integrity: sha512-Mqn96+RjUjPUz/42H8MOp/8eOKjE5MVIgZRFDGmSI2YuggnMZSfh5MMpvd6ykjNTpq7gV5D2iwjqLt8nYRg9rg==}
     peerDependencies:
       typedoc-plugin-markdown: '>=4.0.0'
     dependencies:
-      typedoc-plugin-markdown: 4.1.0(typedoc@0.26.5)
+      typedoc-plugin-markdown: 4.1.1(typedoc@0.26.5)
       yaml: 2.4.5
     dev: false
 
