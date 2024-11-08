@@ -18,8 +18,8 @@
     "lint": "prettier -c --cache . && eslint . --cache --max-warnings=0"
   },
   "dependencies": {
-    "@astrojs/starlight": "0.24.4",
-    "astro": "4.11.1",
+    "@astrojs/starlight": "0.25.0",
+    "astro": "4.16.10",
     "sharp": "0.32.6",
     "starlight-typedoc": "workspace:*",
     "typedoc": "0.26.5",
