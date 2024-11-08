@@ -111,7 +111,7 @@ function getSidebarGroupFromReflections(
       .flatMap((group) => {
         if (group.title === 'Modules') {
           return group.children.map((child) => {
-            if (!child.url) {
+            if (!child.url || child.variant === 'document') {
               return undefined
             }
 
@@ -230,7 +230,7 @@ export function getStarlightTypeDocOutputDirectory(outputDirectory: string, base
 }
 
 function isSidebarManualGroup(item: NonNullable<StarlightUserConfigSidebar>[number]): item is SidebarManualGroup {
-  return 'items' in item
+  return typeof item === 'object' && 'items' in item
 }
 
 function isReferenceReflectionGroup(group: ReflectionGroup) {

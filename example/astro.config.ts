@@ -24,7 +24,7 @@ export default defineConfig({
       sidebar: [
         {
           label: 'Guides',
-          items: [{ label: 'Example Guide', link: '/guides/example/' }],
+          items: ['guides/example'],
         },
         typeDocSidebarGroup,
       ],
