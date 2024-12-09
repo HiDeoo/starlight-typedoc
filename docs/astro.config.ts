@@ -33,6 +33,7 @@ export default defineConfig({
         { label: 'Demo', link: 'https://starlight-typedoc-example.vercel.app/api/functions/dothingc/' },
       ],
       social: {
+        blueSky: 'https://bsky.app/profile/hideoo.dev',
         github: 'https://github.com/HiDeoo/starlight-typedoc',
       },
       title: 'Starlight TypeDoc',
