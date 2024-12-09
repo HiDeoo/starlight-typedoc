@@ -28,6 +28,10 @@ export default defineConfig({
         },
         typeDocSidebarGroup,
       ],
+      social: {
+        blueSky: 'https://bsky.app/profile/hideoo.dev',
+        github: 'https://github.com/HiDeoo/starlight-typedoc',
+      },
       title: 'Starlight TypeDoc Example',
     }),
   ],
