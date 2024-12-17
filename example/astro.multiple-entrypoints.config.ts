@@ -32,6 +32,7 @@ export default defineConfig({
       title: 'Starlight TypeDoc Multiple Entry Points Example',
     }),
   ],
+  outDir: './dist-multiple-entrypoints',
   server: {
     port: 4322,
   },

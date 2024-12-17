@@ -20,28 +20,25 @@
     "test:e2e:packages": "cross-env TEST_TYPE=packages pnpm run playwright",
     "test:e2e:plugins": "cross-env TEST_TYPE=plugins pnpm run playwright",
     "playwright": "playwright install --with-deps chromium && playwright test",
-    "lint": "eslint . --cache --max-warnings=0",
-    "format": "prettier -w --cache --ignore-unknown ."
+    "lint": "eslint . --cache --max-warnings=0"
   },
   "dependencies": {
-    "github-slugger": "2.0.0"
+    "github-slugger": "^2.0.0"
   },
   "devDependencies": {
-    "@astrojs/starlight": "0.25.0",
-    "@playwright/test": "1.35.0",
-    "@types/node": "18.16.16",
-    "astro": "4.16.10",
-    "cross-env": "7.0.3",
-    "typescript": "5.1.6",
-    "vitest": "1.0.4"
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^18.19.68",
+    "cross-env": "^7.0.3",
+    "typescript": "^5.7.2",
+    "vitest": "2.1.6"
   },
   "peerDependencies": {
-    "@astrojs/starlight": ">=0.25.0",
+    "@astrojs/starlight": ">=0.30.0",
     "typedoc": ">=0.26.5",
     "typedoc-plugin-markdown": ">=4.1.1"
   },
   "engines": {
-    "node": ">=18.14.1"
+    "node": ">=18.17.1"
   },
   "packageManager": "pnpm@8.6.1",
   "publishConfig": {
@@ -60,7 +57,8 @@
   "homepage": "https://github.com/HiDeoo/starlight-typedoc",
   "repository": {
     "type": "git",
-    "url": "https://github.com/HiDeoo/starlight-typedoc.git"
+    "url": "https://github.com/HiDeoo/starlight-typedoc.git",
+    "directory": "packages/starlight-typedoc"
   },
   "bugs": "https://github.com/HiDeoo/starlight-typedoc/issues"
 }

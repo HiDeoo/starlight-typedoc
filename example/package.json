@@ -11,25 +11,31 @@
     "dev:multiple-entrypoints": "astro dev --config astro.multiple-entrypoints.config.ts",
     "dev:packages-entrypoints": "pnpm -C ../fixtures/packages run build && astro dev --config astro.packages-entrypoints.config.ts",
     "dev:multiple-plugins": "astro dev --config astro.multiple-plugins.config.ts",
-    "start": "astro dev",
     "build": "astro build",
+    "build:single-entrypoints": "astro build --config astro.config.ts",
+    "build:multiple-entrypoints": "astro build --config astro.multiple-entrypoints.config.ts",
+    "build:packages-entrypoints": "pnpm -C ../fixtures/packages run build && astro build --config astro.packages-entrypoints.config.ts",
+    "build:multiple-plugins": "astro build --config astro.multiple-plugins.config.ts",
     "preview": "astro preview",
+    "preview:single-entrypoints": "astro preview --config astro.config.ts",
+    "preview:multiple-entrypoints": "astro preview --config astro.multiple-entrypoints.config.ts",
+    "preview:packages-entrypoints": "astro preview --config astro.packages-entrypoints.config.ts",
+    "preview:multiple-plugins": "astro preview --config astro.multiple-plugins.config.ts",
     "astro": "astro",
-    "lint": "eslint . --cache --max-warnings=0",
-    "format": "prettier -w --cache --ignore-unknown ."
+    "lint": "eslint . --cache --max-warnings=0"
   },
   "dependencies": {
-    "@astrojs/starlight": "0.25.0",
-    "astro": "4.16.10",
-    "sharp": "0.32.6",
+    "@astrojs/starlight": "^0.30.2",
+    "astro": "^5.0.5",
+    "sharp": "^0.33.5",
     "starlight-typedoc": "workspace:*",
-    "typedoc": "0.26.5",
-    "typedoc-plugin-frontmatter": "1.0.0",
-    "typedoc-plugin-markdown": "4.1.1",
-    "typedoc-plugin-mdn-links": "3.0.3"
+    "typedoc": "^0.26.5",
+    "typedoc-plugin-frontmatter": "^1.0.0",
+    "typedoc-plugin-markdown": "^4.1.1",
+    "typedoc-plugin-mdn-links": "^3.0.3"
   },
   "engines": {
-    "node": ">=18.14.1"
+    "node": ">=18.17.1"
   },
   "packageManager": "pnpm@8.6.1",
   "private": true,
@@ -45,7 +51,8 @@
   "homepage": "https://github.com/HiDeoo/starlight-typedoc",
   "repository": {
     "type": "git",
-    "url": "https://github.com/HiDeoo/starlight-typedoc.git"
+    "url": "https://github.com/HiDeoo/starlight-typedoc.git",
+    "directory": "example"
   },
   "bugs": "https://github.com/HiDeoo/starlight-typedoc/issues"
 }

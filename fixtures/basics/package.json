@@ -6,10 +6,10 @@
   "author": "HiDeoo <github@hideoo.dev> (https://hideoo.dev)",
   "type": "module",
   "dependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
   },
   "engines": {
-    "node": ">=18.14.1"
+    "node": ">=18.17.1"
   },
   "packageManager": "pnpm@8.6.1",
   "private": true,
@@ -25,7 +25,8 @@
   "homepage": "https://github.com/HiDeoo/starlight-typedoc",
   "repository": {
     "type": "git",
-    "url": "https://github.com/HiDeoo/starlight-typedoc.git"
+    "url": "https://github.com/HiDeoo/starlight-typedoc.git",
+    "directory": "fixtures/basics"
   },
   "bugs": "https://github.com/HiDeoo/starlight-typedoc/issues"
 }

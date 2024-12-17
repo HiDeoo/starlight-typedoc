@@ -23,7 +23,9 @@ function makeStarlightTypeDocPlugin(sidebarGroup: SidebarGroup): (options: Starl
     return {
       name: 'starlight-typedoc-plugin',
       hooks: {
-        async setup({ astroConfig, config, logger, updateConfig }) {
+        async setup({ astroConfig, command, config, logger, updateConfig }) {
+          if (command === 'preview') return
+
           const { outputDirectory, reflections } = await generateTypeDoc(options, astroConfig, logger)
           const sidebar = getSidebarFromReflections(
             config.sidebar,
