@@ -19,6 +19,7 @@
 build
 coverage
 dist
+dist-multiple-entrypoints
 dist-ssr
 lerna-debug.log*
 logs

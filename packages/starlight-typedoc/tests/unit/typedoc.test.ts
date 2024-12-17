@@ -199,6 +199,9 @@ function generateTestTypeDoc(
       info() {
         // noop
       },
+      warn() {
+        // noop
+      },
     } as unknown as AstroIntegrationLogger,
   )
 }

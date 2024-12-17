@@ -1,5 +1,5 @@
 .eslintcache
+eslint.config.mjs
 playwright.config.ts
 tests
-tsconfig.json
 vitest.config.ts

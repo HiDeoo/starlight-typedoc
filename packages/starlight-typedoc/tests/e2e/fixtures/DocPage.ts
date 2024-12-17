@@ -13,10 +13,10 @@ export class DocPage {
     const baseDir = this.#useMultipleEntryPoints
       ? 'multiple-entrypoints/api-multiple-entrypoints'
       : this.#usePackagesEntryPoints
-      ? 'packages-entrypoints/api-packages-entrypoints'
-      : this.#useMultiplePlugins
-      ? 'multiple-plugins'
-      : 'api'
+        ? 'packages-entrypoints/api-packages-entrypoints'
+        : this.#useMultiplePlugins
+          ? 'multiple-plugins'
+          : 'api'
     const baseUrl = `http://localhost:${this.#useMultipleEntryPoints ? 4322 : 4321}/${baseDir}`
 
     await this.page.goto(`${baseUrl}${url.startsWith('/') ? url : `/${url}`}${url.endsWith('/') ? '' : '/'}`)
