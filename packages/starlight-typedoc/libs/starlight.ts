@@ -1,6 +1,6 @@
 import path from 'node:path'
 
-import type { StarlightPlugin } from '@astrojs/starlight/types'
+import type { HookParameters } from '@astrojs/starlight/types'
 import { slug } from 'github-slugger'
 import {
   type DeclarationReflection,
@@ -268,4 +268,4 @@ interface LinkItem {
 
 type AsideType = 'caution' | 'danger' | 'note' | 'tip'
 
-type StarlightUserConfigSidebar = Parameters<StarlightPlugin['hooks']['setup']>[0]['config']['sidebar']
+type StarlightUserConfigSidebar = HookParameters<'config:setup'>['config']['sidebar']
