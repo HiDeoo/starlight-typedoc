@@ -58,7 +58,7 @@ export async function generateTypeDoc(
     (!reflections?.groups || reflections.groups.length === 0) &&
     !reflections?.children?.some((child) => (child.groups ?? []).length > 0)
   ) {
-    throw new Error('Failed to generate TypeDoc documentation.')
+    throw new NoReflectionsError()
   }
 
   const outputPath = path.join(url.fileURLToPath(config.srcDir), 'content/docs', outputDirectory)
@@ -156,6 +156,12 @@ function onRendererPageEnd(event: MarkdownPageEvent, pagination: boolean) {
 function onRendererEnd(pagesToRemove: string[]) {
   for (const page of pagesToRemove) {
     fs.rmSync(page, { force: true })
+  }
+}
+
+export class NoReflectionsError extends Error {
+  constructor() {
+    super('Failed to generate TypeDoc documentation.')
   }
 }
 

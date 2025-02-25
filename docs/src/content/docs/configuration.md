@@ -79,6 +79,17 @@ As documented in the [TypeDoc documentation](https://typedoc.org/options/input/#
 
 Whether to watch the entry point(s) for changes and regenerate the documentation when needed.
 
+### `errorOnEmptyDocumentation`
+
+**Type:** `boolean`  
+**Default:** `true`
+
+Whether the plugin should error when no TypeDoc documentation is generated.
+
+By default, the plugin will error when no TypeDoc documentation is generated.
+Setting this option to `false` will prevent the plugin from erroring in this case.
+This can be useful when generating documentation for multiple entry points and only some of them contain documented code at a given time.
+
 ## Sidebar configuration
 
 The sidebar configuration is an object with the following properties:

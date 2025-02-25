@@ -63,6 +63,39 @@ export function getSidebarFromReflections(
   })
 }
 
+export function getSidebarWithoutReflections(
+  sidebar: StarlightUserConfigSidebar,
+  sidebarGroupPlaceholder: SidebarGroup,
+): StarlightUserConfigSidebar {
+  if (!sidebar || sidebar.length === 0) {
+    return sidebar
+  }
+
+  function removeSidebarGroupPlaceholder(
+    entries: NonNullable<StarlightUserConfigSidebar>,
+  ): NonNullable<StarlightUserConfigSidebar> {
+    const sidebarWithoutPlaceholder: StarlightUserConfigSidebar = []
+
+    for (const item of entries) {
+      if (isSidebarManualGroup(item)) {
+        if (item.label === sidebarGroupPlaceholder.label) continue
+
+        sidebarWithoutPlaceholder.push({
+          ...item,
+          items: removeSidebarGroupPlaceholder(item.items),
+        })
+        continue
+      }
+
+      sidebarWithoutPlaceholder.push(item)
+    }
+
+    return sidebarWithoutPlaceholder
+  }
+
+  return removeSidebarGroupPlaceholder(sidebar)
+}
+
 function getSidebarGroupFromPackageReflections(
   options: StarlightTypeDocSidebarOptions,
   reflections: ProjectReflection | DeclarationReflection,

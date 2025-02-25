@@ -3,8 +3,13 @@ import { randomBytes } from 'node:crypto'
 import type { StarlightPlugin } from '@astrojs/starlight/types'
 import type { TypeDocOptions } from 'typedoc'
 
-import { getSidebarFromReflections, getSidebarGroupPlaceholder, type SidebarGroup } from './libs/starlight'
-import { generateTypeDoc, type TypeDocConfig } from './libs/typedoc'
+import {
+  getSidebarFromReflections,
+  getSidebarGroupPlaceholder,
+  getSidebarWithoutReflections,
+  type SidebarGroup,
+} from './libs/starlight'
+import { generateTypeDoc, NoReflectionsError, type TypeDocConfig } from './libs/typedoc'
 
 export const typeDocSidebarGroup = getSidebarGroupPlaceholder()
 
@@ -26,16 +31,27 @@ function makeStarlightTypeDocPlugin(sidebarGroup: SidebarGroup): (options: Starl
         async 'config:setup'({ astroConfig, command, config, logger, updateConfig }) {
           if (command === 'preview') return
 
-          const { outputDirectory, reflections } = await generateTypeDoc(options, astroConfig, logger)
-          const sidebar = getSidebarFromReflections(
-            config.sidebar,
-            sidebarGroup,
-            options.sidebar,
-            reflections,
-            outputDirectory,
-          )
+          try {
+            const { outputDirectory, reflections } = await generateTypeDoc(options, astroConfig, logger)
 
-          updateConfig({ sidebar })
+            updateConfig({
+              sidebar: getSidebarFromReflections(
+                config.sidebar,
+                sidebarGroup,
+                options.sidebar,
+                reflections,
+                outputDirectory,
+              ),
+            })
+          } catch (error) {
+            if (options.errorOnEmptyDocumentation === false && error instanceof NoReflectionsError) {
+              logger.warn('No documentation generated but ignoring as `errorOnEmptyDocumentation` is disabled.')
+              updateConfig({ sidebar: getSidebarWithoutReflections(config.sidebar, sidebarGroup) })
+              return
+            }
+
+            throw error
+          }
         },
       },
     }
@@ -47,6 +63,11 @@ export interface StarlightTypeDocOptions {
    * The path(s) to the entry point(s) to document.
    */
   entryPoints: TypeDocOptions['entryPoints']
+  /**
+   * Whether the plugin should error when no TypeDoc documentation is generated.
+   * @default true
+   */
+  errorOnEmptyDocumentation?: boolean
   /**
    * The output directory containing the generated documentation markdown files relative to the `src/content/docs/`
    * directory.
