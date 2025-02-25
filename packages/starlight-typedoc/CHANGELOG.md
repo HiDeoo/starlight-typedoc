@@ -1,5 +1,15 @@
 # starlight-typedoc
 
+## 0.20.0
+
+### Minor Changes
+
+- [#74](https://github.com/HiDeoo/starlight-typedoc/pull/74) [`2765549`](https://github.com/HiDeoo/starlight-typedoc/commit/276554979760b992d204ce25106c51611f289749) Thanks [@HiDeoo](https://github.com/HiDeoo)! - Adds a new [`errorOnEmptyDocumentation`](https://starlight-typedoc.vercel.app/configuration/#erroronemptydocumentation) option, defaulting to `true`, to control whether the plugin should error when no TypeDoc documentation is generated.
+
+  Setting this option to `false` will prevent the plugin from erroring in this case which can be useful when generating documentation for multiple entry points and only some of them contain documented code at a given time.
+
+  The current behavior remains unchanged, and the plugin will error when no TypeDoc documentation is generated if the option is not explicitly set to `false`.
+
 ## 0.19.0
 
 ### Minor Changes
