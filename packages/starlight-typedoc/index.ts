@@ -32,7 +32,7 @@ function makeStarlightTypeDocPlugin(sidebarGroup: SidebarGroup): (options: Starl
           if (command === 'preview') return
 
           try {
-            const { outputDirectory, reflections } = await generateTypeDoc(options, astroConfig, logger)
+            const { definitions, outputDirectory, reflections } = await generateTypeDoc(options, astroConfig, logger)
 
             updateConfig({
               sidebar: getSidebarFromReflections(
@@ -40,6 +40,7 @@ function makeStarlightTypeDocPlugin(sidebarGroup: SidebarGroup): (options: Starl
                 sidebarGroup,
                 options.sidebar,
                 reflections,
+                definitions,
                 outputDirectory,
               ),
             })
@@ -62,7 +63,7 @@ export interface StarlightTypeDocOptions {
   /**
    * The path(s) to the entry point(s) to document.
    */
-  entryPoints: TypeDocOptions['entryPoints']
+  entryPoints: NonNullable<TypeDocOptions['entryPoints']>
   /**
    * Whether the plugin should error when no TypeDoc documentation is generated.
    * @default true
@@ -86,7 +87,7 @@ export interface StarlightTypeDocOptions {
   /**
    * The path to the `tsconfig.json` file to use for the documentation generation.
    */
-  tsconfig: TypeDocOptions['tsconfig']
+  tsconfig: NonNullable<TypeDocOptions['tsconfig']>
   /**
    * Additional TypeDoc configuration.
    * @see https://typedoc.org/options

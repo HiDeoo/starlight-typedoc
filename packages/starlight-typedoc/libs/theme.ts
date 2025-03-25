@@ -1,5 +1,3 @@
-import path from 'node:path'
-
 import { Reflection, type Comment, type CommentTag, type Options, type CommentDisplayPart } from 'typedoc'
 import { MarkdownTheme, MarkdownThemeContext, type MarkdownPageEvent } from 'typedoc-plugin-markdown'
 
@@ -9,99 +7,93 @@ const customBlockTagTypes = ['@deprecated'] as const
 const customModifiersTagTypes = ['@alpha', '@beta', '@experimental'] as const
 
 export class StarlightTypeDocTheme extends MarkdownTheme {
-  override getRenderContext(event: MarkdownPageEvent): StarlightTypeDocThemeRenderContext {
+  override getRenderContext(event: MarkdownPageEvent<Reflection>): StarlightTypeDocThemeRenderContext {
     return new StarlightTypeDocThemeRenderContext(this, event, this.application.options)
   }
 }
 
 class StarlightTypeDocThemeRenderContext extends MarkdownThemeContext {
-  #markdownThemeContext: MarkdownThemeContext
-
-  constructor(theme: MarkdownTheme, event: MarkdownPageEvent, options: Options) {
+  constructor(theme: MarkdownTheme, event: MarkdownPageEvent<Reflection>, options: Options) {
     super(theme, event, options)
 
-    this.#markdownThemeContext = new MarkdownThemeContext(theme, event, options)
+    const superPartials = this.partials
+
+    this.partials = {
+      ...superPartials,
+      comment: (comment, options) => {
+        const filteredComment = { ...comment } as Comment
+        filteredComment.blockTags = []
+        filteredComment.modifierTags = new Set<`@${string}`>()
+
+        const customTags: CustomTag[] = []
+
+        for (const blockTag of comment.blockTags) {
+          if (this.#isCustomBlockCommentTagType(blockTag.tag)) {
+            customTags.push({ blockTag, type: blockTag.tag })
+          } else {
+            blockTag.content = blockTag.content.map((part) => this.#parseCommentDisplayPart(part))
+            filteredComment.blockTags.push(blockTag)
+          }
+        }
+
+        for (const modifierTag of comment.modifierTags) {
+          if (this.#isCustomModifierCommentTagType(modifierTag)) {
+            customTags.push({ type: modifierTag })
+          } else {
+            filteredComment.modifierTags.add(modifierTag)
+          }
+        }
+
+        filteredComment.summary = comment.summary.map((part) => this.#parseCommentDisplayPart(part))
+
+        let markdown = superPartials.comment(filteredComment, options)
+
+        if (options?.showSummary === false) {
+          return markdown
+        }
+
+        for (const customCommentTag of customTags) {
+          switch (customCommentTag.type) {
+            case '@alpha': {
+              markdown = this.#addReleaseStageAside(markdown, 'Alpha')
+              break
+            }
+            case '@beta': {
+              markdown = this.#addReleaseStageAside(markdown, 'Beta')
+              break
+            }
+            case '@deprecated': {
+              markdown = this.#addDeprecatedAside(markdown, customCommentTag.blockTag)
+              break
+            }
+            case '@experimental': {
+              markdown = this.#addReleaseStageAside(markdown, 'Experimental')
+              break
+            }
+          }
+        }
+
+        return markdown
+      },
+    }
   }
 
-  override getRelativeUrl(url: string): string {
+  override urlTo(reflection: Reflection): string {
     const outputDirectory = this.options.getValue('starlight-typedoc-output')
     const baseUrl = typeof outputDirectory === 'string' ? outputDirectory : ''
 
-    return getRelativeURL(url, baseUrl, this.page.url)
-  }
-
-  override partials: MarkdownThemeContext['partials'] = {
-    // @ts-expect-error https://github.com/tgreyuk/typedoc-plugin-markdown/blob/2bc4136a364c1d1ab44789d6148cd19c425ce63c/docs/pages/docs/customizing-output.mdx#custom-theme
-    ...this.partials,
-    comment: (comment, options) => {
-      const filteredComment = { ...comment } as Comment
-      filteredComment.blockTags = []
-      filteredComment.modifierTags = new Set<`@${string}`>()
-
-      const customTags: CustomTag[] = []
-
-      for (const blockTag of comment.blockTags) {
-        if (this.#isCustomBlockCommentTagType(blockTag.tag)) {
-          customTags.push({ blockTag, type: blockTag.tag })
-        } else {
-          blockTag.content = blockTag.content.map((part) => this.#parseCommentDisplayPart(part))
-          filteredComment.blockTags.push(blockTag)
-        }
-      }
-
-      for (const modifierTag of comment.modifierTags) {
-        if (this.#isCustomModifierCommentTagType(modifierTag)) {
-          customTags.push({ type: modifierTag })
-        } else {
-          filteredComment.modifierTags.add(modifierTag)
-        }
-      }
-
-      filteredComment.summary = comment.summary.map((part) => this.#parseCommentDisplayPart(part))
-
-      let markdown = this.#markdownThemeContext.partials.comment(filteredComment, options)
-
-      if (options?.showSummary === false) {
-        return markdown
-      }
-
-      for (const customCommentTag of customTags) {
-        switch (customCommentTag.type) {
-          case '@alpha': {
-            markdown = this.#addReleaseStageAside(markdown, 'Alpha')
-            break
-          }
-          case '@beta': {
-            markdown = this.#addReleaseStageAside(markdown, 'Beta')
-            break
-          }
-          case '@deprecated': {
-            markdown = this.#addDeprecatedAside(markdown, customCommentTag.blockTag)
-            break
-          }
-          case '@experimental': {
-            markdown = this.#addReleaseStageAside(markdown, 'Experimental')
-            break
-          }
-        }
-      }
-
-      return markdown
-    },
+    return getRelativeURL(this.router.getFullUrl(reflection), baseUrl, this.page.url)
   }
 
   #parseCommentDisplayPart = (part: CommentDisplayPart): CommentDisplayPart => {
     if (
       part.kind === 'inline-tag' &&
       (part.tag === '@link' || part.tag === '@linkcode' || part.tag === '@linkplain') &&
-      part.target instanceof Reflection &&
-      typeof part.target.url === 'string'
+      part.target instanceof Reflection
     ) {
       return {
         ...part,
-        target: this.getRelativeUrl(
-          path.posix.join(this.options.getValue('entryPointStrategy') === 'packages' ? '../..' : '..', part.target.url),
-        ),
+        target: this.urlTo(part.target),
       }
     }
 

@@ -1,4 +1,4 @@
-import fs from 'node:fs'
+import * as fs from 'node:fs'
 import path from 'node:path'
 import url from 'node:url'
 
@@ -9,8 +9,8 @@ import {
   TSConfigReader,
   type TypeDocOptions,
   ParameterType,
-  type Reflection,
   RendererEvent,
+  type PageDefinition,
 } from 'typedoc'
 import type { MarkdownPageEvent, PluginOptions } from 'typedoc-plugin-markdown'
 
@@ -47,11 +47,23 @@ export async function generateTypeDoc(
     options.entryPoints,
     options.tsconfig,
     options.typeDoc,
-    outputDirectory,
+    {
+      base: config.base,
+      directory: outputDirectory,
+      path: path.join(url.fileURLToPath(config.srcDir), 'content/docs', outputDirectory),
+    },
     options.pagination ?? false,
-    config.base,
     logger,
   )
+
+  const definitions: TypeDocDefinitions = {}
+  app.renderer.on(RendererEvent.END, (event) => {
+    for (const page of event.pages) {
+      if (!('id' in page.model)) continue
+      definitions[page.model.id] = page.url
+    }
+  })
+
   const reflections = await app.convert()
 
   if (
@@ -61,26 +73,21 @@ export async function generateTypeDoc(
     throw new NoReflectionsError()
   }
 
-  const outputPath = path.join(url.fileURLToPath(config.srcDir), 'content/docs', outputDirectory)
+  await (options.watch
+    ? app.convertAndWatch(async (reflections) => {
+        await app.generateOutputs(reflections)
+      })
+    : app.generateOutputs(reflections))
 
-  if (options.watch) {
-    app.convertAndWatch(async (reflections) => {
-      await app.generateDocs(reflections, outputPath)
-    })
-  } else {
-    await app.generateDocs(reflections, outputPath)
-  }
-
-  return { outputDirectory, reflections }
+  return { definitions, outputDirectory, reflections }
 }
 
 async function bootstrapApp(
-  entryPoints: TypeDocOptions['entryPoints'],
-  tsconfig: TypeDocOptions['tsconfig'],
+  entryPoints: NonNullable<TypeDocOptions['entryPoints']>,
+  tsconfig: NonNullable<TypeDocOptions['tsconfig']>,
   config: TypeDocConfig = {},
-  outputDirectory: string,
+  output: TypeDocOutput,
   pagination: boolean,
-  base: string,
   logger: AstroIntegrationLogger,
 ) {
   const pagesToRemove: string[] = []
@@ -93,15 +100,16 @@ async function bootstrapApp(
     plugin: [...(config.plugin ?? []), 'typedoc-plugin-markdown'],
     entryPoints,
     tsconfig,
+    outputs: [{ name: 'markdown', path: output.path }],
   })
   app.logger = new StarlightTypeDocLogger(logger)
   app.options.addReader(new TSConfigReader())
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
-  app.renderer.on(PageEvent.BEGIN, (event: PageEvent<Reflection>) => {
-    onRendererPageBegin(event, pagination)
+  app.renderer.on(PageEvent.BEGIN, (event) => {
+    onRendererPageBegin(event as MarkdownPageEvent, pagination)
   })
-  app.renderer.on(PageEvent.END, (event: PageEvent<Reflection>) => {
-    const shouldRemovePage = onRendererPageEnd(event, pagination)
+  app.renderer.on(PageEvent.END, (event) => {
+    const shouldRemovePage = onRendererPageEnd(event as MarkdownPageEvent, pagination)
     if (shouldRemovePage) {
       pagesToRemove.push(event.filename)
     }
@@ -110,7 +118,7 @@ async function bootstrapApp(
     onRendererEnd(pagesToRemove)
   })
   app.options.addDeclaration({
-    defaultValue: getStarlightTypeDocOutputDirectory(outputDirectory, base),
+    defaultValue: getStarlightTypeDocOutputDirectory(output.directory, output.base),
     help: 'The starlight-typedoc output directory containing the generated documentation markdown files relative to the `src/content/docs/` directory.',
     name: 'starlight-typedoc-output',
     type: ParameterType.String,
@@ -166,3 +174,10 @@ export class NoReflectionsError extends Error {
 }
 
 export type TypeDocConfig = Partial<Omit<TypeDocOptions, 'entryPoints' | 'tsconfig'> & PluginOptions>
+export type TypeDocDefinitions = Record<string, PageDefinition['url']>
+
+interface TypeDocOutput {
+  base: string
+  directory: string
+  path: string
+}

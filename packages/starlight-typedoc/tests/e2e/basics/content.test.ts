@@ -37,7 +37,7 @@ test('should properly format links with anchors for a single entry point', async
     .getByRole('link', { exact: true, name: 'constructor' })
     .getAttribute('href')
 
-  expect(barConstructorLinkHref).toEqual('/api/classes/bar/#constructors')
+  expect(barConstructorLinkHref).toEqual('/api/classes/bar/#constructor')
 })
 
 test('should properly format links with anchors for multiple entry points', async ({ docPage }) => {
@@ -49,7 +49,7 @@ test('should properly format links with anchors for multiple entry points', asyn
     .getByRole('link', { exact: true, name: 'constructor' })
     .getAttribute('href')
 
-  expect(barConstructorLinkHref).toEqual('/multiple-entrypoints/api-multiple-entrypoints/bar/classes/bar/#constructors')
+  expect(barConstructorLinkHref).toEqual('/multiple-entrypoints/api-multiple-entrypoints/bar/classes/bar/#constructor')
 })
 
 test('should disable edit links', async ({ docPage }) => {
@@ -88,12 +88,12 @@ test('should properly format links in summary', async ({ docPage }) => {
   await docPage.goto('functions/dothingfaster')
 
   await docPage.content.getByRole('link', { exact: true, name: 'doThingB' }).click()
-  await docPage.page.waitForURL('**/api/functions/dothingb')
+  await docPage.page.waitForURL('**/api/functions/dothingb/')
 })
 
 test('should properly format links in block tag comments', async ({ docPage }) => {
   await docPage.goto('classes/foo')
 
   await docPage.content.locator('h4:has-text("See") + p a').click()
-  await docPage.page.waitForURL('**/api/interfaces/thing')
+  await docPage.page.waitForURL('**/api/interfaces/thing/')
 })

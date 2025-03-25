@@ -6,7 +6,7 @@ export function load(app) {
     MarkdownPageEvent.BEGIN,
     /** @param {MarkdownPageEvent} page */
     (page) => {
-      if (page.model.url === 'variables/anObject.md') {
+      if (page.url === 'variables/anObject.md') {
         page.frontmatter = {
           sidebar: {
             badge: {

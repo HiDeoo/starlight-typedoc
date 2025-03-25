@@ -42,11 +42,6 @@ test('should generate the proper items for for a single entry point', async ({ d
 
   expect(items).toMatchObject([
     {
-      label: 'References',
-      items: [{ name: 'doThingARef' }],
-      collapsed: true,
-    },
-    {
       label: 'Enumerations',
       items: [{ name: 'ANumericEnum' }, { name: 'AStringEnum' }],
       collapsed: true,
@@ -74,6 +69,11 @@ test('should generate the proper items for for a single entry point', async ({ d
     {
       label: 'Functions',
       items: [{ name: 'doThingA' }, { name: 'doThingB' }, { name: 'doThingC' }, { name: 'doThingFaster' }],
+      collapsed: true,
+    },
+    {
+      label: 'References',
+      items: [{ name: 'doThingARef' }],
       collapsed: true,
     },
     // `MyCustomGroup` defined in `fixtures/basics/src/Baz.ts` does not have a directory on disk which means it should
