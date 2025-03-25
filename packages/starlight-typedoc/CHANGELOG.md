@@ -1,5 +1,13 @@
 # starlight-typedoc
 
+## 0.21.0
+
+### Minor Changes
+
+- [#77](https://github.com/HiDeoo/starlight-typedoc/pull/77) [`751021f`](https://github.com/HiDeoo/starlight-typedoc/commit/751021f9e1029600266cc8c3bea8232e385bbbc3) Thanks [@HiDeoo](https://github.com/HiDeoo)! - ⚠️ **BREAKING CHANGE:** The minimum supported version of `typedoc` is now `0.28.0`.
+
+  ⚠️ **BREAKING CHANGE:** The minimum supported version of `typedoc-plugin-markdown` is now `4.6.0`.
+
 ## 0.20.0
 
 ### Minor Changes
