@@ -1,10 +1,20 @@
-import fs from 'node:fs'
+import * as fs from 'node:fs'
 
 import type { AstroIntegrationLogger, AstroConfig } from 'astro'
 import { afterAll, afterEach, beforeAll, expect, test, vi } from 'vitest'
 
 import type { StarlightTypeDocOptions } from '../..'
 import { generateTypeDoc } from '../../libs/typedoc'
+
+vi.mock(import('node:fs'), async (importOriginal) => {
+  const mod = await importOriginal()
+  return {
+    ...mod,
+    mkdirSync: vi.fn(),
+    rmSync: vi.fn(),
+    writeFileSync: vi.fn(),
+  }
+})
 
 const starlightTypeDocOptions = {
   tsconfig: '../../fixtures/basics/tsconfig.json',
@@ -177,11 +187,11 @@ test('should output index with correct module path', async () => {
 
   expect(
     content.includes(`
-- [bar](/api/namespaces/bar/)
-- [foo](/api/namespaces/foo/)
-- [functions](/api/namespaces/functions/)
-- [shared](/api/namespaces/shared/)
-- [types](/api/namespaces/types/)`),
+- [bar](/api/starlight-typedoc/namespaces/bar/)
+- [foo](/api/starlight-typedoc/namespaces/foo/)
+- [functions](/api/starlight-typedoc/namespaces/functions/)
+- [shared](/api/starlight-typedoc/namespaces/shared/)
+- [types](/api/starlight-typedoc/namespaces/types/)`),
   ).toBe(true)
 })
 

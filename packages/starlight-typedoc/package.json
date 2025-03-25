@@ -34,8 +34,8 @@
   },
   "peerDependencies": {
     "@astrojs/starlight": ">=0.32.0",
-    "typedoc": ">=0.26.5",
-    "typedoc-plugin-markdown": ">=4.1.1"
+    "typedoc": ">=0.28.0",
+    "typedoc-plugin-markdown": ">=4.6.0"
   },
   "engines": {
     "node": ">=18.17.1"

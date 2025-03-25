@@ -184,7 +184,7 @@ describe('getSidebarWithoutReflections', () => {
 })
 
 function getTestSidebar(sidebar: Parameters<typeof getSidebarFromReflections>[0]) {
-  return getSidebarFromReflections(sidebar, typeDocSidebarGroup, {}, {} as ProjectReflection, 'api')
+  return getSidebarFromReflections(sidebar, typeDocSidebarGroup, {}, {} as ProjectReflection, {}, 'api')
 }
 
 function getTestSidebarWithoutReflections(sidebar: Parameters<typeof getSidebarFromReflections>[0]) {

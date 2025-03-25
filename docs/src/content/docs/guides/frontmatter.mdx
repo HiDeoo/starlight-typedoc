@@ -33,7 +33,7 @@ import { PackageManagers } from '@hideoo/starlight-plugins-docs-components'
        /** @param {MarkdownPageEvent} page */
        (page) => {
          // Customize the frontmatter for a specific page.
-         if (page.model.url === 'variables/something.md') {
+         if (page.url === 'variables/something.md') {
           // Update the frontmatter of the generated page.
            page.frontmatter = {
              // Include a sidebar badge with the text 'New'.

@@ -15,5 +15,5 @@ test('should properly format links in block tag comments', async ({ docPage }) =
   await docPage.goto('foo/functions/dofoofaster')
 
   await docPage.content.getByRole('link', { exact: true, name: 'doFoo' }).click()
-  await docPage.page.waitForURL('**/api-packages-entrypoints/foo/functions/dofoo')
+  await docPage.page.waitForURL('**/api-packages-entrypoints/foo/functions/dofoo/')
 })
