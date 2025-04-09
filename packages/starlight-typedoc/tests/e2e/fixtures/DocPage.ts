@@ -41,7 +41,7 @@ export class DocPage {
     return this.page.getByRole('main')
   }
 
-  get #sidebar() {
+  get sidebar() {
     return this.page.getByRole('navigation', { name: 'Main' })
   }
 
@@ -56,7 +56,7 @@ export class DocPage {
   }
 
   get #typeDocSidebarRootDetails() {
-    return this.#sidebar
+    return this.sidebar
       .getByRole('listitem')
       .locator(`details:has(summary > div > span:has-text("${this.#expectedTypeDocSidebarLabel}"))`)
   }
@@ -66,7 +66,7 @@ export class DocPage {
   }
 
   async getSidebarItems() {
-    return this.#getTypeDocSidebarChildrenItems(this.#sidebar.locator('ul.top-level'))
+    return this.#getTypeDocSidebarChildrenItems(this.sidebar.locator('ul.top-level'))
   }
 
   async #getTypeDocSidebarChildrenItems(list: Locator): Promise<TypeDocSidebarItem[]> {

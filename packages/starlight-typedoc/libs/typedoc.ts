@@ -3,6 +3,7 @@ import path from 'node:path'
 import url from 'node:url'
 
 import type { AstroConfig, AstroIntegrationLogger } from 'astro'
+import { slug } from 'github-slugger'
 import {
   Application,
   PageEvent,
@@ -18,7 +19,7 @@ import type { StarlightTypeDocOptions } from '..'
 
 import { StarlightTypeDocLogger } from './logger'
 import { addFrontmatter } from './markdown'
-import { getStarlightTypeDocOutputDirectory } from './starlight'
+import { getRelativeURL, getStarlightTypeDocOutputDirectory } from './starlight'
 import { StarlightTypeDocTheme } from './theme'
 
 const defaultTypeDocConfig: TypeDocConfig = {
@@ -91,6 +92,7 @@ async function bootstrapApp(
   logger: AstroIntegrationLogger,
 ) {
   const pagesToRemove: string[] = []
+  const outputDirectory = getStarlightTypeDocOutputDirectory(output.directory, output.base)
 
   const app = await Application.bootstrapWithPlugins({
     ...defaultTypeDocConfig,
@@ -106,10 +108,10 @@ async function bootstrapApp(
   app.options.addReader(new TSConfigReader())
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
   app.renderer.on(PageEvent.BEGIN, (event) => {
-    onRendererPageBegin(event as MarkdownPageEvent, pagination)
+    onRendererPageBegin(event as MarkdownPageEvent, outputDirectory, pagination)
   })
   app.renderer.on(PageEvent.END, (event) => {
-    const shouldRemovePage = onRendererPageEnd(event as MarkdownPageEvent, pagination)
+    const shouldRemovePage = onRendererPageEnd(event as MarkdownPageEvent, outputDirectory, pagination)
     if (shouldRemovePage) {
       pagesToRemove.push(event.filename)
     }
@@ -118,7 +120,7 @@ async function bootstrapApp(
     onRendererEnd(pagesToRemove)
   })
   app.options.addDeclaration({
-    defaultValue: getStarlightTypeDocOutputDirectory(output.directory, output.base),
+    defaultValue: outputDirectory,
     help: 'The starlight-typedoc output directory containing the generated documentation markdown files relative to the `src/content/docs/` directory.',
     name: 'starlight-typedoc-output',
     type: ParameterType.String,
@@ -127,17 +129,20 @@ async function bootstrapApp(
   return app
 }
 
-function onRendererPageBegin(event: MarkdownPageEvent, pagination: boolean) {
+function onRendererPageBegin(event: MarkdownPageEvent, outputDirectory: string, pagination: boolean) {
   if (event.frontmatter) {
-    event.frontmatter['editUrl'] = false
-    event.frontmatter['next'] = pagination
-    event.frontmatter['prev'] = pagination
-    event.frontmatter['title'] = event.model.name
+    event.frontmatter = getModelFrontmatter(event, outputDirectory, {
+      ...event.frontmatter,
+      editUrl: false,
+      next: pagination,
+      prev: pagination,
+      title: event.model.name,
+    })
   }
 }
 
 // Returning `true` will delete the page from the filesystem.
-function onRendererPageEnd(event: MarkdownPageEvent, pagination: boolean) {
+function onRendererPageEnd(event: MarkdownPageEvent, outputDirectory: string, pagination: boolean) {
   if (!event.contents) {
     return false
   } else if (/^.+[/\\]README\.md$/.test(event.url)) {
@@ -149,13 +154,16 @@ function onRendererPageEnd(event: MarkdownPageEvent, pagination: boolean) {
   }
 
   if (!event.frontmatter) {
-    event.contents = addFrontmatter(event.contents, {
-      editUrl: false,
-      next: pagination,
-      prev: pagination,
-      // Wrap in quotes to prevent issue with special characters in frontmatter
-      title: `"${event.model.name}"`,
-    })
+    event.contents = addFrontmatter(
+      event.contents,
+      getModelFrontmatter(event, outputDirectory, {
+        editUrl: false,
+        next: pagination,
+        prev: pagination,
+        // Wrap in quotes to prevent issue with special characters in frontmatter
+        title: `"${event.model.name}"`,
+      }),
+    )
   }
 
   return false
@@ -165,6 +173,20 @@ function onRendererEnd(pagesToRemove: string[]) {
   for (const page of pagesToRemove) {
     fs.rmSync(page, { force: true })
   }
+}
+
+function getModelFrontmatter(
+  event: MarkdownPageEvent,
+  outputDirectory: string,
+  frontmatter: NonNullable<MarkdownPageEvent['frontmatter']>,
+) {
+  const defaultSlug = slug(event.model.name)
+
+  if (defaultSlug.length === 0) {
+    frontmatter['slug'] = getRelativeURL(event.url, outputDirectory, event.url).replaceAll(/^\/|\/$/g, '')
+  }
+
+  return frontmatter
 }
 
 export class NoReflectionsError extends Error {

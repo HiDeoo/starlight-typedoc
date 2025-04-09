@@ -273,7 +273,8 @@ export function getRelativeURL(url: string, baseUrl: string, pageUrl?: string): 
 
   let constructedUrl = typeof baseUrl === 'string' ? baseUrl : ''
   constructedUrl += segments.length > 0 ? `${segments.join('/')}/` : ''
-  constructedUrl += slug(filePath.name)
+  const fileNameSlug = slug(filePath.name)
+  constructedUrl += fileNameSlug || filePath.name
   constructedUrl += '/'
   constructedUrl += anchor && anchor.length > 0 ? `#${anchor}` : ''
 

@@ -29,3 +29,10 @@ export function doThingC() {
 export function doThingFaster() {
   return 'thingB'
 }
+
+/**
+ * A function that print dollars.
+ */
+export function $() {
+  return '$'
+}
