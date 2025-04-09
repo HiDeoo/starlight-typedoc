@@ -68,7 +68,13 @@ test('should generate the proper items for for a single entry point', async ({ d
     },
     {
       label: 'Functions',
-      items: [{ name: 'doThingA' }, { name: 'doThingB' }, { name: 'doThingC' }, { name: 'doThingFaster' }],
+      items: [
+        { name: '$' },
+        { name: 'doThingA' },
+        { name: 'doThingB' },
+        { name: 'doThingC' },
+        { name: 'doThingFaster' },
+      ],
       collapsed: true,
     },
     {
