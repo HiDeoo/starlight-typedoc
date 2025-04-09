@@ -1,5 +1,11 @@
 # starlight-typedoc
 
+## 0.21.1
+
+### Patch Changes
+
+- [#80](https://github.com/HiDeoo/starlight-typedoc/pull/80) [`e447787`](https://github.com/HiDeoo/starlight-typedoc/commit/e4477874721b8c8482375c35587aebabb3fa8d17) Thanks [@HiDeoo](https://github.com/HiDeoo)! - Fixes a potential page and link generation issue with some declaration reference names such as a function named `# starlight-typedoc.
+
 ## 0.21.0
 
 ### Minor Changes
