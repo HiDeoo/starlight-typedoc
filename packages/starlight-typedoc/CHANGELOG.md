@@ -1,5 +1,11 @@
 # starlight-typedoc
 
+## 0.21.2
+
+### Patch Changes
+
+- [#83](https://github.com/HiDeoo/starlight-typedoc/pull/83) [`2fc1bf2`](https://github.com/HiDeoo/starlight-typedoc/commit/2fc1bf2499d226ca624e18ae235134f314b18d47) Thanks [@HiDeoo](https://github.com/HiDeoo)! - Fixes a regression introduced in [version `0.21.0`](https://github.com/HiDeoo/starlight-typedoc/releases/tag/starlight-typedoc%400.21.0) that prevented the development server from starting when using the [plugin `watch` configuration option](https://starlight-typedoc.vercel.app/configuration/#watch).
+
 ## 0.21.1
 
 ### Patch Changes
