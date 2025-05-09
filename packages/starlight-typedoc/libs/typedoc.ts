@@ -74,11 +74,13 @@ export async function generateTypeDoc(
     throw new NoReflectionsError()
   }
 
-  await (options.watch
-    ? app.convertAndWatch(async (reflections) => {
-        await app.generateOutputs(reflections)
-      })
-    : app.generateOutputs(reflections))
+  if (options.watch) {
+    void app.convertAndWatch(async (reflections) => {
+      await app.generateOutputs(reflections)
+    })
+  } else {
+    await app.generateOutputs(reflections)
+  }
 
   return { definitions, outputDirectory, reflections }
 }
