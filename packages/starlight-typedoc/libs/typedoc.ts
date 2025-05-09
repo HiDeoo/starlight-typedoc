@@ -12,6 +12,7 @@ import {
   ParameterType,
   RendererEvent,
   type PageDefinition,
+  type ProjectReflection,
 } from 'typedoc'
 import type { MarkdownPageEvent, PluginOptions } from 'typedoc-plugin-markdown'
 
@@ -65,20 +66,25 @@ export async function generateTypeDoc(
     }
   })
 
-  const reflections = await app.convert()
-
-  if (
-    (!reflections?.groups || reflections.groups.length === 0) &&
-    !reflections?.children?.some((child) => (child.groups ?? []).length > 0)
-  ) {
-    throw new NoReflectionsError()
-  }
+  let reflections: ProjectReflection | undefined
 
   if (options.watch) {
-    void app.convertAndWatch(async (reflections) => {
-      await app.generateOutputs(reflections)
+    reflections = await new Promise<ProjectReflection>((resolve) => {
+      void app.convertAndWatch(async (reflections) => {
+        await app.generateOutputs(reflections)
+        resolve(reflections)
+      })
     })
   } else {
+    reflections = await app.convert()
+
+    if (
+      (!reflections?.groups || reflections.groups.length === 0) &&
+      !reflections?.children?.some((child) => (child.groups ?? []).length > 0)
+    ) {
+      throw new NoReflectionsError()
+    }
+
     await app.generateOutputs(reflections)
   }
 
