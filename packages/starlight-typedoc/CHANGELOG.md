@@ -1,5 +1,11 @@
 # starlight-typedoc
 
+## 0.21.3
+
+### Patch Changes
+
+- [#85](https://github.com/HiDeoo/starlight-typedoc/pull/85) [`51d3e37`](https://github.com/HiDeoo/starlight-typedoc/commit/51d3e370a5fff417a2c104175c0ee17d4048eb66) Thanks [@HiDeoo](https://github.com/HiDeoo)! - Fixes a sidebar generation issue when using the [plugin `watch` configuration option](https://starlight-typedoc.vercel.app/configuration/#watch).
+
 ## 0.21.2
 
 ### Patch Changes
