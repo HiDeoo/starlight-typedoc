@@ -1,5 +1,11 @@
 # starlight-typedoc
 
+## 0.21.4
+
+### Patch Changes
+
+- [#91](https://github.com/HiDeoo/starlight-typedoc/pull/91) [`2fd0555`](https://github.com/HiDeoo/starlight-typedoc/commit/2fd0555da100d6bfb1b38b009a8517e85eb7e3b7) Thanks [@HiDeoo](https://github.com/HiDeoo)! - Setups trusted publishing using OpenID Connect (OIDC) authentication — no code changes.
+
 ## 0.21.3
 
 ### Patch Changes
