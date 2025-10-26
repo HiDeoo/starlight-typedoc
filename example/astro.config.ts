@@ -2,6 +2,11 @@ import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
 import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc'
 
+const site =
+  process.env['VERCEL_ENV'] !== 'production' && process.env['VERCEL_URL']
+    ? `https://${process.env['VERCEL_URL']}`
+    : 'https://starlight-typedoc-example.vercel.app/'
+
 export default defineConfig({
   integrations: [
     starlight({
@@ -9,6 +14,19 @@ export default defineConfig({
       editLink: {
         baseUrl: 'https://github.com/HiDeoo/starlight-typedoc/edit/main/example/',
       },
+      head: [
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image', content: new URL('og.jpg', site).href },
+        },
+        {
+          tag: 'meta',
+          attrs: {
+            property: 'og:image:alt',
+            content: 'Starlight plugin to generate documentation from TypeScript using TypeDoc.',
+          },
+        },
+      ],
       plugins: [
         starlightTypeDoc({
           entryPoints: ['../fixtures/basics/src/index.ts'],
