@@ -91,6 +91,11 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeContext {
       (part.tag === '@link' || part.tag === '@linkcode' || part.tag === '@linkplain') &&
       part.target instanceof Reflection
     ) {
+      if (!this.router.hasUrl(part.target)) {
+        const { target, ...rest } = part
+        return rest
+      }
+
       return {
         ...part,
         target: this.urlTo(part.target),

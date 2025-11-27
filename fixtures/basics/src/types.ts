@@ -11,3 +11,11 @@ export interface Thing {
 }
 
 export type Things = Thing[]
+
+export type ThingWithBazAndQuux = Thing & {
+  baz: string
+  /**
+   * @see {@link ThingWithBazAndQuux.baz}
+   */
+  quux: number[]
+}
