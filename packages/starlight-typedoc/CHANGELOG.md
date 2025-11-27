@@ -1,5 +1,11 @@
 # starlight-typedoc
 
+## 0.21.5
+
+### Patch Changes
+
+- [#94](https://github.com/HiDeoo/starlight-typedoc/pull/94) [`e848c07`](https://github.com/HiDeoo/starlight-typedoc/commit/e848c07cffc5f4530e99af314bdf1e848d7310a7) Thanks [@HiDeoo](https://github.com/HiDeoo)! - Fixes a potential error when rendering link tags in comments that reference reflections without URLs.
+
 ## 0.21.4
 
 ### Patch Changes
