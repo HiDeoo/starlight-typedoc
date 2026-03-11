@@ -58,7 +58,7 @@ export class DocPage {
   get #typeDocSidebarRootDetails() {
     return this.sidebar
       .getByRole('listitem')
-      .locator(`details:has(summary > div > span:has-text("${this.#expectedTypeDocSidebarLabel}"))`)
+      .locator(`details:has(summary > span > span:has-text("${this.#expectedTypeDocSidebarLabel}"))`)
   }
 
   getTypeDocSidebarItems() {
@@ -75,7 +75,7 @@ export class DocPage {
     for (const category of await list.locator('> li > details').all()) {
       items.push({
         collapsed: !(await category.getAttribute('open')),
-        label: await category.locator(`> summary > div > span:not(.sl-badge)`).textContent(),
+        label: await category.locator(`> summary > span > span:not(.sl-badge)`).textContent(),
         items: await this.#getTypeDocSidebarChildrenItems(category.locator('> ul')),
       })
     }

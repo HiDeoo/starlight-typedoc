@@ -5,7 +5,7 @@ export { doThingA as doThingARef } from './functions'
  */
 export const aString = 'the_string_value'
 
-// eslint-disable-next-line import/no-mutable-exports
+// eslint-disable-next-line import-x/no-mutable-exports
 export let anUndefinedString: string
 
 /**
