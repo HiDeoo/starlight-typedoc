@@ -21,6 +21,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeContext {
     this.partials = {
       ...superPartials,
       comment: (comment, options) => {
+        // eslint-disable-next-line @typescript-eslint/no-misused-spread
         const filteredComment = { ...comment } as Comment
         filteredComment.blockTags = []
         filteredComment.modifierTags = new Set<`@${string}`>()

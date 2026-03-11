@@ -6,12 +6,12 @@
   "author": "HiDeoo <github@hideoo.dev> (https://hideoo.dev)",
   "type": "module",
   "dependencies": {
-    "typescript": "^5.7.2"
+    "typescript": "^5.9.3"
   },
   "engines": {
-    "node": ">=18.17.1"
+    "node": ">=22.12.0"
   },
-  "packageManager": "pnpm@8.6.1",
+  "packageManager": "pnpm@10.32.1",
   "private": true,
   "sideEffects": false,
   "keywords": [

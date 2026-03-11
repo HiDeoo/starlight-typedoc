@@ -94,6 +94,6 @@ test('should properly format links in summary', async ({ docPage }) => {
 test('should properly format links in block tag comments', async ({ docPage }) => {
   await docPage.goto('classes/foo')
 
-  await docPage.content.locator('h4:has-text("See") + p a').click()
+  await docPage.content.locator('div:has(h4:has-text("See")) + p a').click()
   await docPage.page.waitForURL('**/api/interfaces/thing/')
 })
