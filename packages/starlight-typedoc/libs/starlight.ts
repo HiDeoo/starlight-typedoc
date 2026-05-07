@@ -50,16 +50,16 @@ export function getSidebarFromReflections(
     baseOutputDirectory,
   )
 
-  function replaceSidebarGroupPlaceholder(group: SidebarManualGroup): SidebarGroup {
+  function replaceSidebarGroupPlaceholder(group: SidebarGroup): SidebarGroup {
     if (group.label === sidebarGroupPlaceholder.label) {
       return group.badge ? { ...sidebarGroup, badge: group.badge } : sidebarGroup
     }
 
-    if (isSidebarManualGroup(group)) {
+    if (isSidebarGroup(group)) {
       return {
         ...group,
         items: group.items.map((item) => {
-          return isSidebarManualGroup(item) ? replaceSidebarGroupPlaceholder(item) : item
+          return isSidebarGroup(item) ? replaceSidebarGroupPlaceholder(item) : item
         }),
       }
     }
@@ -68,7 +68,7 @@ export function getSidebarFromReflections(
   }
 
   return sidebar.map((item) => {
-    return isSidebarManualGroup(item) ? replaceSidebarGroupPlaceholder(item) : item
+    return isSidebarGroup(item) ? replaceSidebarGroupPlaceholder(item) : item
   })
 }
 
@@ -86,7 +86,7 @@ export function getSidebarWithoutReflections(
     const sidebarWithoutPlaceholder: StarlightUserConfigSidebar = []
 
     for (const item of entries) {
-      if (isSidebarManualGroup(item)) {
+      if (isSidebarGroup(item)) {
         if (item.label === sidebarGroupPlaceholder.label) continue
 
         sidebarWithoutPlaceholder.push({
@@ -197,11 +197,8 @@ function getSidebarGroupFromReflections(
         return {
           collapsed: true,
           label: group.title,
-          autogenerate: {
-            collapsed: true,
-            directory,
-          },
-        }
+          items: [{ autogenerate: { collapsed: true, directory } }],
+        } satisfies SidebarGroup
       })
       .filter((item): item is SidebarGroup => item !== undefined),
   }
@@ -211,7 +208,7 @@ function getReferencesSidebarGroup(
   group: ReflectionGroup,
   definitions: TypeDocDefinitions,
   baseOutputDirectory: string,
-): SidebarManualGroup | undefined {
+): SidebarGroup | undefined {
   const referenceItems: LinkItem[] = group.children
     .map((child) => {
       const reference = child as ReferenceReflection
@@ -285,7 +282,7 @@ export function getStarlightTypeDocOutputDirectory(outputDirectory: string, base
   return path.posix.join(base, `/${outputDirectory}${outputDirectory.endsWith('/') ? '' : '/'}`)
 }
 
-function isSidebarManualGroup(item: NonNullable<StarlightUserConfigSidebar>[number]): item is SidebarManualGroup {
+function isSidebarGroup(item: NonNullable<StarlightUserConfigSidebar>[number]): item is SidebarGroup {
   return typeof item === 'object' && 'items' in item
 }
 
@@ -293,29 +290,8 @@ function isReferenceReflectionGroup(group: ReflectionGroup) {
   return group.children.every((child) => child instanceof ReferenceReflection)
 }
 
-export type SidebarGroup =
-  | SidebarManualGroup
-  | {
-      autogenerate: {
-        collapsed?: boolean
-        directory: string
-      }
-      collapsed?: boolean
-      label: string
-    }
-
-interface SidebarManualGroup {
-  collapsed?: boolean
-  items: (LinkItem | SidebarGroup)[]
-  label: string
-  badge?:
-    | string
-    | {
-        text: string
-        variant: 'note' | 'danger' | 'success' | 'caution' | 'tip' | 'default'
-      }
-    | undefined
-}
+type SidebarItem = NonNullable<StarlightUserConfigSidebar>[number]
+export type SidebarGroup = Extract<SidebarItem, { items: unknown[] }>
 
 interface LinkItem {
   label: string
