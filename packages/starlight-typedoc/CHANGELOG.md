@@ -1,5 +1,17 @@
 # starlight-typedoc
 
+## 0.22.0
+
+### Minor Changes
+
+- [#100](https://github.com/HiDeoo/starlight-typedoc/pull/100) [`0b0146b`](https://github.com/HiDeoo/starlight-typedoc/commit/0b0146b94efd544319e195c61a86852bc3b91b2a) Thanks [@HiDeoo](https://github.com/HiDeoo)! - ⚠️ **BREAKING CHANGE:** The minimum supported version of Starlight is now version `0.39.0`.
+
+  Please use the `@astrojs/upgrade` command to upgrade your project:
+
+  ```sh
+  npx @astrojs/upgrade
+  ```
+
 ## 0.21.5
 
 ### Patch Changes
