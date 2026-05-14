@@ -13,13 +13,17 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "test": "pnpm test:unit && pnpm test:e2e",
     "test:unit": "vitest",
     "test:e2e": "pnpm run test:e2e:basics && pnpm run test:e2e:packages && pnpm run test:e2e:plugins",
+    "test:e2e:ci": "pnpm run test:e2e:basics:ci && pnpm run test:e2e:packages:ci && pnpm run test:e2e:plugins:ci",
     "test:e2e:basics": "cross-env TEST_TYPE=basics pnpm run playwright",
+    "test:e2e:basics:ci": "cross-env TEST_TYPE=basics pnpm run playwright:ci",
     "test:e2e:packages": "cross-env TEST_TYPE=packages pnpm run playwright",
+    "test:e2e:packages:ci": "cross-env TEST_TYPE=packages pnpm run playwright:ci",
     "test:e2e:plugins": "cross-env TEST_TYPE=plugins pnpm run playwright",
+    "test:e2e:plugins:ci": "cross-env TEST_TYPE=plugins pnpm run playwright:ci",
     "playwright": "playwright install --with-deps chromium && playwright test",
+    "playwright:ci": "playwright test",
     "lint": "eslint . --cache --max-warnings=0"
   },
   "dependencies": {
