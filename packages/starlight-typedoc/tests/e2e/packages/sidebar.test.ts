@@ -18,6 +18,7 @@ test('should generate the proper items for for multiple entry points', async ({ 
   const items = await docPage.getTypeDocSidebarItems()
 
   expect(items).toMatchObject([
+    { name: 'Overview' },
     {
       label: 'bar',
       items: [

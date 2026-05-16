@@ -114,16 +114,16 @@ test('should generate the doc in a custom output directory relative to `src/cont
   )
 })
 
-test('should include `README.md` files for multiple entry points', async () => {
+test('should include `index.md` files for multiple entry points', async () => {
   await generateTestTypeDoc({
     ...starlightTypeDocOptions,
     entryPoints: ['../../fixtures/basics/src/Bar.ts', '../../fixtures/basics/src/Foo.ts'],
   })
 
-  const rmSyncSpy = vi.mocked(fs.rmSync)
-  const filePaths = rmSyncSpy.mock.calls.map((call) => call[0].toString())
+  const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
+  const filePaths = writeFileSyncSpy.mock.calls.map((call) => call[0].toString())
 
-  expect(filePaths.filter((filePath) => /\/(?:Bar|Foo)\/README\.md$/.test(filePath)).length).toBe(0)
+  expect(filePaths.filter((filePath) => /\/(?:Bar|Foo)\/index\.md$/.test(filePath)).length).toBe(2)
 })
 
 test('should support overriding typedoc-plugin-markdown readme page generation', async () => {
@@ -140,7 +140,7 @@ test('should support overriding typedoc-plugin-markdown readme page generation',
   const filePaths = writeFileSyncSpy.mock.calls.map((call) => call[0].toString())
 
   expect(filePaths.some((filePath) => filePath.endsWith('modules.md'))).toBe(true)
-  expect(filePaths.some((filePath) => filePath.endsWith('README.md'))).toBe(true)
+  expect(filePaths.some((filePath) => filePath.endsWith('index.md'))).toBe(true)
 })
 
 test('should output modules with index', async () => {

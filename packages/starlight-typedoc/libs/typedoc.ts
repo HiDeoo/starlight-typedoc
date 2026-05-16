@@ -33,6 +33,7 @@ const defaultTypeDocConfig: TypeDocConfig = {
 }
 
 const markdownPluginConfig: TypeDocConfig = {
+  entryFileName: 'index.md',
   hideBreadcrumbs: true,
   hidePageHeader: true,
   hidePageTitle: true,

@@ -15,6 +15,7 @@ test('should generate the proper items for for multiple plugins with different c
           collapsed: true,
           label: 'Bar API',
           items: [
+            { name: 'Overview' },
             {
               collapsed: true,
               label: 'Classes',
@@ -31,6 +32,7 @@ test('should generate the proper items for for multiple plugins with different c
           collapsed: true,
           label: 'Foo API',
           items: [
+            { name: 'Overview' },
             {
               collapsed: true,
               label: 'Classes',

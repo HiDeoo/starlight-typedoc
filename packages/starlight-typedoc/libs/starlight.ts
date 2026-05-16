@@ -151,69 +151,82 @@ function getSidebarGroupFromReflections(
   outputDirectory: string,
   label?: string,
 ): SidebarGroup {
+  let group: SidebarGroup
   if ((!reflections.groups || reflections.groups.length === 0) && reflections.children) {
-    return getSidebarGroupFromPackageReflections(options, reflections, definitions, outputDirectory)
-  }
+    group = getSidebarGroupFromPackageReflections(options, reflections, definitions, outputDirectory)
+  } else {
+    const groups = reflections.groups ?? []
+    group = {
+      label: label ?? options.label ?? sidebarDefaultOptions.label,
+      collapsed: options.collapsed ?? sidebarDefaultOptions.collapsed,
+      items: groups
+        .flatMap((group) => {
+          if (group.title === 'Modules') {
+            return group.children.map((child) => {
+              const url = definitions[child.id]
 
-  const groups = reflections.groups ?? []
+              if (!url || child.variant === 'document') {
+                return undefined
+              }
 
-  return {
-    label: label ?? options.label ?? sidebarDefaultOptions.label,
-    collapsed: options.collapsed ?? sidebarDefaultOptions.collapsed,
-    items: groups
-      .flatMap((group) => {
-        if (group.title === 'Modules') {
-          return group.children.map((child) => {
-            const url = definitions[child.id]
+              const parsedPath = path.parse(url)
+              const isParentKindModule = child.parent?.kind === ReflectionKind.Module
 
-            if (!url || child.variant === 'document') {
-              return undefined
-            }
+              const moduleGroup = getSidebarGroupFromReflections(
+                { collapsed: true, label: child.name },
+                child,
+                definitions,
+                baseOutputDirectory,
+                `${outputDirectory}/${isParentKindModule ? parsedPath.dir.split('/').slice(1).join('/') : parsedPath.dir}`,
+              )
 
-            const parsedPath = path.parse(url)
-            const isParentKindModule = child.parent?.kind === ReflectionKind.Module
+              const firstLink = {
+                label: child.readme?.length ? 'README' : 'Overview',
+                link: getRelativeURL(url, getStarlightTypeDocOutputDirectory(baseOutputDirectory)),
+              }
+              return { ...moduleGroup, items: [firstLink, ...moduleGroup.items] }
+            })
+          }
 
-            const moduleGroup = getSidebarGroupFromReflections(
-              { collapsed: true, label: child.name },
-              child,
-              definitions,
-              baseOutputDirectory,
-              `${outputDirectory}/${isParentKindModule ? parsedPath.dir.split('/').slice(1).join('/') : parsedPath.dir}`,
-            )
+          if (isReferenceReflectionGroup(group)) {
+            return getReferencesSidebarGroup(group, definitions, baseOutputDirectory)
+          }
 
-            const firstLink = {
-              label: child.readme?.length ? 'README' : 'Overview',
-              link: getRelativeURL(url, getStarlightTypeDocOutputDirectory(baseOutputDirectory)),
-            }
-            return { ...moduleGroup, items: [firstLink, ...moduleGroup.items] }
+          const directory = `${outputDirectory}/${slug(group.title.toLowerCase())}`
+
+          // The groups generated using the `@group` tag do not have an associated directory on disk.
+          const isGroupWithDirectory = group.children.some((child) => {
+            return path.posix
+              .join(baseOutputDirectory, definitions[child.id]?.replace('\\', '/') ?? '')
+              .startsWith(directory)
           })
-        }
 
-        if (isReferenceReflectionGroup(group)) {
-          return getReferencesSidebarGroup(group, definitions, baseOutputDirectory)
-        }
+          if (!isGroupWithDirectory) {
+            return undefined
+          }
 
-        const directory = `${outputDirectory}/${slug(group.title.toLowerCase())}`
-
-        // The groups generated using the `@group` tag do not have an associated directory on disk.
-        const isGroupWithDirectory = group.children.some((child) => {
-          return path.posix
-            .join(baseOutputDirectory, definitions[child.id]?.replace('\\', '/') ?? '')
-            .startsWith(directory)
+          return {
+            collapsed: true,
+            label: group.title,
+            items: [{ autogenerate: { collapsed: true, directory } }],
+          } satisfies SidebarGroup
         })
-
-        if (!isGroupWithDirectory) {
-          return undefined
-        }
-
-        return {
-          collapsed: true,
-          label: group.title,
-          items: [{ autogenerate: { collapsed: true, directory } }],
-        } satisfies SidebarGroup
-      })
-      .filter((item): item is SidebarGroup => item !== undefined),
+        .filter((item): item is SidebarGroup => item !== undefined),
+    }
   }
+
+  if (reflections.variant === 'project') {
+    const url = definitions[reflections.id]
+    if (url) {
+      const rootLink = {
+        label: reflections.readme?.length ? 'README' : 'Overview',
+        link: getRelativeURL(url, getStarlightTypeDocOutputDirectory(baseOutputDirectory)),
+      }
+      return { ...group, items: [rootLink, ...group.items] }
+    }
+  }
+
+  return group
 }
 
 function getReferencesSidebarGroup(
@@ -283,8 +296,10 @@ export function getRelativeURL(url: string, baseUrl: string, pageUrl?: string): 
   let constructedUrl = typeof baseUrl === 'string' ? baseUrl : ''
   constructedUrl += segments.length > 0 ? `${segments.join('/')}/` : ''
   const fileNameSlug = slug(filePath.name)
-  constructedUrl += fileNameSlug || filePath.name
-  constructedUrl += '/'
+  if (fileNameSlug !== 'index') {
+    constructedUrl += fileNameSlug || filePath.name
+    constructedUrl += '/'
+  }
   constructedUrl += anchor && anchor.length > 0 ? `#${anchor}` : ''
 
   return constructedUrl
