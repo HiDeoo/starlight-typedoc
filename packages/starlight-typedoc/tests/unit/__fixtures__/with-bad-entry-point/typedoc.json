@@ -1,0 +1,5 @@
+{
+  "entryPoints": ["../../fixtures/basics/src/noExports.ts"],
+  "tsconfig": "../../fixtures/basics/tsconfig.json",
+  "logLevel": 4
+}

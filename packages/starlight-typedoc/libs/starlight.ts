@@ -120,7 +120,7 @@ function getSidebarGroupFromPackageReflections(
 
     const parsedPath = path.parse(url)
 
-    return getSidebarGroupFromReflections(
+    const group = getSidebarGroupFromReflections(
       options,
       child,
       definitions,
@@ -128,6 +128,12 @@ function getSidebarGroupFromPackageReflections(
       `${baseOutputDirectory}/${parsedPath.dir}`,
       child.name,
     )
+
+    const firstLink = {
+      label: child.readme?.length ? 'README' : 'Overview',
+      link: getRelativeURL(url, getStarlightTypeDocOutputDirectory(baseOutputDirectory)),
+    }
+    return { ...group, items: [firstLink, ...group.items] }
   })
 
   return {
@@ -167,13 +173,19 @@ function getSidebarGroupFromReflections(
             const parsedPath = path.parse(url)
             const isParentKindModule = child.parent?.kind === ReflectionKind.Module
 
-            return getSidebarGroupFromReflections(
+            const moduleGroup = getSidebarGroupFromReflections(
               { collapsed: true, label: child.name },
               child,
               definitions,
               baseOutputDirectory,
               `${outputDirectory}/${isParentKindModule ? parsedPath.dir.split('/').slice(1).join('/') : parsedPath.dir}`,
             )
+
+            const firstLink = {
+              label: child.readme?.length ? 'README' : 'Overview',
+              link: getRelativeURL(url, getStarlightTypeDocOutputDirectory(baseOutputDirectory)),
+            }
+            return { ...moduleGroup, items: [firstLink, ...moduleGroup.items] }
           })
         }
 

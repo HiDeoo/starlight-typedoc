@@ -21,6 +21,7 @@ test('should generate the proper items for for multiple entry points', async ({ 
     {
       label: 'bar',
       items: [
+        { name: 'README' },
         {
           label: 'Interfaces',
           items: [{ name: 'DoBarBetterOptions' }],
@@ -35,6 +36,7 @@ test('should generate the proper items for for multiple entry points', async ({ 
     {
       label: 'foo',
       items: [
+        { name: 'README' },
         {
           label: 'Functions',
           items: [{ name: 'doFoo' }, { name: 'doFooFaster' }],

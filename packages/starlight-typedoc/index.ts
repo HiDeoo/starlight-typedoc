@@ -62,8 +62,9 @@ function makeStarlightTypeDocPlugin(sidebarGroup: SidebarGroup): (options: Starl
 export interface StarlightTypeDocOptions {
   /**
    * The path(s) to the entry point(s) to document.
+   * Can also be provided via a `typedoc.json` file at the project root.
    */
-  entryPoints: NonNullable<TypeDocOptions['entryPoints']>
+  entryPoints?: NonNullable<TypeDocOptions['entryPoints']>
   /**
    * Whether the plugin should error when no TypeDoc documentation is generated.
    * @default true
@@ -86,8 +87,9 @@ export interface StarlightTypeDocOptions {
   pagination?: boolean
   /**
    * The path to the `tsconfig.json` file to use for the documentation generation.
+   * Can also be provided via a `typedoc.json` file at the project root.
    */
-  tsconfig: NonNullable<TypeDocOptions['tsconfig']>
+  tsconfig?: NonNullable<TypeDocOptions['tsconfig']>
   /**
    * Additional TypeDoc configuration.
    * @see https://typedoc.org/options

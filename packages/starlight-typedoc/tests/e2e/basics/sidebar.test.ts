@@ -98,6 +98,7 @@ test('should generate the proper items for for multiple entry points', async ({ 
     {
       label: 'Bar',
       items: [
+        { name: 'Overview' },
         {
           label: 'Classes',
           items: [{ name: 'Bar' }],
@@ -108,6 +109,7 @@ test('should generate the proper items for for multiple entry points', async ({ 
     {
       label: 'Foo',
       items: [
+        { name: 'Overview' },
         {
           label: 'Classes',
           items: [{ name: 'Foo' }],

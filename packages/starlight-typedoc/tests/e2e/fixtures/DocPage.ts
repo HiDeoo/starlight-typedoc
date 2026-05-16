@@ -72,18 +72,22 @@ export class DocPage {
   async #getTypeDocSidebarChildrenItems(list: Locator): Promise<TypeDocSidebarItem[]> {
     const items: TypeDocSidebarItem[] = []
 
-    for (const category of await list.locator('> li > details').all()) {
-      items.push({
-        collapsed: !(await category.getAttribute('open')),
-        label: await category.locator(`> summary > span > span:not(.sl-badge)`).textContent(),
-        items: await this.#getTypeDocSidebarChildrenItems(category.locator('> ul')),
-      })
-    }
+    for (const li of await list.locator('> li').all()) {
+      const category = li.locator('> details').first()
+      if ((await category.count()) > 0) {
+        items.push({
+          collapsed: !(await category.getAttribute('open')),
+          label: await category.locator(`> summary > span > span:not(.sl-badge)`).textContent(),
+          items: await this.#getTypeDocSidebarChildrenItems(category.locator('> ul')),
+        })
+        continue
+      }
 
-    for (const link of await list.locator('> li > a > span:not(.sl-badge)').all()) {
-      const name = await link.textContent()
-
-      items.push({ name: name ? name.trim() : null })
+      const link = li.locator('> a > span:not(.sl-badge)').first()
+      if ((await link.count()) > 0) {
+        const name = await link.textContent()
+        items.push({ name: name ? name.trim() : null })
+      }
     }
 
     return items
