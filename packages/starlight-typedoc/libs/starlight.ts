@@ -126,7 +126,7 @@ function getSidebarGroupFromPackageReflections(
       definitions,
       baseOutputDirectory,
       `${baseOutputDirectory}/${parsedPath.dir}`,
-      child.name,
+      formatPackageLabel(child.name, options),
     )
 
     const firstLink = {
@@ -173,7 +173,7 @@ function getSidebarGroupFromReflections(
               const isParentKindModule = child.parent?.kind === ReflectionKind.Module
 
               const moduleGroup = getSidebarGroupFromReflections(
-                { collapsed: true, label: child.name },
+                { ...options, collapsed: true, label: formatPackageLabel(child.name, options) },
                 child,
                 definitions,
                 baseOutputDirectory,
@@ -315,6 +315,10 @@ function isSidebarGroup(item: NonNullable<StarlightUserConfigSidebar>[number]): 
 
 function isReferenceReflectionGroup(group: ReflectionGroup) {
   return group.children.every((child) => child instanceof ReferenceReflection)
+}
+
+export function formatPackageLabel(name: string, options: StarlightTypeDocSidebarOptions): string {
+  return options.removeScope ? name.replace(/^@[^/]+\//, '') : name
 }
 
 type SidebarItem = NonNullable<StarlightUserConfigSidebar>[number]

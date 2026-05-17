@@ -20,6 +20,7 @@ import type { StarlightTypeDocOptions } from '..'
 
 import { StarlightTypeDocLogger } from './logger'
 import { addFrontmatter } from './markdown'
+import { StarlightTypeDocMemberRouter, StarlightTypeDocModuleRouter } from './router'
 import { getRelativeURL, getStarlightTypeDocOutputDirectory } from './starlight'
 import { StarlightTypeDocTheme } from './theme'
 
@@ -50,7 +51,7 @@ export async function generateTypeDoc(
     entryPoints: jsonEntryPoints,
     tsconfig: jsonTsconfig,
     ...typeDocJsonConfig
-  } = loadTypeDocJsonFile(config.root)
+  } = loadTypeDocJsonFile(process.cwd(), config.root)
 
   const entryPoints = options.entryPoints ?? jsonEntryPoints
   const tsconfig = options.tsconfig ?? jsonTsconfig
@@ -138,6 +139,17 @@ async function bootstrapApp(
   })
   app.logger = new StarlightTypeDocLogger(logger)
   app.options.addReader(new TSConfigReader())
+  app.renderer.defineRouter('starlight-typedoc-member', StarlightTypeDocMemberRouter)
+  app.renderer.defineRouter('starlight-typedoc-module', StarlightTypeDocModuleRouter)
+  if (!app.options.isSet('router')) {
+    const outputFileStrategy = app.options.isSet('outputFileStrategy')
+      ? app.options.getValue('outputFileStrategy')
+      : 'members'
+    app.options.setValue(
+      'router',
+      outputFileStrategy === 'modules' ? 'starlight-typedoc-module' : 'starlight-typedoc-member',
+    )
+  }
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
   app.renderer.on(PageEvent.BEGIN, (event) => {
     onRendererPageBegin(event as MarkdownPageEvent, outputDirectory, pagination)
@@ -215,15 +227,19 @@ function getModelFrontmatter(
   return frontmatter
 }
 
-function loadTypeDocJsonFile(root: URL | undefined): TypeDocJsonFile {
-  if (!root) return {}
-  try {
-    const configPath = path.join(url.fileURLToPath(root), 'typedoc.json')
-    if (!fs.existsSync(configPath)) return {}
-    return JSON.parse(fs.readFileSync(configPath, 'utf8')) as TypeDocJsonFile
-  } catch {
-    return {}
+function loadTypeDocJsonFile(...candidates: (URL | string | undefined)[]): TypeDocJsonFile {
+  for (const candidate of candidates) {
+    if (!candidate) continue
+    try {
+      const base = candidate instanceof URL ? url.fileURLToPath(candidate) : candidate
+      const configPath = path.join(base, 'typedoc.json')
+      if (!fs.existsSync(configPath)) continue
+      return JSON.parse(fs.readFileSync(configPath, 'utf8')) as TypeDocJsonFile
+    } catch {
+      continue
+    }
   }
+  return {}
 }
 
 export class NoReflectionsError extends Error {

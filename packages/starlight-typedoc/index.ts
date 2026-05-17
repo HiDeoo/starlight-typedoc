@@ -114,4 +114,10 @@ export interface StarlightTypeDocSidebarOptions {
    * @default 'API'
    */
   label?: string
+  /**
+   * Whether to remove the package scope (e.g. `@scope/`) from package names in the generated sidebar.
+   * Only affects package-mode entry points.
+   * @default false
+   */
+  removeScope?: boolean
 }
