@@ -15,11 +15,6 @@ export default defineConfig({
             collapsed: true,
           },
           tsconfig: '../fixtures/basics/tsconfig.json',
-          // @ts-expect-error - Fake the `readme` option not being set to ensure that frontmatter titles are escaped properly.
-          // @see https://github.com/HiDeoo/starlight-typedoc/pull/7
-          typeDoc: {
-            readme: undefined,
-          },
         }),
       ],
       sidebar: [

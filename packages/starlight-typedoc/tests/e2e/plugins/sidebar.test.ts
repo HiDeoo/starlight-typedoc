@@ -12,11 +12,9 @@ test('should generate the proper items for for multiple plugins with different c
       label: 'Bar Content',
       items: [
         {
-          collapsed: true,
           label: 'Bar API',
           items: [
             {
-              collapsed: true,
               label: 'Classes',
               items: [{ name: 'Bar' }],
             },
@@ -28,11 +26,9 @@ test('should generate the proper items for for multiple plugins with different c
       label: 'Foo Content',
       items: [
         {
-          collapsed: true,
           label: 'Foo API',
           items: [
             {
-              collapsed: true,
               label: 'Classes',
               items: [{ name: 'Foo' }],
             },

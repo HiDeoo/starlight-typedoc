@@ -12,13 +12,14 @@ import {
 
 import type { StarlightTypeDocSidebarOptions } from '..'
 
-import type { TypeDocDefinitions } from './typedoc'
+import type { TypeDocDefinitions, TypeDocReadmeUrls } from './typedoc'
 
 const externalLinkRegex = /^(http|ftp)s?:\/\//
 
 const sidebarDefaultOptions = {
   collapsed: false,
   label: 'API',
+  readmeLabel: 'Overview',
 } satisfies StarlightTypeDocSidebarOptions
 
 const starlightTypeDocSidebarGroupLabel = Symbol('StarlightTypeDocSidebarGroupLabel')
@@ -37,6 +38,7 @@ export function getSidebarFromReflections(
   reflections: ProjectReflection | DeclarationReflection,
   definitions: TypeDocDefinitions,
   baseOutputDirectory: string,
+  readmeUrls: TypeDocReadmeUrls,
 ): StarlightUserConfigSidebar {
   if (!sidebar || sidebar.length === 0) {
     return sidebar
@@ -46,6 +48,7 @@ export function getSidebarFromReflections(
     options,
     reflections,
     definitions,
+    readmeUrls,
     baseOutputDirectory,
     baseOutputDirectory,
   )
@@ -109,7 +112,9 @@ function getSidebarGroupFromPackageReflections(
   options: StarlightTypeDocSidebarOptions,
   reflections: ProjectReflection | DeclarationReflection,
   definitions: TypeDocDefinitions,
+  readmeUrls: TypeDocReadmeUrls,
   baseOutputDirectory: string,
+  outputDirectory: string,
 ): SidebarGroup {
   const groups = (reflections.children ?? []).map((child) => {
     const url = definitions[child.id]
@@ -124,8 +129,9 @@ function getSidebarGroupFromPackageReflections(
       options,
       child,
       definitions,
+      readmeUrls,
       baseOutputDirectory,
-      `${baseOutputDirectory}/${parsedPath.dir}`,
+      `${outputDirectory}/${parsedPath.dir}`,
       child.name,
     )
   })
@@ -141,67 +147,84 @@ function getSidebarGroupFromReflections(
   options: StarlightTypeDocSidebarOptions,
   reflections: ProjectReflection | DeclarationReflection,
   definitions: TypeDocDefinitions,
+  readmeUrls: TypeDocReadmeUrls,
   baseOutputDirectory: string,
   outputDirectory: string,
   label?: string,
 ): SidebarGroup {
-  if ((!reflections.groups || reflections.groups.length === 0) && reflections.children) {
-    return getSidebarGroupFromPackageReflections(options, reflections, definitions, outputDirectory)
-  }
+  const sidebarGroup: SidebarGroup =
+    (!reflections.groups || reflections.groups.length === 0) && reflections.children
+      ? getSidebarGroupFromPackageReflections(
+          options,
+          reflections,
+          definitions,
+          readmeUrls,
+          baseOutputDirectory,
+          outputDirectory,
+        )
+      : {
+          label: label ?? options.label ?? sidebarDefaultOptions.label,
+          collapsed: options.collapsed ?? sidebarDefaultOptions.collapsed,
+          items: (reflections.groups ?? [])
+            .flatMap((group) => {
+              if (group.title === 'Modules') {
+                return group.children.map((child) => {
+                  const url = definitions[child.id]
 
-  const groups = reflections.groups ?? []
+                  if (!url || child.variant === 'document') {
+                    return undefined
+                  }
 
-  return {
-    label: label ?? options.label ?? sidebarDefaultOptions.label,
-    collapsed: options.collapsed ?? sidebarDefaultOptions.collapsed,
-    items: groups
-      .flatMap((group) => {
-        if (group.title === 'Modules') {
-          return group.children.map((child) => {
-            const url = definitions[child.id]
+                  const parsedPath = path.parse(url)
+                  const isParentKindModule = child.parent?.kind === ReflectionKind.Module
 
-            if (!url || child.variant === 'document') {
-              return undefined
-            }
+                  return getSidebarGroupFromReflections(
+                    { ...options, collapsed: true, label: child.name },
+                    child,
+                    definitions,
+                    readmeUrls,
+                    baseOutputDirectory,
+                    `${outputDirectory}/${isParentKindModule ? parsedPath.dir.split('/').slice(1).join('/') : parsedPath.dir}`,
+                  )
+                })
+              }
 
-            const parsedPath = path.parse(url)
-            const isParentKindModule = child.parent?.kind === ReflectionKind.Module
+              if (isReferenceReflectionGroup(group)) {
+                return getReferencesSidebarGroup(group, definitions, baseOutputDirectory)
+              }
 
-            return getSidebarGroupFromReflections(
-              { collapsed: true, label: child.name },
-              child,
-              definitions,
-              baseOutputDirectory,
-              `${outputDirectory}/${isParentKindModule ? parsedPath.dir.split('/').slice(1).join('/') : parsedPath.dir}`,
-            )
-          })
+              const directory = `${outputDirectory}/${slug(group.title.toLowerCase())}`
+
+              // The groups generated using the `@group` tag do not have an associated directory on disk.
+              const isGroupWithDirectory = group.children.some((child) => {
+                return path.posix
+                  .join(baseOutputDirectory, definitions[child.id]?.replace('\\', '/') ?? '')
+                  .startsWith(directory)
+              })
+
+              if (!isGroupWithDirectory) {
+                return undefined
+              }
+
+              return {
+                collapsed: true,
+                label: group.title,
+                items: [{ autogenerate: { collapsed: true, directory } }],
+              } satisfies SidebarGroup
+            })
+            .filter((item): item is SidebarGroup => item !== undefined),
         }
 
-        if (isReferenceReflectionGroup(group)) {
-          return getReferencesSidebarGroup(group, definitions, baseOutputDirectory)
-        }
+  const readmeUrl = readmeUrls[reflections.id]
 
-        const directory = `${outputDirectory}/${slug(group.title.toLowerCase())}`
-
-        // The groups generated using the `@group` tag do not have an associated directory on disk.
-        const isGroupWithDirectory = group.children.some((child) => {
-          return path.posix
-            .join(baseOutputDirectory, definitions[child.id]?.replace('\\', '/') ?? '')
-            .startsWith(directory)
-        })
-
-        if (!isGroupWithDirectory) {
-          return undefined
-        }
-
-        return {
-          collapsed: true,
-          label: group.title,
-          items: [{ autogenerate: { collapsed: true, directory } }],
-        } satisfies SidebarGroup
-      })
-      .filter((item): item is SidebarGroup => item !== undefined),
-  }
+  return readmeUrl
+    ? addReadmeLinkToSidebarGroup(
+        sidebarGroup,
+        readmeUrl,
+        baseOutputDirectory,
+        options.readmeLabel ?? sidebarDefaultOptions.readmeLabel,
+      )
+    : sidebarGroup
 }
 
 function getReferencesSidebarGroup(
@@ -245,6 +268,21 @@ function getReferencesSidebarGroup(
   }
 }
 
+function addReadmeLinkToSidebarGroup(
+  sidebarGroup: SidebarGroup,
+  readmeUrl: string,
+  baseOutputDirectory: string,
+  label: string,
+): SidebarGroup {
+  return {
+    ...sidebarGroup,
+    items: [
+      { label, link: getRelativeURL(readmeUrl, getStarlightTypeDocOutputDirectory(baseOutputDirectory)) },
+      ...sidebarGroup.items,
+    ],
+  }
+}
+
 export function getAsideMarkdown(type: AsideType, title: string, content: string) {
   return `:::${type}[${title}]
 ${content}
@@ -270,9 +308,13 @@ export function getRelativeURL(url: string, baseUrl: string, pageUrl?: string): 
 
   let constructedUrl = typeof baseUrl === 'string' ? baseUrl : ''
   constructedUrl += segments.length > 0 ? `${segments.join('/')}/` : ''
-  const fileNameSlug = slug(filePath.name)
-  constructedUrl += fileNameSlug || filePath.name
-  constructedUrl += '/'
+
+  if (filePath.name !== 'index') {
+    const fileNameSlug = slug(filePath.name)
+    constructedUrl += fileNameSlug || filePath.name
+    constructedUrl += '/'
+  }
+
   constructedUrl += anchor && anchor.length > 0 ? `#${anchor}` : ''
 
   return constructedUrl

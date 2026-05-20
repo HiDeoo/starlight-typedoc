@@ -17,6 +17,8 @@ import {
   PackageJsonReader,
   type OptionsReader,
   type Options,
+  PageKind,
+  ReflectionKind,
 } from 'typedoc'
 import type { MarkdownPageEvent, PluginOptions } from 'typedoc-plugin-markdown'
 
@@ -49,7 +51,7 @@ export async function generateTypeDoc(
 ) {
   const outputDirectory = options.output ?? 'api'
 
-  const app = await bootstrapApp(
+  const { app, isReadmeConfigured } = await bootstrapApp(
     options.entryPoints,
     options.tsconfig,
     options.typeDoc,
@@ -63,8 +65,33 @@ export async function generateTypeDoc(
   )
 
   const definitions: TypeDocDefinitions = {}
+  const readmeUrls: TypeDocReadmeUrls = {}
+
+  const entryFileName = app.options.getValue('entryFileName')
+  const fileExtension = app.options.getValue('fileExtension')
+  const entryPageFileName =
+    typeof entryFileName === 'string' && typeof fileExtension === 'string'
+      ? `${path.parse(entryFileName).name}${fileExtension}`
+      : undefined
+
   app.renderer.on(RendererEvent.END, (event) => {
     for (const page of event.pages) {
+      const isPackageEntryPage =
+        entryPageFileName !== undefined &&
+        path.basename(page.url) === entryPageFileName &&
+        'kind' in page.model &&
+        page.model.kind === ReflectionKind.Module &&
+        page.model.parent?.kind === ReflectionKind.Project
+
+      if (
+        isReadmeConfigured &&
+        'id' in page.model &&
+        // Root readme pages are emitted as index pages; package overviews are emitted as module entry pages.
+        (page.kind === PageKind.Index || isPackageEntryPage)
+      ) {
+        readmeUrls[page.model.id] = page.url
+      }
+
       if (!('id' in page.model)) continue
       definitions[page.model.id] = page.url
     }
@@ -92,7 +119,7 @@ export async function generateTypeDoc(
     await app.generateOutputs(reflections)
   }
 
-  return { definitions, outputDirectory, reflections }
+  return { definitions, outputDirectory, readmeUrls, reflections }
 }
 
 async function bootstrapApp(
@@ -121,13 +148,23 @@ async function bootstrapApp(
     [new TypeDocReader(), new PackageJsonReader(), new TSConfigReader(), new PluginOptionsReader(plugin)],
   )
   app.logger = new StarlightTypeDocLogger(logger)
+  // TODO(HiDeoo)
   app.options.addReader(new TSConfigReader())
+
+  const readme = app.options.getValue('readme')
+  const isReadmeConfigured = typeof readme === 'string' && !readme.endsWith('none')
+
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
   app.renderer.on(PageEvent.BEGIN, (event) => {
     onRendererPageBegin(event as MarkdownPageEvent, outputDirectory, pagination)
   })
   app.renderer.on(PageEvent.END, (event) => {
-    const shouldRemovePage = onRendererPageEnd(event as MarkdownPageEvent, outputDirectory, pagination)
+    const shouldRemovePage = onRendererPageEnd(
+      event as MarkdownPageEvent,
+      outputDirectory,
+      pagination,
+      isReadmeConfigured,
+    )
     if (shouldRemovePage) {
       pagesToRemove.push(event.filename)
     }
@@ -142,7 +179,7 @@ async function bootstrapApp(
     type: ParameterType.String,
   })
 
-  return app
+  return { app, isReadmeConfigured }
 }
 
 function onRendererPageBegin(event: MarkdownPageEvent, outputDirectory: string, pagination: boolean) {
@@ -158,11 +195,16 @@ function onRendererPageBegin(event: MarkdownPageEvent, outputDirectory: string, 
 }
 
 // Returning `true` will delete the page from the filesystem.
-function onRendererPageEnd(event: MarkdownPageEvent, outputDirectory: string, pagination: boolean) {
+function onRendererPageEnd(
+  event: MarkdownPageEvent,
+  outputDirectory: string,
+  pagination: boolean,
+  isReadmeConfigured: boolean,
+) {
   if (!event.contents) {
     return false
-  } else if (/^.+[/\\]README\.md$/.test(event.url)) {
-    // Do not save `README.md` files for multiple entry points.
+  } else if (!isReadmeConfigured && /^.+[/\\]README\.md$/.test(event.url)) {
+    // Do not save `README.md` files for multiple entry points if the `readme` option is not configured.
     // It is no longer supported in TypeDoc 0.26.0 to call `event.preventDefault()` to prevent the file from being saved.
     // https://github.com/TypeStrong/typedoc/commit/6e6b3b662c92b3d4bc24b6c6c0c6e227e063c759
     // event.preventDefault()
@@ -249,6 +291,7 @@ export class NoReflectionsError extends Error {
 
 export type TypeDocConfig = Partial<Omit<TypeDocOptions, 'entryPoints' | 'tsconfig'> & PluginOptions>
 export type TypeDocDefinitions = Record<string, PageDefinition['url']>
+export type TypeDocReadmeUrls = Record<string, PageDefinition['url']>
 
 interface TypeDocOutput {
   base: string
