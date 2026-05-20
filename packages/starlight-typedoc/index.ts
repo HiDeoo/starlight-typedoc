@@ -62,8 +62,13 @@ function makeStarlightTypeDocPlugin(sidebarGroup: SidebarGroup): (options: Starl
 export interface StarlightTypeDocOptions {
   /**
    * The path(s) to the entry point(s) to document.
+   *
+   * This option can also be specified in a TypeDoc options file located at the root of the project (e.g. `typedoc.json`
+   * or `typedoc.mjs`).
+   *
+   * @see https://typedoc.org/documents/Options.Configuration.html#options
    */
-  entryPoints: NonNullable<TypeDocOptions['entryPoints']>
+  entryPoints?: NonNullable<TypeDocOptions['entryPoints']>
   /**
    * Whether the plugin should error when no TypeDoc documentation is generated.
    * @default true
@@ -86,11 +91,21 @@ export interface StarlightTypeDocOptions {
   pagination?: boolean
   /**
    * The path to the `tsconfig.json` file to use for the documentation generation.
+   *
+   * This option can also be specified in a TypeDoc options file located at the root of the project (e.g. `typedoc.json`
+   * or `typedoc.mjs`).
+   *
+   * @see https://typedoc.org/documents/Options.Configuration.html#options
    */
-  tsconfig: NonNullable<TypeDocOptions['tsconfig']>
+  tsconfig?: NonNullable<TypeDocOptions['tsconfig']>
   /**
    * Additional TypeDoc configuration.
-   * @see https://typedoc.org/options
+   *
+   * These options can also be specified in a TypeDoc options file located at the root of the project (e.g.
+   * `typedoc.json` or `typedoc.mjs`).
+   *
+   * @see https://typedoc.org/documents/Options.html
+   * @see https://typedoc.org/documents/Options.Configuration.html#options
    */
   typeDoc?: TypeDocConfig
   /**
@@ -102,7 +117,7 @@ export interface StarlightTypeDocOptions {
 
 export interface StarlightTypeDocSidebarOptions {
   /**
-   * Wheter the generated documentation sidebar group should be collapsed by default.
+   * Whether the generated documentation sidebar group should be collapsed by default.
    * Note that nested sidebar groups are always collapsed.
    * @default false
    */

@@ -13,6 +13,10 @@ import {
   RendererEvent,
   type PageDefinition,
   type ProjectReflection,
+  TypeDocReader,
+  PackageJsonReader,
+  type OptionsReader,
+  type Options,
 } from 'typedoc'
 import type { MarkdownPageEvent, PluginOptions } from 'typedoc-plugin-markdown'
 
@@ -92,8 +96,8 @@ export async function generateTypeDoc(
 }
 
 async function bootstrapApp(
-  entryPoints: NonNullable<TypeDocOptions['entryPoints']>,
-  tsconfig: NonNullable<TypeDocOptions['tsconfig']>,
+  entryPoints: TypeDocOptions['entryPoints'],
+  tsconfig: TypeDocOptions['tsconfig'],
   config: TypeDocConfig = {},
   output: TypeDocOutput,
   pagination: boolean,
@@ -102,16 +106,20 @@ async function bootstrapApp(
   const pagesToRemove: string[] = []
   const outputDirectory = getStarlightTypeDocOutputDirectory(output.directory, output.base)
 
-  const app = await Application.bootstrapWithPlugins({
-    ...defaultTypeDocConfig,
-    ...markdownPluginConfig,
-    ...config,
-    // typedoc-plugin-markdown must be applied here so that it isn't overwritten by any additional applied plugins
-    plugin: [...(config.plugin ?? []), 'typedoc-plugin-markdown'],
-    entryPoints,
-    tsconfig,
-    outputs: [{ name: 'markdown', path: output.path }],
-  })
+  // Merge plugins later so plugins from config files are preserved.
+  const { plugin = [], ...typeDocConfig } = config
+
+  const app = await Application.bootstrapWithPlugins(
+    {
+      ...defaultTypeDocConfig,
+      ...markdownPluginConfig,
+      ...typeDocConfig,
+      ...(entryPoints === undefined ? {} : { entryPoints }),
+      ...(tsconfig === undefined ? {} : { tsconfig }),
+      outputs: [{ name: 'markdown', path: output.path }],
+    },
+    [new TypeDocReader(), new PackageJsonReader(), new TSConfigReader(), new PluginOptionsReader(plugin)],
+  )
   app.logger = new StarlightTypeDocLogger(logger)
   app.options.addReader(new TSConfigReader())
   app.renderer.defineTheme('starlight-typedoc', StarlightTypeDocTheme)
@@ -195,6 +203,42 @@ function getModelFrontmatter(
   }
 
   return frontmatter
+}
+
+class PluginOptionsReader implements OptionsReader {
+  readonly name = 'starlight-typedoc-plugin'
+  // Run after config readers so config-file plugins can be merged instead of overwritten.
+  readonly order = 300
+  readonly supportsPackages = false
+
+  constructor(private readonly plugin: NonNullable<TypeDocOptions['plugin']>) {}
+
+  read(container: Options) {
+    // Let TypeDoc normalize plugin names before deduping them.
+    container.setValue('plugin', [...container.getValue('plugin'), ...this.plugin, 'typedoc-plugin-markdown'])
+
+    const plugins = container.getValue('plugin')
+    const markdownPlugin = plugins.at(-1)
+
+    if (markdownPlugin === undefined) return
+
+    container.setValue('plugin', [
+      ...this.#dedupePlugins(plugins.filter((plugin) => plugin !== markdownPlugin)),
+      markdownPlugin,
+    ])
+  }
+
+  #dedupePlugins(plugins: NonNullable<TypeDocOptions['plugin']>) {
+    const uniquePlugins: NonNullable<TypeDocOptions['plugin']> = []
+
+    for (const plugin of plugins) {
+      if (!uniquePlugins.includes(plugin)) {
+        uniquePlugins.push(plugin)
+      }
+    }
+
+    return uniquePlugins
+  }
 }
 
 export class NoReflectionsError extends Error {
