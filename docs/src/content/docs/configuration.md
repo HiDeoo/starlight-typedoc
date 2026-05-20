@@ -35,11 +35,15 @@ You can pass the following options to the Starlight TypeDoc plugin.
 
 The path(s) to the entry point(s) to document.
 
+This option can also be specified in a TypeDoc [options file](https://typedoc.org/documents/Options.Configuration.html#options) located at the root of the project (e.g. `typedoc.json` or `typedoc.mjs`).
+
 ### `tsconfig` (required)
 
 **Type:** `string`
 
 The path to the `tsconfig.json` file to use for the documentation generation.
+
+This option can also be specified in a TypeDoc [options file](https://typedoc.org/documents/Options.Configuration.html#options) located at the root of the project (e.g. `typedoc.json` or `typedoc.mjs`).
 
 ### `output`
 
@@ -65,7 +69,9 @@ The generated documentation [sidebar configuration](#sidebar-configuration).
 
 **Type:** `TypeDocConfig`
 
-Additional [TypeDoc](https://typedoc.org/options) or [typedoc-plugin-markdown](https://github.com/tgreyuk/typedoc-plugin-markdown/blob/next/packages/typedoc-plugin-markdown/docs/usage/options.md) configuration to override the [default settings](https://github.com/HiDeoo/starlight-typedoc/blob/main/packages/starlight-typedoc/libs/typedoc.ts#L21-L28) used by the plugin.
+Additional [TypeDoc](https://typedoc.org/options) or [typedoc-plugin-markdown](https://github.com/tgreyuk/typedoc-plugin-markdown/blob/next/packages/typedoc-plugin-markdown/docs/usage/options.md) configuration to override the [default settings](https://github.com/HiDeoo/starlight-typedoc/blob/main/packages/starlight-typedoc/libs/typedoc.ts#L30-L43) used by the plugin.
+
+These options can also be specified in a TypeDoc [options file](https://typedoc.org/documents/Options.Configuration.html#options) located at the root of the project (e.g. `typedoc.json` or `typedoc.mjs`).
 
 :::note
 When using TypeDoc [`packages`](https://typedoc.org/options/input/#packages) entry point strategy, all entry points should be directories that may contain their own TypeDoc configuration.
@@ -99,7 +105,7 @@ The sidebar configuration is an object with the following properties:
 **Type:** `boolean`  
 **Default:** `false`
 
-Wheter the generated documentation sidebar group should be collapsed by default.
+Whether the generated documentation sidebar group should be collapsed by default.
 Note that nested sidebar groups are always collapsed.
 
 ### `label`
