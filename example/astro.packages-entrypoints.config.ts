@@ -13,6 +13,7 @@ export default defineConfig({
           tsconfig: '../fixtures/packages/tsconfig.json',
           typeDoc: {
             entryPointStrategy: 'packages',
+            readme: '../fixtures/packages/README.md',
           },
         }),
       ],

@@ -1,11 +1,6 @@
 <div align="center">
   <h1>starlight-typedoc 📚</h1>
   <p>Starlight plugin to generate documentation from TypeScript using TypeDoc.</p>
-  <p>
-    <a href="https://i.imgur.com/EpHdpln.png" title="Screenshot of starlight-typedoc">
-      <img alt="Screenshot of starlight-typedoc" src="https://i.imgur.com/EpHdpln.png" width="520" />
-    </a>
-  </p>
 </div>
 
 <div align="center">
@@ -18,13 +13,9 @@
   <br />
 </div>
 
-## Getting Started
+## Fixtures
 
-Want to get started immediately? Check out the [getting started guide](https://starlight-typedoc.vercel.app/getting-started/) or check out the [demo](https://starlight-typedoc-example.vercel.app) to see the plugin in action.
-
-## Features
-
-A [Starlight](https://starlight.astro.build) plugin using [TypeDoc](https://typedoc.org) and [typedoc-plugin-markdown](https://github.com/typedoc2md/typedoc-plugin-markdown) to generate documentation from TypeScript code.
+This folder contains fixtures used for the example and tests.
 
 ## License
 

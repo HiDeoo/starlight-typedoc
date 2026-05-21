@@ -114,6 +114,20 @@ test('should generate the doc in a custom output directory relative to `src/cont
   )
 })
 
+test('should quote generated frontmatter titles', async () => {
+  await generateTestTypeDoc({
+    ...starlightTypeDocOptions,
+    entryPoints: ['../../fixtures/basics/src/functions.ts'],
+  })
+
+  const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
+  const [, content] = writeFileSyncSpy.mock.calls.find((call) =>
+    /[/\\]functions[/\\]\$\.md$/.test(call[0].toString()),
+  ) as [fs.PathOrFileDescriptor, string]
+
+  expect(content).toContain('title: "$"')
+})
+
 test('should not add `README.md` module files for multiple entry points', async () => {
   await generateTestTypeDoc({
     ...starlightTypeDocOptions,
@@ -128,7 +142,7 @@ test('should not add `README.md` module files for multiple entry points', async 
 })
 
 test('should support overriding typedoc-plugin-markdown readme page generation', async () => {
-  await generateTestTypeDoc({
+  const { readmeUrls } = await generateTestTypeDoc({
     ...starlightTypeDocOptions,
     typeDoc: {
       ...starlightTypeDocOptions.typeDoc,
@@ -138,10 +152,28 @@ test('should support overriding typedoc-plugin-markdown readme page generation',
   })
 
   const writeFileSyncSpy = vi.mocked(fs.writeFileSync)
-  const filePaths = writeFileSyncSpy.mock.calls.map((call) => call[0].toString())
+  const writtenFilePaths = writeFileSyncSpy.mock.calls.map((call) => call[0].toString())
+  const rmSyncSpy = vi.mocked(fs.rmSync)
+  const removedFilePaths = rmSyncSpy.mock.calls.map((call) => call[0].toString())
 
-  expect(filePaths.some((filePath) => filePath.endsWith('modules.md'))).toBe(true)
-  expect(filePaths.some((filePath) => filePath.endsWith('README.md'))).toBe(true)
+  expect(writtenFilePaths.some((filePath) => filePath.endsWith('modules.md'))).toBe(true)
+  expect(writtenFilePaths.some((filePath) => filePath.endsWith('README.md'))).toBe(true)
+  expect(removedFilePaths.some((filePath) => /\/(?:Bar|Foo)\/README\.md$/.test(filePath))).toBe(false)
+  expect(Object.values(readmeUrls).toSorted()).toEqual(['Bar/README.md', 'Foo/README.md', 'README.md'])
+})
+
+test('should collect package overview URLs when using packages entry point strategy', async () => {
+  const { readmeUrls } = await generateTestTypeDoc({
+    entryPoints: ['../../fixtures/packages/packages/*'],
+    tsconfig: '../../fixtures/packages/tsconfig.json',
+    typeDoc: {
+      ...starlightTypeDocOptions.typeDoc,
+      entryPointStrategy: 'packages',
+      readme: '../../fixtures/packages/README.md',
+    },
+  })
+
+  expect(Object.values(readmeUrls).toSorted()).toEqual(['README.md', 'bar/README.md', 'foo/README.md'])
 })
 
 test('should output modules with index', async () => {

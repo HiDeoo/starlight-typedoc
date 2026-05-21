@@ -69,13 +69,13 @@ The generated documentation [sidebar configuration](#sidebar-configuration).
 
 **Type:** `TypeDocConfig`
 
-Additional [TypeDoc](https://typedoc.org/options) or [typedoc-plugin-markdown](https://github.com/tgreyuk/typedoc-plugin-markdown/blob/next/packages/typedoc-plugin-markdown/docs/usage/options.md) configuration to override the [default settings](https://github.com/HiDeoo/starlight-typedoc/blob/main/packages/starlight-typedoc/libs/typedoc.ts#L30-L43) used by the plugin.
+Additional [TypeDoc](https://typedoc.org/documents/Options.html) or [typedoc-plugin-markdown](https://typedoc-plugin-markdown.org/docs/options#plugin-options) configuration to override the [default settings](https://github.com/HiDeoo/starlight-typedoc/blob/main/packages/starlight-typedoc/libs/typedoc.ts#L30-L43) used by the plugin.
 
 These options can also be specified in a TypeDoc [options file](https://typedoc.org/documents/Options.Configuration.html#options) located at the root of the project (e.g. `typedoc.json` or `typedoc.mjs`).
 
 :::note
-When using TypeDoc [`packages`](https://typedoc.org/options/input/#packages) entry point strategy, all entry points should be directories that may contain their own TypeDoc configuration.
-As documented in the [TypeDoc documentation](https://typedoc.org/options/input/#packages), the root configuration provided by this plugin will not be copied or merged with the entry point configuration.
+When using TypeDoc [`packages`](https://typedoc.org/documents/Options.Input.html#packages) entry point strategy, all entry points should be directories that may contain their own TypeDoc configuration.
+As documented in the [TypeDoc documentation](https://typedoc.org/documents/Options.Input.html#packages), the root configuration provided by this plugin will not be copied or merged with the entry point configuration.
 :::
 
 ### `watch`
@@ -114,3 +114,10 @@ Note that nested sidebar groups are always collapsed.
 **Default:** `'API'`
 
 The generated documentation sidebar group label.
+
+### `readmeLabel`
+
+**Type:** `string`  
+**Default:** `'Overview'`
+
+The label used for generated readme links in the sidebar when the [TypeDoc `readme` option](https://typedoc.org/documents/Options.Input.html#readme) is configured.

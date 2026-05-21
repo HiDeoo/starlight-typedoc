@@ -18,9 +18,11 @@ test('should generate the proper items for for multiple entry points', async ({ 
   const items = await docPage.getTypeDocSidebarItems()
 
   expect(items).toMatchObject([
+    { name: 'Overview' },
     {
       label: 'bar',
       items: [
+        { name: 'Overview' },
         {
           label: 'Interfaces',
           items: [{ name: 'DoBarBetterOptions' }],
@@ -30,17 +32,16 @@ test('should generate the proper items for for multiple entry points', async ({ 
           items: [{ name: 'doBar' }, { name: 'doBarBetter' }],
         },
       ],
-      collapsed: true,
     },
     {
       label: 'foo',
       items: [
+        { name: 'Overview' },
         {
           label: 'Functions',
           items: [{ name: 'doFoo' }, { name: 'doFooFaster' }],
         },
       ],
-      collapsed: true,
     },
   ])
 })

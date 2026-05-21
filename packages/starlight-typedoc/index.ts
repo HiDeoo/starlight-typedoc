@@ -32,7 +32,11 @@ function makeStarlightTypeDocPlugin(sidebarGroup: SidebarGroup): (options: Starl
           if (command === 'preview') return
 
           try {
-            const { definitions, outputDirectory, reflections } = await generateTypeDoc(options, astroConfig, logger)
+            const { definitions, outputDirectory, readmeUrls, reflections } = await generateTypeDoc(
+              options,
+              astroConfig,
+              logger,
+            )
 
             updateConfig({
               sidebar: getSidebarFromReflections(
@@ -42,6 +46,7 @@ function makeStarlightTypeDocPlugin(sidebarGroup: SidebarGroup): (options: Starl
                 reflections,
                 definitions,
                 outputDirectory,
+                readmeUrls,
               ),
             })
           } catch (error) {
@@ -127,4 +132,10 @@ export interface StarlightTypeDocSidebarOptions {
    * @default 'API'
    */
   label?: string
+  /**
+   * The label used for generated readme links in the sidebar when the TypeDoc `readme` option is configured.
+   * @default 'Overview'
+   * @see https://typedoc.org/documents/Options.Input.html#readme
+   */
+  readmeLabel?: string
 }
