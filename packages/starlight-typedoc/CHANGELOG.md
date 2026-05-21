@@ -1,5 +1,13 @@
 # starlight-typedoc
 
+## 0.23.0
+
+### Minor Changes
+
+- [#105](https://github.com/HiDeoo/starlight-typedoc/pull/105) [`87e3ad3`](https://github.com/HiDeoo/starlight-typedoc/commit/87e3ad34ae2e8a28f09a543f052024dcc1c7d722) Thanks [@HiDeoo](https://github.com/HiDeoo)! - Adds support for providing TypeDoc options using [TypeDoc options files](https://typedoc.org/documents/Options.Configuration.html#options).
+
+- [#107](https://github.com/HiDeoo/starlight-typedoc/pull/107) [`90309cf`](https://github.com/HiDeoo/starlight-typedoc/commit/90309cf43fc1315f3c71b01b66b879910285d8dd) Thanks [@HiDeoo](https://github.com/HiDeoo)! - Adds support for including generated readme pages in the sidebar with a customizable label when the [TypeDoc `readme` option](https://typedoc.org/documents/Options.Input.html#readme) is configured.
+
 ## 0.22.0
 
 ### Minor Changes
