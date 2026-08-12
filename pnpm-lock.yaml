@@ -98,6 +98,9 @@ importers:
       '@astrojs/starlight':
         specifier: '>=0.39.0'
         version: 0.39.0(astro@6.3.0(@types/node@22.19.15)(rollup@4.59.0)(yaml@2.8.2))(typescript@5.9.3)
+      astro:
+        specifier: '>=6.0.0'
+        version: 6.3.0(@types/node@22.19.15)(rollup@4.59.0)(yaml@2.8.2)
       github-slugger:
         specifier: ^2.0.0
         version: 2.0.0

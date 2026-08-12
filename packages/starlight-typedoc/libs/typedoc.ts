@@ -29,6 +29,8 @@ import { addFrontmatter } from './markdown'
 import { getRelativeURL, getStarlightTypeDocOutputDirectory } from './starlight'
 import { StarlightTypeDocTheme } from './theme'
 
+export const DefaultOutputDirectory = 'api'
+
 const defaultTypeDocConfig: TypeDocConfig = {
   excludeInternal: true,
   excludePrivate: true,
@@ -49,7 +51,7 @@ export async function generateTypeDoc(
   config: AstroConfig,
   logger: AstroIntegrationLogger,
 ) {
-  const outputDirectory = options.output ?? 'api'
+  const outputDirectory = options.output ?? DefaultOutputDirectory
 
   const { app, isReadmeConfigured } = await bootstrapApp(
     options.entryPoints,
@@ -148,7 +150,6 @@ async function bootstrapApp(
     [new TypeDocReader(), new PackageJsonReader(), new TSConfigReader(), new PluginOptionsReader(plugin)],
   )
   app.logger = new StarlightTypeDocLogger(logger)
-  // TODO(HiDeoo)
   app.options.addReader(new TSConfigReader())
 
   const readme = app.options.getValue('readme')

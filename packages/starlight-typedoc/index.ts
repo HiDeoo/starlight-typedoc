@@ -1,6 +1,9 @@
 import { randomBytes } from 'node:crypto'
+import path from 'node:path'
+import url from 'node:url'
 
 import type { StarlightPlugin } from '@astrojs/starlight/types'
+import { AstroError } from 'astro/errors'
 import type { TypeDocOptions } from 'typedoc'
 
 import {
@@ -9,9 +12,11 @@ import {
   getSidebarWithoutReflections,
   type SidebarGroup,
 } from './libs/starlight'
-import { generateTypeDoc, NoReflectionsError, type TypeDocConfig } from './libs/typedoc'
+import { DefaultOutputDirectory, generateTypeDoc, NoReflectionsError, type TypeDocConfig } from './libs/typedoc'
 
 export const typeDocSidebarGroup = getSidebarGroupPlaceholder()
+
+const outputs = new WeakMap<URL, string[]>()
 
 export default function starlightTypeDocPlugin(options: StarlightTypeDocOptions): StarlightPlugin {
   return makeStarlightTypeDocPlugin(typeDocSidebarGroup)(options)
@@ -30,6 +35,21 @@ function makeStarlightTypeDocPlugin(sidebarGroup: SidebarGroup): (options: Starl
       hooks: {
         async 'config:setup'({ astroConfig, command, config, logger, updateConfig }) {
           if (command === 'preview') return
+
+          const output = options.output ?? DefaultOutputDirectory
+          const outputPath = path.join(url.fileURLToPath(astroConfig.srcDir), 'content/docs', output)
+          const knownOutputs = outputs.get(astroConfig.srcDir) ?? []
+
+          for (const knownOutput of knownOutputs) {
+            if (isSameOrNestedDirectory(knownOutput, outputPath) || isSameOrNestedDirectory(outputPath, knownOutput)) {
+              throw new AstroError(
+                `The 'output' directory '${output}' conflicts with the output directory of another Starlight TypeDoc plugin instance.`,
+                "Configure each Starlight TypeDoc plugin instance with a distinct and non-overlapping 'output' directory.",
+              )
+            }
+          }
+
+          outputs.set(astroConfig.srcDir, [...knownOutputs, outputPath])
 
           try {
             const { definitions, outputDirectory, readmeUrls, reflections } = await generateTypeDoc(
@@ -62,6 +82,11 @@ function makeStarlightTypeDocPlugin(sidebarGroup: SidebarGroup): (options: Starl
       },
     }
   }
+}
+
+function isSameOrNestedDirectory(parent: string, child: string) {
+  const relative = path.relative(parent, child)
+  return relative === '' || (relative !== '..' && !relative.startsWith(`..${path.sep}`))
 }
 
 export interface StarlightTypeDocOptions {
