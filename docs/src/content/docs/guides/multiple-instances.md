@@ -15,6 +15,8 @@ Calling the `createStarlightTypeDocPlugin()` function returns an array with exac
 1. A new Starlight TypeDoc plugin instance that you can add to your Starlight configuration.
 1. A reference to the generated sidebar group for that instance that you can add to your sidebar.
 
+Each plugin instance must use a distinct, non-overlapping [`output`](/configuration/#output) directory.
+
 The following example creates two Starlight TypeDoc plugin instances for two different entry points: one for a public API and another for an admin API.
 The associated sidebar groups are then added to the sidebar:
 
