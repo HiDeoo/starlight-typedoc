@@ -1,5 +1,11 @@
 # starlight-typedoc
 
+## 0.23.1
+
+### Patch Changes
+
+- [#109](https://github.com/HiDeoo/starlight-typedoc/pull/109) [`0bb1836`](https://github.com/HiDeoo/starlight-typedoc/commit/0bb1836f5eba46d22714db5161b0599b0b33755b) Thanks [@HiDeoo](https://github.com/HiDeoo)! - Prevents `output` directory conflicts between multiple plugin instances.
+
 ## 0.23.0
 
 ### Minor Changes
