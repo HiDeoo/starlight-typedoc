@@ -110,7 +110,7 @@ test('should generate the doc in a custom output directory relative to `src/cont
 
   expect(mkdirSyncSpy).toHaveBeenCalled()
   expect(mkdirSyncSpy.mock.calls[0]?.[0].toString()).toMatch(
-    new RegExp(`src[/\\\\]content[/\\\\]docs[/\\\\]${output}$`),
+    new RegExp(String.raw`src[/\\]content[/\\]docs[/\\]${output}$`),
   )
 })
 
