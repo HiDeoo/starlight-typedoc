@@ -9,5 +9,14 @@ allowBuilds:
   sharp: false
   unrs-resolver: false
 
+peerDependencyRules:
+  allowedVersions:
+    typescript: '5.9.3'
+
 # Prevent installing packages published in the last 3 days.
 minimumReleaseAge: 4320
+
+minimumReleaseAgeExclude:
+  - '@hideoo/eslint-config@5.2.0'
+  - '@hideoo/starlight-plugins-docs-components@0.5.0'
+  - starlight-package-managers@0.13.0

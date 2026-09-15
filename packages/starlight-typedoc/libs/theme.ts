@@ -5,6 +5,7 @@ import { getAsideMarkdown, getRelativeURL } from './starlight'
 
 const customBlockTagTypes = ['@deprecated'] as const
 const customModifiersTagTypes = ['@alpha', '@beta', '@experimental'] as const
+const linkTagTypes = new Set(['@link', '@linkcode', '@linkplain'])
 
 export class StarlightTypeDocTheme extends MarkdownTheme {
   override getRenderContext(event: MarkdownPageEvent<Reflection>): StarlightTypeDocThemeRenderContext {
@@ -87,11 +88,7 @@ class StarlightTypeDocThemeRenderContext extends MarkdownThemeContext {
   }
 
   #parseCommentDisplayPart = (part: CommentDisplayPart): CommentDisplayPart => {
-    if (
-      part.kind === 'inline-tag' &&
-      (part.tag === '@link' || part.tag === '@linkcode' || part.tag === '@linkplain') &&
-      part.target instanceof Reflection
-    ) {
+    if (part.kind === 'inline-tag' && linkTagTypes.has(part.tag) && part.target instanceof Reflection) {
       if (!this.router.hasUrl(part.target)) {
         const { target, ...rest } = part
         return rest

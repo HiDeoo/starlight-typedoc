@@ -89,7 +89,7 @@ export async function generateTypeDoc(
         isReadmeConfigured &&
         'id' in page.model &&
         // Root readme pages are emitted as index pages; package overviews are emitted as module entry pages.
-        (page.kind === PageKind.Index || isPackageEntryPage)
+        (isPackageEntryPage || page.kind === PageKind.Index)
       ) {
         readmeUrls[page.model.id] = page.url
       }
@@ -143,8 +143,8 @@ async function bootstrapApp(
       ...defaultTypeDocConfig,
       ...markdownPluginConfig,
       ...typeDocConfig,
-      ...(entryPoints === undefined ? {} : { entryPoints }),
-      ...(tsconfig === undefined ? {} : { tsconfig }),
+      ...(entryPoints !== undefined && { entryPoints }),
+      ...(tsconfig !== undefined && { tsconfig }),
       outputs: [{ name: 'markdown', path: output.path }],
     },
     [new TypeDocReader(), new PackageJsonReader(), new TSConfigReader(), new PluginOptionsReader(plugin)],
@@ -204,7 +204,9 @@ function onRendererPageEnd(
 ) {
   if (!event.contents) {
     return false
-  } else if (!isReadmeConfigured && /^.+[/\\]README\.md$/.test(event.url)) {
+  }
+
+  if (!isReadmeConfigured && /^.+[/\\]README\.md$/.test(event.url)) {
     // Do not save `README.md` files for multiple entry points if the `readme` option is not configured.
     // It is no longer supported in TypeDoc 0.26.0 to call `event.preventDefault()` to prevent the file from being saved.
     // https://github.com/TypeStrong/typedoc/commit/6e6b3b662c92b3d4bc24b6c6c0c6e227e063c759

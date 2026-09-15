@@ -300,7 +300,7 @@ export function getRelativeURL(url: string, baseUrl: string, pageUrl?: string): 
     currentDirname === urlDirname ? url : path.posix.join(currentDirname, path.posix.relative(currentDirname, url))
 
   const filePath = path.parse(relativeUrl)
-  const [, anchor] = filePath.base.split('#')
+  const [, anchor] = filePath.base.split('#', 2)
   const segments = filePath.dir
     .split(/[/\\]/)
     .map((segment) => slug(segment))
