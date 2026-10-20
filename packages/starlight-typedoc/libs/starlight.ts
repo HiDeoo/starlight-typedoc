@@ -176,7 +176,6 @@ function getSidebarGroupFromReflections(
                   }
 
                   const parsedPath = path.parse(url)
-                  const isParentKindModule = child.parent?.kind === ReflectionKind.Module
 
                   return getSidebarGroupFromReflections(
                     { ...options, collapsed: true, label: child.name },
@@ -184,7 +183,9 @@ function getSidebarGroupFromReflections(
                     definitions,
                     readmeUrls,
                     baseOutputDirectory,
-                    `${outputDirectory}/${isParentKindModule ? parsedPath.dir.split('/').slice(1).join('/') : parsedPath.dir}`,
+                    // TypeDoc page URLs are relative to the output root, so nested module directories (including scoped
+                    // package names such as `@scope/pkg`) must be resolved from the base output directory.
+                    `${baseOutputDirectory}/${parsedPath.dir}`,
                   )
                 })
               }

@@ -1,0 +1,3 @@
+{
+  "entryPoints": ["src/functions.ts", "src/types.ts"]
+}
