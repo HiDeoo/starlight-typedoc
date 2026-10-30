@@ -138,7 +138,7 @@ test('should not add `README.md` module files for multiple entry points', async 
   const filePaths = rmSyncSpy.mock.calls.map((call) => call[0].toString())
 
   expect(rmSyncSpy).toHaveBeenCalled()
-  expect(filePaths.filter((filePath) => /\/(?:Bar|Foo)\/README\.md$/.test(filePath)).length).toBe(2)
+  expect(filePaths.filter((filePath) => /[/\\](?:Bar|Foo)[/\\]README\.md$/.test(filePath)).length).toBe(2)
 })
 
 test('should support overriding typedoc-plugin-markdown readme page generation', async () => {
@@ -158,7 +158,7 @@ test('should support overriding typedoc-plugin-markdown readme page generation',
 
   expect(writtenFilePaths.some((filePath) => filePath.endsWith('modules.md'))).toBe(true)
   expect(writtenFilePaths.some((filePath) => filePath.endsWith('README.md'))).toBe(true)
-  expect(removedFilePaths.some((filePath) => /\/(?:Bar|Foo)\/README\.md$/.test(filePath))).toBe(false)
+  expect(removedFilePaths.some((filePath) => /[/\\](?:Bar|Foo)[/\\]README\.md$/.test(filePath))).toBe(false)
   expect(Object.values(readmeUrls).toSorted()).toEqual(['Bar/README.md', 'Foo/README.md', 'README.md'])
 })
 
