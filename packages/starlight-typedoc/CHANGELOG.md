@@ -1,5 +1,11 @@
 # starlight-typedoc
 
+## 0.23.2
+
+### Patch Changes
+
+- [#113](https://github.com/HiDeoo/starlight-typedoc/pull/113) [`60c37aa`](https://github.com/HiDeoo/starlight-typedoc/commit/60c37aa493bf713f1b90de3d8ac44df2eb0a4a32) Thanks [@jviall](https://github.com/jviall)! - Fixes empty sidebar groups for scoped packages with multiple entry points when using the TypeDoc [`packages` entry point strategy](https://typedoc.org/documents/Options.Input.html#packages).
+
 ## 0.23.1
 
 ### Patch Changes
