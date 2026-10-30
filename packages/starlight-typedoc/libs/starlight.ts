@@ -183,8 +183,8 @@ function getSidebarGroupFromReflections(
                     definitions,
                     readmeUrls,
                     baseOutputDirectory,
-                    // TypeDoc page URLs are relative to the output root, so nested module directories (including scoped
-                    // package names such as `@scope/pkg`) must be resolved from the base output directory.
+                    // TypeDoc page URLs are relative to the base output directory, so nested module directories
+                    // (including scoped package names such as `@scope/pkg`) must be resolved from it.
                     `${baseOutputDirectory}/${parsedPath.dir}`,
                   )
                 })
