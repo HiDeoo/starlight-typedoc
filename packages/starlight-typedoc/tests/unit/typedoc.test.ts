@@ -173,7 +173,12 @@ test('should collect package overview URLs when using packages entry point strat
     },
   })
 
-  expect(Object.values(readmeUrls).toSorted()).toEqual(['README.md', 'bar/README.md', 'foo/README.md'])
+  expect(Object.values(readmeUrls).toSorted()).toEqual([
+    '@scope/baz/README.md',
+    'README.md',
+    'bar/README.md',
+    'foo/README.md',
+  ])
 })
 
 test('should output modules with index', async () => {
