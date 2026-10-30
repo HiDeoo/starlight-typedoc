@@ -20,6 +20,14 @@ test('should generate the proper items for for multiple entry points', async ({ 
   expect(items).toMatchObject([
     { name: 'Overview' },
     {
+      label: '@scope/baz',
+      items: [
+        { name: 'Overview' },
+        { label: 'index', items: [{ label: 'Functions', items: [{ name: 'doBaz' }] }] },
+        { label: 'types', items: [{ label: 'Interfaces', items: [{ name: 'DoBazOptions' }] }] },
+      ],
+    },
+    {
       label: 'bar',
       items: [
         { name: 'Overview' },
