@@ -34,7 +34,7 @@ function makeStarlightTypeDocPlugin(sidebarGroup: SidebarGroup): (options: Starl
       name: 'starlight-typedoc-plugin',
       hooks: {
         async 'config:setup'({ astroConfig, command, config, logger, updateConfig }) {
-          if (command === 'preview') return
+          if (command === 'preview' || command === 'sync') return
 
           const output = options.output ?? DefaultOutputDirectory
           const outputPath = path.join(url.fileURLToPath(astroConfig.srcDir), 'content/docs', output)
