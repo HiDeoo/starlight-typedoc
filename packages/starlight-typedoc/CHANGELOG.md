@@ -1,5 +1,11 @@
 # starlight-typedoc
 
+## 0.23.3
+
+### Patch Changes
+
+- [#116](https://github.com/HiDeoo/starlight-typedoc/pull/116) [`dffb987`](https://github.com/HiDeoo/starlight-typedoc/commit/dffb987c9e9793d75a998f68f20c1a0f93bed8d0) Thanks [@jviall](https://github.com/jviall)! - Skip TypeDoc generation when running `astro sync` and `astro check`
+
 ## 0.23.2
 
 ### Patch Changes
